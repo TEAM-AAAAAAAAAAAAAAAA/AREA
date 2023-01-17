@@ -13,7 +13,6 @@ jobs:
     name: Push content of the current repo on mirror
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    needs: [build]
     steps:
       - uses: actions/checkout@v2
         with:
