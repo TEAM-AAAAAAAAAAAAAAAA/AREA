@@ -1,0 +1,25 @@
+{
+  "name": "area_webserver",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/TEAM-AAAAAAAAAAAAAAAA/AREA.git"
+  },
+  "keywords": [
+    "AREA",
+    "Action",
+    "Reaction",
+    "EPITECH"
+  ],
+  "author": "TEAM-AAAAAAAAAAAAAAAA",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TEAM-AAAAAAAAAAAAAAAA/AREA/issues"
+  },
+  "homepage": "https://github.com/TEAM-AAAAAAAAAAAAAAAA/AREA#readme"
+}
