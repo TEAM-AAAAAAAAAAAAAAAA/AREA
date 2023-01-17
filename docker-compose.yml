@@ -1,8 +1,8 @@
 version: '3'
 services:
-  web_server:
+  webserver:
     build:
-      context: ./web_server
+      context: ./webserver
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
