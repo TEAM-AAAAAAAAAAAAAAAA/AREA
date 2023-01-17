@@ -6,31 +6,31 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-  web_client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
-    depends_on:
-      - mobile_client
-      - nodejs
-    volumes:
-      - client_data:/data/client
-  mobile_client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    volumes:
-      - client_data:/data/client
-  apollo:
-    build:
-      context: ./database
-      dockerfile: Dockerfile
-    ports:
-      - "8082:8082"
-    depends_on:
-      - mongodb
+#  web_client:
+#    build:
+#      context: ./client
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      - mobile_client
+#      - web_server
+#    volumes:
+#      - client_data:/data/client
+#  mobile_client:
+#    build:
+#      context: ./client
+#      dockerfile: Dockerfile
+#    volumes:
+#      - client_data:/data/client
+#  apollo:
+#    build:
+#      context: ./database
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8082:8082"
+#    depends_on:
+#      - mongodb
   mongodb:
     image: mongo
     volumes:
