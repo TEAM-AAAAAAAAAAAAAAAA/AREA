@@ -1,6 +1,9 @@
 import { Router } from "express";
-import { indexRoute } from "./routes/index";
+import { index } from "./routes/index";
+import { hook } from "./routes/hook";
 
 export const routes = Router();
 
-routes.use(indexRoute)
+routes.get('/', index.GET);
+routes.get('/hook/', hook.GET);
+routes.post('/hook/', hook.POST);

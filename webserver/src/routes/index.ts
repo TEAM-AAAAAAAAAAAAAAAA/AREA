@@ -1,8 +1,9 @@
-import { Request, Response, Router } from 'express';
+import { Request, Response } from 'express';
 
-export const indexRoute = Router();
+export const index = {
+    
+    GET: (req: Request, res: Response) => {
+        res.status(200).send('ok');
+    }
 
-indexRoute.get('/', (req: Request, res: Response) => {
-    res.status(200).send('ok');
-});
-
+};
