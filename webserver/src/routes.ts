@@ -6,4 +6,4 @@ export const routes = Router();
 
 routes.get('/', index.GET);
 routes.get('/hook/', hook.GET);
-routes.post('/hook/', hook.POST);
+routes.post('/hook/:hook(*)', hook.POST);
