@@ -14,7 +14,7 @@ services:
 #      - "8081:8081"
 #    depends_on:
 #      - mobile_client
-#      - web_server
+#      - webserver
 #    volumes:
 #      - client_data:/data/client
 #  mobile_client:
