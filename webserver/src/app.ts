@@ -13,10 +13,11 @@ const appConfig = {
     name: 'API',
     port: Number(env.API_PORT),
     host: '0.0.0.0',
+    envName: env.ENV_NAME,
 };
 
 app.use('/', routes);
 
 app.listen(appConfig.port, appConfig.host, () => {
-    console.log('Server is running at ' + appConfig.host + ':' + appConfig.port)
+    console.log('[' + appConfig.envName + '] Server is running at ' + appConfig.host + ':' + appConfig.port)
 });
