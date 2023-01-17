@@ -1,10 +1,13 @@
 {
   "name": "area_webserver",
-  "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "main": "app.js",
   "scripts": {
-    "test": "tests"
+    "build": "npx tsc",
+    "prod": "dotenv -e .env/.prod.env -- node -r dotenv/config dist/app.js",
+    "preprod": "dotenv -e .env/.preprod.env -- node -r dotenv/config dist/app.js",
+    "dev": "dotenv -e .env/.dev.env -- npx nodemon -r dotenv/config src/app.ts",
+    "test": "echo \"Error: no test available\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -21,5 +24,18 @@
   "bugs": {
     "url": "https://github.com/TEAM-AAAAAAAAAAAAAAAA/AREA/issues"
   },
-  "homepage": "https://github.com/TEAM-AAAAAAAAAAAAAAAA/AREA#readme"
+  "homepage": "https://github.com/TEAM-AAAAAAAAAAAAAAAA/AREA#readme",
+  "description": "",
+  "dependencies": {
+    "@types/body-parser": "^1.19.2",
+    "@types/express": "github:types/express",
+    "@types/node": "^18.11.18",
+    "body-parser": "^1.20.1",
+    "dotenv-cli": "^6.0.0",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "types": "^0.1.1",
+    "typescript": "^4.9.4"
+  }
 }
