@@ -9,4 +9,4 @@
 npx prisma generate --schema=./prisma/schema.prisma
 ```
 
-> Require a running mongodb instance running on localhost
+> Requires a mongodb instance to be running on localhost
