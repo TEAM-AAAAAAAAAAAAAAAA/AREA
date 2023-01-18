@@ -1,15 +1,15 @@
 version: '3'
 services:
-  webserver:
+  server:
     build:
-      context: ./webserver
+      context: ./server
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
 #  web_client:
 #    build:
 #      context: ./client
-#      dockerfile: Dockerfile
+#      dockerfile: web_client.dockerfile
 #    ports:
 #      - "8081:8081"
 #    depends_on:
@@ -20,17 +20,17 @@ services:
 #  mobile_client:
 #    build:
 #      context: ./client
-#      dockerfile: Dockerfile
+#      dockerfile: mobile_client.dockerfile
 #    volumes:
 #      - client_data:/data/client
-#  apollo:
-#    build:
-#      context: ./database
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8082:8082"
-#    depends_on:
-#      - mongodb
+  apollo:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mongodb
   mongodb:
     image: mongo
     volumes:
