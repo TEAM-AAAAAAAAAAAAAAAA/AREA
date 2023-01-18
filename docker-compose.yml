@@ -9,18 +9,18 @@ services:
 #  web_client:
 #    build:
 #      context: ./client
-#      dockerfile: web_client.dockerfile
+#      dockerfile: client_web.dockerfile
 #    ports:
 #      - "8081:8081"
 #    depends_on:
 #      - mobile_client
-#      - webserver
+#      - server
 #    volumes:
 #      - client_data:/data/client
 #  mobile_client:
 #    build:
 #      context: ./client
-#      dockerfile: mobile_client.dockerfile
+#      dockerfile: client_mobile.dockerfile
 #    volumes:
 #      - client_data:/data/client
   apollo:
