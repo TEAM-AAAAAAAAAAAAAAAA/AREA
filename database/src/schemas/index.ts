@@ -8,7 +8,6 @@ export const typeDefs = gql`
         name: String!
         email: [String!]!
         password: String
-        profile_image: String
         created_at: DateTime!
     }
 
