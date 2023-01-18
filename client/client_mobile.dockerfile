@@ -9,7 +9,7 @@ COPY package*.json ./
 RUN yarn install
 
 #Bundle app source
-COPY ../client_mobile .
+COPY ../client ./mobile
 
 #Build the app
 RUN yarn run build
