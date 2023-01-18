@@ -9,7 +9,7 @@ COPY package*.json ./
 RUN yarn install
 
 #Bundle app source
-COPY . .
+COPY ../webserver .
 
 #Build the app
 RUN yarn run build
