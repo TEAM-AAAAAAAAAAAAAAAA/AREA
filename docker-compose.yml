@@ -30,11 +30,11 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      - mongodb
-  mongodb:
-    image: mongo
+      - db
+  db:
+    image: postgres
     volumes:
-      - mongo_data:/data/db
+      - postgres_data:/data/db
 volumes:
-  mongo_data:
+  postgres_data:
   client_data:
