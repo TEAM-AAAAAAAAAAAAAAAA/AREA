@@ -1,0 +1,40 @@
+version: '3'
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+#  web_client:
+#    build:
+#      context: ./client
+#      dockerfile: client_web.dockerfile
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      - mobile_client
+#      - server
+#    volumes:
+#      - client_data:/data/client
+#  mobile_client:
+#    build:
+#      context: ./client
+#      dockerfile: client_mobile.dockerfile
+#    volumes:
+#      - client_data:/data/client
+  apollo:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/data/db
+volumes:
+  postgres_data:
+  client_data:

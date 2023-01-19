@@ -1,0 +1,13 @@
+set shell := ["bash", "-c"]
+
+# Generate a new prisma schema that will be used inside the code
+prisma_schema_gen:
+    @$(shell) "npx prisma generate --schema=./src/prisma/schema.prisma"
+
+# Migrate database schema to desired DB with specified environment (possible values are: prod, preprod and dev)
+prisma_migrate env:
+    if {{env}} ~= ^(prod|preprod|dev)$ { @$(shell) "npx dotenv -e .env/.dev.env -- npx prisma migrate dev --schema=./src/prisma/schema.prisma" } else { @echo "Invalid environment" }
+
+# Launch and open prisma studio in specified environment (possible values are: prod, preprod and dev)
+prisma_studio env:
+    if {{env}} ~= ^(prod|preprod|dev)$ { @$(shell) "npx dotenv -e .env/.dev.env -- npx prisma studio" } else { @echo "Invalid environment" }
