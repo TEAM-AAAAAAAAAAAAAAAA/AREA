@@ -1,13 +1,19 @@
 set shell := ["bash", "-c"]
 
+set dotenv-load := true
+
 # Generate a new prisma schema that will be used inside the code
 prisma_schema_gen:
-    @$(shell) "npx prisma generate --schema=./src/prisma/schema.prisma"
+    @$(shell) "npx prisma generate --schema=./prisma/schema.prisma"
 
 # Migrate database schema to desired DB with specified environment (possible values are: prod, preprod and dev)
 prisma_migrate env:
-    if {{env}} ~= ^(prod|preprod|dev)$ { @$(shell) "npx dotenv -e .env/.dev.env -- npx prisma migrate dev --schema=./src/prisma/schema.prisma" } else { @echo "Invalid environment" }
+    if {{env}} ~= ^(prod|preprod|dev)$ { @$(shell) "npx dotenv -e .env/."{{env}}".env -- npx prisma migrate dev --schema=./src/prisma/schema.prisma" } else { @echo "Invalid environment" }
 
 # Launch and open prisma studio in specified environment (possible values are: prod, preprod and dev)
 prisma_studio env:
-    if {{env}} ~= ^(prod|preprod|dev)$ { @$(shell) "npx dotenv -e .env/.dev.env -- npx prisma studio" } else { @echo "Invalid environment" }
+    if {{env}} ~= ^(prod|preprod|dev)$ { @$(shell) "npx dotenv -e .env/."{{env}}".env -- npx prisma studio" } else { @echo "Invalid environment" }
+
+# Setup postgresql container
+start_postgres_container:
+    @docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
