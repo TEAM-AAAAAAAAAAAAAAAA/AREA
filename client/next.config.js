@@ -1,4 +1,5 @@
-/** @type {import('next').NextConfig} */
+// next.config.js
 module.exports = {
-  reactStrictMode: true,
+  // ... rest of the configuration.
+  output: 'standalone',
 }
