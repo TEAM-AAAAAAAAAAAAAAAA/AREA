@@ -39,8 +39,13 @@
     "node-fetch": "^3.3.0",
     "node-fetch-commonjs": "^3.2.4",
     "nodemon": "^2.0.20",
+    "prisma": "^4.9.0",
     "ts-node": "^10.9.1",
     "types": "^0.1.1",
     "typescript": "^4.9.4"
+  },
+  "devDependencies": {
+    "prisma-dbml-generator": "^0.10.0",
+    "prisma-joi-generator": "^0.2.0"
   }
 }
