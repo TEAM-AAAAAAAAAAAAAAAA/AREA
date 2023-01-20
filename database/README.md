@@ -49,7 +49,7 @@ Available recipes:
 ENV_NAME = <dev|preprod|prod>
 APOLLO_HOST = localhost
 APOLLO_PORT = 4000
-MONGODB_URI= mongodb://localhost:27017/
+POSTGRES_URI = postgresql://postgres:azer@localhost:5432/postgres
 ```
 
 ## Prisma

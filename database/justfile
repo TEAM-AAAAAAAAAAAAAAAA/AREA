@@ -1,19 +1,43 @@
 set shell := ["bash", "-c"]
 
-set dotenv-load := true
+set dotenv-load
 
 # Generate a new prisma schema that will be used inside the code
-prisma_schema_gen:
-    @$(shell) "npx prisma generate --schema=./prisma/schema.prisma"
+prisma_generate:
+    npx prisma generate --schema=./prisma/schema.prisma
 
 # Migrate database schema to desired DB with specified environment (possible values are: prod, preprod and dev)
 prisma_migrate env:
-    if {{env}} ~= ^(prod|preprod|dev)$ { @$(shell) "npx dotenv -e .env/."{{env}}".env -- npx prisma migrate dev --schema=./src/prisma/schema.prisma" } else { @echo "Invalid environment" }
+    #!/usr/bin/env python3
+    if "{{env}}" is in ["prod", "preprod", "dev"]:
+        import os
+        import subprocess
+        import sys
+        from dotenv import load_dotenv
+        load_dotenv(dotenv_path=f".env/.{{env}}.env")
+        subprocess.run(["npx", "prisma", "migrate", "dev", "--name", "db_init" ,"--schema=./src/prisma/schema.prisma"])
+    else:
+        print("Invalid environment")
+        sys.exit(1)
 
 # Launch and open prisma studio in specified environment (possible values are: prod, preprod and dev)
 prisma_studio env:
-    if {{env}} ~= ^(prod|preprod|dev)$ { @$(shell) "npx dotenv -e .env/."{{env}}".env -- npx prisma studio" } else { @echo "Invalid environment" }
+    #!/usr/bin/env python3
+    if "{{env}}" in ["prod", "preprod", "dev"]:
+        import os
+        import subprocess
+        import sys
+        from dotenv import load_dotenv
+        load_dotenv(dotenv_path=f".env/.{{env}}.env")
+        subprocess.run(["npx", "prisma", "studio"])
+    else:
+        print("Invalid environment")
+        sys.exit(1)
+
+prisma_serve_docs:
+    find . -type f | xargs dos2unix
+    npx prisma-docs-generator serve
 
 # Setup postgresql container
 start_postgres_container:
-    @docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+    @docker run --name area_db -e POSTGRES_PASSWORD=azer -p 5432:5432 -d postgres
