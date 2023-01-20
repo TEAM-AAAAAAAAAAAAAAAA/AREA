@@ -1,10 +1,9 @@
+import { ustring } from "../types/ustring";
 import { IService } from "./IService";
-
-export type ustring = string | undefined;
 
 export abstract class AService implements IService {
     abstract read(data: any): void;
-    abstract receive(data: AService): void;
+    // abstract receive(data: AService): void;
     abstract push(): void;
 
     getSmallText(): ustring { return undefined; }
