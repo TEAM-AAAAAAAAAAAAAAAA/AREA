@@ -1,5 +1,7 @@
+export type ustring = string | undefined;
+
 export interface IService {
-    getSmallText: () => string;
-    getNormalText: () => string;
-    getBigText: () => string;
-}
+    read(data: any): void;
+    receive(data: IService): void;
+    push(): void;
+};

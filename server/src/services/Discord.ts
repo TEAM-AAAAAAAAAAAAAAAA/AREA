@@ -1,37 +1,41 @@
-import { IService } from "./IService";
+import { AService, ustring } from "./AService";
 
-export class Discord implements IService {
+export class Discord extends AService {
     //#region Contruction
     constructor(data: any) {
-        this._author = data.author;
+        super();
+        this._authorName = data.from.name
+        this._authorId = data.from.id;
         this._message = data.content;
     }
 
     public read(data: any): void {
-        this._author = data.author;
+        this._authorName = data.author;
         this._message = data.content;
     }
 
-    public receive(data: IService): void {
-        this._author = data.getSmallText();
+    public receive(data: AService): void {
+        this._authorName = data.getSmallText();
         this._message = data.getNormalText();
+    }
+
+    public push(): void {
+        // push to user-configured discord webhook
     }
     //#endregion
 
     //#region Public members
-    public getSmallText(): string {
-        return this._author;
+    public getSmallText(): ustring {
+        return this._authorName;
     }
-    public getNormalText(): string {
+    public getNormalText(): ustring {
         return this._message;
-    }
-    public getBigText(): string {
-        return "";
     }
     //#endregion
 
     //#region Private members
-    private _author: string;
-    private _message: string;
+    private _authorName: ustring;
+    private _authorId: ustring;
+    private _message: ustring;
     //#endregion
 }

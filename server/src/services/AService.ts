@@ -1,15 +1,15 @@
+import { IService } from "./IService";
+
 export type ustring = string | undefined;
 
-export abstract class AService {
-    getSmallText(): ustring { return this._smallText; }
-    getNormalText(): ustring { return this._normalText; }
-    getBigText(): ustring { return this._bigText; }
-    getAuthorId(): ustring { return this._authorId; }
-    getAuthorName(): ustring { return this._authorName; }
+export abstract class AService implements IService {
+    abstract read(data: any): void;
+    abstract receive(data: AService): void;
+    abstract push(): void;
 
-    _smallText: ustring = undefined;
-    _normalText: ustring = undefined;
-    _bigText: ustring = undefined;
-    _authorId: ustring = undefined;
-    _authorName: ustring = undefined;
+    getSmallText(): ustring { return undefined; }
+    getNormalText(): ustring { return undefined; }
+    getBigText(): ustring { return undefined; }
+    getAuthorId(): ustring { return undefined; }
+    getAuthorName(): ustring { return undefined; }
 }
