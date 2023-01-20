@@ -2,7 +2,7 @@ import { Express } from 'express'
 import express from 'express'
 import { routes } from './routes';
 import { env } from './config/env';
-import { db } from './config/db';
+import { context } from './config/db';
 import bodyParser from 'body-parser';
 
 const app = express();
