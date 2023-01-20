@@ -8,9 +8,26 @@ datasource db {
 }
 
 model User {
-    id        String      @id @default(uuid())
-    email     String   @unique
+    id        String    @id @default(uuid())
+    email     String    @unique
     name      String
     password  String
-    createdAt DateTime @default(now())
+    createdAt DateTime  @default(now())
+    tokens   Token[]
+}
+
+model Token {
+    id        String      @id @default(uuid())
+    userId    String
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    valid     Boolean     @default(true)
+    user      User        @relation(fields: [userId], references: [id])
+    type      TokenType
+}
+
+enum TokenType {
+    EMALI_VERIFICATION
+    API
+    PASSWORD_RESET
 }
