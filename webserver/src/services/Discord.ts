@@ -1,4 +1,4 @@
-import { IService } from "../IService";
+import { IService } from "./IService";
 
 export class Discord implements IService {
     //#region Contruction
