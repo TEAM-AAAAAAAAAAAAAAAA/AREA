@@ -1,0 +1,4 @@
+generator docs {
+    provider = "node node_modules/prisma-docs-generator"
+    output   = "../docs"
+}

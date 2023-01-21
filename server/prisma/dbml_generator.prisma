@@ -1,0 +1,4 @@
+generator dbml {
+    provider = "prisma-dbml-generator"
+    output   = "../dbml"
+}
