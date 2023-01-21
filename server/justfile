@@ -6,15 +6,15 @@ set dotenv-load
 prisma_generate *ADDITIONAL_GENERATORS:
     #!/usr/bin/env bash
     for generator in {{ADDITIONAL_GENERATORS}}; do
-        cat src/prisma/generators/${generator}_generator.prisma > src/prisma/generators/schema.prisma
+        cat prisma/${generator}_generator.prisma > prisma/schema.prisma
     done
-    cat ../database/prisma/schema.prisma >> src/prisma/generators/schema.prisma
-    npx prisma generate --schema=src/prisma/generators/schema.prisma
+    cat ../database/prisma/schema.prisma >> prisma/schema.prisma
+    npx prisma generate --schema=prisma/schema.prisma
 
 # Migrate database schema to desired DB with specified environment (possible values are: prod, preprod and dev)
 prisma_migrate env:
     #!/usr/bin/env python3
-    if "{{env}}" is in ["prod", "preprod", "dev"]:
+    if "{{env}}" in ["prod", "preprod", "dev"]:
         import os
         import subprocess
         import sys
