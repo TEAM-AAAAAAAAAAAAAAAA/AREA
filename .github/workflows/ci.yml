@@ -9,11 +9,84 @@ on:
     branches: [ main ]
 
 jobs:
+  apollo_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # In this step, this action saves a list of existing images,
+      # the cache is created without them in the post run.
+      # It also restores the cache if it exists.
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
+      - name: Build the Docker image
+        run: docker build ./database --file Dockerfile --tag server:$(date +%s)
+
+  server_build:
+    runs-on: ubuntu-latest
+    needs:
+      - apollo_build
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+
+      - name: Build the Docker image
+        run: docker build ./server --file Dockerfile --tag apollo:$(date +%s)
+
+  web_build:
+    runs-on: ubuntu-latest
+    needs:
+      - apollo_build
+      - server_build
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+
+      - name: Build the Docker image
+        run: docker build ./client --file web_client.dockerfile --tag web_client:$(date +%s)
+
+  mobile_build:
+    runs-on: ubuntu-latest
+    needs:
+      - apollo_build
+      - server_build
+      - web_build
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+
+      - name: Build the Docker image
+        run: docker build ./client --file client_mobile.dockerfile --tag mobile_client:$(date +%s)
+
   to_github:
-    name: Push content of the current repo on mirror
-    if: github.event_name == 'push'
+    needs:
+      - apollo_build
+      - server_build
+      - web_build
+      - mobile_build
     runs-on: ubuntu-latest
     steps:
+      - name: Check status of previous builds
+        run: |
+          if [ "$apollo_build_status" == "success" ] 
+          && [ "server_build_status" == "success" ] 
+          && [ "web_build_status" == "success" ] 
+          && [ "mobile_build_status" == "success" ]; then
+            echo "All builds succeed, now proceeding with push on mirror repo"
+          else
+            echo "On of the builds failed, Push skipped";
+            exit 1;
+          fi
+      - name: Push content of the current repo on mirror
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -23,25 +96,3 @@ jobs:
             ${{ secrets.EPI_AREA_REPO_URL }}
           ssh_private_key:
             ${{ secrets.EPI_AREA_MIRRORING_KEY }}
-
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      # Pull the latest image to build, and avoid caching pull-only images.
-      # (docker pull is faster than caching in most cases.)
-      - run: docker-compose pull
-
-      # In this step, this action saves a list of existing images,
-      # the cache is created without them in the post run.
-      # It also restores the cache if it exists.
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        # Ignore the failure of a step and avoid terminating the job.
-        continue-on-error: true
-
-      - run: docker-compose up --build
-
-    # Finally, "Post Run satackey/action-docker-layer-caching@v0.0.11",
-    # which is the process of saving the cache, will be executed.
