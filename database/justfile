@@ -6,7 +6,7 @@ prisma_schema_gen:
 
 # Migrate database schema to desired DB with specified environment (possible values are: prod, preprod and dev)
 prisma_migrate env:
-    if {{env}} ~= ^(prod|preprod|dev)$ { @$(shell) "npx prisma migrate dev --schema=./src/prisma/schema.prisma" } else { @echo "Invalid environment" }
+    if {{env}} ~= ^(prod|preprod|dev)$ { @$(shell) "npx dotenv -e .env/.dev.env -- npx prisma migrate dev --schema=./src/prisma/schema.prisma" } else { @echo "Invalid environment" }
 
 # Launch and open prisma studio in specified environment (possible values are: prod, preprod and dev)
 prisma_studio env:
