@@ -8,6 +8,8 @@
     "test": "playwright test"
   },
   "dependencies": {
+    "@capacitor/cli": "^4.6.2",
+    "@capacitor/core": "^4.6.2",
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
