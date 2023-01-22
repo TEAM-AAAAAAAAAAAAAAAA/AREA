@@ -8,9 +8,6 @@ services:
       dockerfile: client_web.dockerfile
     restart: always
     volumes:
-      - ./components:/app/components
-      - ./interfaces:/app/interfaces
-      - ./pages:/app/pages
-      - ./utils:/app/utils
+      - ./src:/app/src
     ports:
       - 3000:3000
