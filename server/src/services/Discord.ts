@@ -12,7 +12,7 @@ export class Discord implements IService {
     //     this._message = data.getNormalText();
     // }
 
-    push(): void {
+    push(webhookLink: string): void {
         // push to user-configured discord webhook
     }
     //#endregion

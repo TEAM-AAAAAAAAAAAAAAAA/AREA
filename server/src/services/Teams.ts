@@ -14,7 +14,7 @@ export class Teams implements IService {
     //     this._message = data.getNormalText();
     // }
 
-    push(): void {
+    push(webhookLink: string): void {
         // push to user-configured teams webhook
     }
 
