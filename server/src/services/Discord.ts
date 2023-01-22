@@ -1,7 +1,7 @@
 import { ustring } from "../types/ustring";
-import { AService } from "./AService";
+import { IService } from "./IService";
 
-export class Discord extends AService {
+export class Discord implements IService {
     read(data: any): void {
         this._authorName = data.author;
         this._message = data.content;
