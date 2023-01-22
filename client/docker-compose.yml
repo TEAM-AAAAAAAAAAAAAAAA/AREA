@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+
+  client_web:
+    build: .
+    restart: always
+    volumes:
+      - ./components:/app/components
+      - ./interfaces:/app/interfaces
+      - ./pages:/app/pages
+      - ./utils:/app/utils
+    ports:
+      - 3000:3000
