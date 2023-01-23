@@ -2,11 +2,13 @@ import { Express } from 'express'
 import express from 'express'
 import { routes } from './routes';
 import { env } from './config/env';
-import { context } from './config/db';
 import bodyParser from 'body-parser';
+import csrf from 'csurf';
+import passport from 'passport';
 
 const app = express();
 
+app.use(passport.initialize())
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

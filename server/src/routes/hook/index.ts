@@ -3,6 +3,7 @@ import { BodyParser } from "body-parser";
 import { Request, Response } from "express";
 import https from "https";
 import fetch from "node-fetch-commonjs";
+import passport from "passport";
 
 function getMsgFromHook(hook: string, req: any) {
     var msg: string = "";
@@ -33,7 +34,9 @@ export const hook = {
         res.status(200).send('got a hook');
     },
 
-    POST: (req: any, res: Response) => {
+    POST: [
+    // passport.authenticate('jwt', {session: false}),
+    (req: any, res: Response) => {
         // check db to get corresponding webhook (we'll do some arbitrary if statements here to simulate it)
         let hook: string = req.params.hook;
 
@@ -49,6 +52,5 @@ export const hook = {
             msg = msg.substring(8);
             fetchOutgoingWebhook("content", msg, "https://discord.com/api/webhooks/1063747203098738779/D150PoHwflKTJX47ew80J4x2U49VTAcF3hKSjL1XTK9I7pi1yOiHiwcferLTHNSVwcED");
         };
-    }
-
+    }]
 };
