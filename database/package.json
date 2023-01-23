@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
+    "dbinit:prod": "dotenv -e .env/.prod.env -- prisma migrate dev --name init",
+    "dbinit:preprod": "dotenv -e .env/.preprod.env -- prisma migrate dev --name init",
+    "dbinit:dev": "dotenv -e .env/.dev.env -- prisma migrate dev --name init",
     "build": "npx tsc",
     "prod": "dotenv -e .env/.prod.env -- node -r dotenv/config dist/app.js",
     "preprod": "dotenv -e .env/.preprod.env -- node -r dotenv/config dist/app.js",
@@ -31,7 +34,6 @@
   "dependencies": {
     "@prisma/client": "^4.9.0",
     "apollo-server": "^3.11.1",
-    "bson": "^4.7.2",
     "dotenv-cli": "^6.0.0",
     "graphql": "^16.6.0",
     "graphql-scalars": "^1.20.1",
