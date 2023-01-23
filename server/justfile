@@ -5,10 +5,10 @@ set dotenv-load
 # Generate a new prisma schema that will be used inside the code
 prisma_generate *ADDITIONAL_GENERATORS:
     #!/usr/bin/env bash
+    cat ../database/prisma/schema.prisma > prisma/schema.prisma
     for generator in {{ADDITIONAL_GENERATORS}}; do
-        cat prisma/${generator}_generator.prisma > prisma/schema.prisma
+        cat prisma/${generator}_generator.prisma >> prisma/schema.prisma
     done
-    cat ../database/prisma/schema.prisma >> prisma/schema.prisma
     npx prisma generate --schema=prisma/schema.prisma
 
 # Migrate database schema to desired DB with specified environment (possible values are: prod, preprod and dev)
