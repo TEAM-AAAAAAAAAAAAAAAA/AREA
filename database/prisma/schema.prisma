@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
+  id        String    @id @default(uuid()) @unique
   email     String    @unique
   name      String
   password  String
@@ -18,7 +18,7 @@ model User {
 }
 
 model Token {
-  id        String    @id @default(uuid())
+  id        String    @id @default(uuid()) @unique
   userId    String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -28,7 +28,7 @@ model Token {
 }
 
 model Service {
-  id     Int      @id @default(autoincrement())
+  id     Int      @id @default(autoincrement()) @unique
   name   String
   Action Action[]
 }
