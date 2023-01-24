@@ -1,8 +1,9 @@
 # AREA DB
 
-![](https://badgen.net/badge/icon/graphql?icon=graphql&label) Typescript project with GraphQL and Apollo
+> ![](https://badgen.net/badge/icon/graphql?icon=graphql&label)
+> ![](https://badgen.net/badge/-/TypeScript?icon=typescript&label&labelColor=blue&color=555555)
 
-
+> Typescript project with GraphQL and Apollo
 
 ## ENV
 
