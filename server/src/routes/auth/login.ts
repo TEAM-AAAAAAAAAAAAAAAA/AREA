@@ -43,7 +43,7 @@ export const login = {
                     });
                     if (prismaToken)
                         (user as any).token = jwt.sign({ token: prismaToken.id }, jwtSecret);
-                    res.status(200).json(user);
+                    res.status(200).json({"status": "ok", "user": _.omit(user, ['password'])});
                 } else {
                     res.status(401).json('Wrong password');
                 }
