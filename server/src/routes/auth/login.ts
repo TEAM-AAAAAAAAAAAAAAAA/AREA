@@ -24,9 +24,10 @@ export const login = {
         if (userInput.error !== undefined)
             return res.status(400).json(userInput.error);
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
             where: {
-                email: userInput.value.email
+                email: userInput.value.email,
+                emailVerified: true
             }
         });
 
@@ -36,6 +37,7 @@ export const login = {
                     const prismaToken = await prisma.token.findFirst({
                         where: {
                             userId: user.id,
+                            valid: true,
                             type: 'API'
                         }
                     });
