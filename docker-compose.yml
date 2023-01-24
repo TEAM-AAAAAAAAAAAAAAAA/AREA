@@ -1,12 +1,12 @@
 version: '3'
 services:
-  #server:
-  #  build:
-  #    context: ./server
-  #    dockerfile: Dockerfile
-  #  ports:
-  #    - "8080:8080"
-  client_client:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+  client_web:
     build:
       context: ./client
       dockerfile: client_web.dockerfile
@@ -14,7 +14,7 @@ services:
       - "8081:8081"
     depends_on:
       - client_mobile
-    #  - server
+      - server
     volumes:
       - client_data:/data/client
   client_mobile:
@@ -36,5 +36,5 @@ services:
   #  volumes:
   #    - postgres_data:/data/db
 volumes:
-#  postgres_data:
+  #postgres_data:
   client_data:
