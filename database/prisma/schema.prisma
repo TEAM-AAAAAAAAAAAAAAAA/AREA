@@ -1,16 +1,73 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("POSTGRES_URI")
+  provider = "postgresql"
+  url      = env("POSTGRES_URI")
 }
 
 model User {
-    id        String      @id @default(uuid())
-    email     String   @unique
-    name      String
-    password  String
-    createdAt DateTime @default(now())
+  id        String    @id @default(uuid()) @unique
+  email     String    @unique
+  name      String
+  password  String
+  createdAt DateTime  @default(now())
+  tokens    Token[]
+  Webhook   Webhook[]
+}
+
+model Token {
+  id        String    @id @default(uuid()) @unique
+  userId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  valid     Boolean   @default(true)
+  user      User      @relation(fields: [userId], references: [id])
+  type      TokenType
+}
+
+model Service {
+  id     Int      @id @default(autoincrement()) @unique
+  name   String
+  Action Action[]
+}
+
+model Webhook {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  reactionId Int      @unique
+  reaction   Reaction @relation(fields: [reactionId], references: [id])
+}
+
+model Action {
+  id             Int              @id @default(autoincrement())
+  serviceId      Int
+  service        Service          @relation(fields: [serviceId], references: [id])
+  Reaction       Reaction[]
+  ActionReaction ActionReaction[]
+}
+
+model Reaction {
+  id             Int              @id @default(autoincrement())
+  reactionId     Int
+  reaction       Action           @relation(fields: [reactionId], references: [id])
+  ActionReaction ActionReaction[]
+  Webhook        Webhook?
+}
+
+model ActionReaction {
+  actionId   Int
+  reactionId Int
+  action     Action   @relation(fields: [actionId], references: [id])
+  reaction   Reaction @relation(fields: [reactionId], references: [id])
+
+  @@id([actionId, reactionId])
+}
+
+enum TokenType {
+  EMAIL_VERIFICATION
+  API
+  PASSWORD_RESET
 }

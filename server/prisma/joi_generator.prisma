@@ -1,0 +1,4 @@
+generator joi {
+    provider = "prisma-joi-generator"
+    output   = "joi"
+}
