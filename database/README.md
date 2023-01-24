@@ -1,8 +1,9 @@
 # AREA DB
 
-![](https://badgen.net/badge/icon/graphql?icon=graphql&label) Typescript project with GraphQL and Apollo
+> ![](https://badgen.net/badge/icon/graphql?icon=graphql&label)
+> ![](https://badgen.net/badge/-/TypeScript?icon=typescript&label&labelColor=blue&color=555555)
 
-
+> Typescript project with GraphQL and Apollo
 
 ## ENV
 
@@ -46,7 +47,7 @@ Available recipes:
 
 .dev.env example:
 ```bash
-ENV_NAME = <dev|preprod|prod>
+ENV_NAME = dev
 APOLLO_HOST = localhost
 APOLLO_PORT = 4000
 POSTGRES_URI = postgresql://postgres:azer@localhost:5432/postgres
@@ -59,5 +60,3 @@ POSTGRES_URI = postgresql://postgres:azer@localhost:5432/postgres
 npx prisma generate --schema=./prisma/schema.prisma
 ```
 
-
-> Requires a mongodb instance to be running on localhost

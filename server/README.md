@@ -11,35 +11,29 @@ Typescript project with ExpressJS
 ### Environment setup
 
 Create the following files:
-> .env/.dev.env
-
-> .env/.preprod.env
-
-> .env/.prod.env
+> - .env/.dev.env
+> - .env/.preprod.env
+> - .env/.prod.env
 
 Copy these keys and set the values for each environment in the .env files you just created:
 ```
 ENV_NAME=
 API_PORT=
-```
-
-### DB Setup
-
-#### Env setup
-
-Append these keys and set the values for each environment in the .env files you just created:
-```
 POSTGRES_URI=
 ```
 
-In order to communicate with the db, prisma needs to be initialized.
-you can use the justfile to do so or run each command manually.
+## DB Setup
 
-#### Using justfile
+> In order to communicate with the db, prisma needs to be initialized.
+> you can use the justfile to do so or run each command manually.
+
+### Using justfile
+***
+
 > You'll need to have just installed on your machine, you can download it [here](https://github.com/casey/just)
 First you'll need to generate the prisma client:
 
-##### 1. Generate prisma client
+#### 1. Generate prisma client
 
 Prisma offers lots of different generators, you can find the list [here](https://www.prisma.io/docs/concepts/components/prisma-schema/generators)
 
@@ -53,16 +47,43 @@ cd server
 just prisma_generate <joi | dbml | docs>
 ```
 
-##### 2. Migrate the db
+#### 2. Migrate the db
 
 Next, you'll need to migrate the db to the latest version.
 You can choose to migrate the db for a specific environment
 
+> **Note**
+> For more information on how to setup the databse, refer the [database README](../database/README.md)
+
+
 ```
 just prisma_migrate <prod | preprod | dev>
 ```
+> **Note**
+> For more information on how to use prisma migrations, you can check the [official documentation](https://www.prisma.io/docs/concepts/components/prisma-migrate)
 
 This will create a new migration file in the `prisma/migrations` folder and apply it to the db.
+
+### Manually
+***
+
+#### 1. Generate prisma client
+
+> **Warning**
+> Using only the schema located in `./prisma/schema.prisma` will only generate the prisma-js client, if you want to use other generators, you'll need to modify the `./prisma/schema.prisma` file and add the generator you want to use.
+
+```bash
+npx dotenv -e .env/.<dev | preprod | prod>.env -- npx prisma generate --schema=./prisma/schema.prisma
+```
+
+#### 2. Migrate the db
+
+> **Note**
+> For more information on how to setup the databse, refer the [database README](../database/README.md)
+
+```bash
+npx dotenv -e .env/.<dev | preprod | prod>.env -- prisma migrate --schema=./prisma/schema.prisma --name init
+```
 
 ## Run the project
 
