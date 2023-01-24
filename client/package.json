@@ -1,5 +1,7 @@
 {
   "private": true,
+  "name": "area",
+  "author": "bob",
   "scripts": {
     "dev": "next",
     "build": "next build",
