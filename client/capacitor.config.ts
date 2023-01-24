@@ -1,9 +1,9 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.teamaaaaaaaaaaaaaaaa.area',
-  appName: 'AREA',
-  webDir: 'public',
+  appId: 'io.ionic.starter',
+  appName: 'area',
+  webDir: 'build',
   bundledWebRuntime: false
 };
 
