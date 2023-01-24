@@ -30,7 +30,7 @@ export const login = {
                 email: userInput.value.email
             }
         })
-        .then(async (user) => {
+        .then(async (user: any) => {
             if (user) {
                 try {
                     if (await argon2id.verify(user.password, userInput.value.password)) {
@@ -60,7 +60,7 @@ export const login = {
                 });
             }
         })
-        .then((user) => {
+        .then((user: any) => {
             res.status(200).json(user);
             // TODO: send email with token
         });
