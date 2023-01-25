@@ -2,3 +2,4 @@
 node_modules/
 prisma/schema.prisma
 prisma/docs
+prisma/joi
