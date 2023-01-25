@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { includes } from 'lodash';
 import { prisma } from '../config/db';
 
 export const newService = {
@@ -8,16 +9,42 @@ export const newService = {
             {include: {
                 action: {
                     include: {
-                        service: true,
+                        action: {
+                            include: {
+                                service: {
+                                    select: {
+                                        name: true
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 reaction: {
                     include: {
-                        // action: {
-                        //     include: true
-                        // }
+                        action: {
+                            include: {
+                                service: {
+                                    select: {
+                                        name: true
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
+                // action: {
+                //     include: {
+                //         ,
+                //     }
+                // },
+                // reaction: {
+                //     include: {
+                //         // action: {
+                //         //     include: true
+                //         // }
+                //     }
+                // }
             }
         }).then(async (area: any) => {
             console.log(area)
