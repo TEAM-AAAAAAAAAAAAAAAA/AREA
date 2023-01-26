@@ -28,6 +28,7 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^4.9.0",
+    "@sendgrid/mail": "^7.7.0",
     "argon2": "^0.30.3",
     "body-parser": "^1.20.1",
     "csurf": "^1.11.0",

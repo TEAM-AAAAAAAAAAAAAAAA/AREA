@@ -3,8 +3,8 @@ import { logout } from "./logout";
 import { prisma } from "../../config/db";
 import passport from 'passport';
 import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
-import { randomBytes } from 'crypto';
 import { jwtSecret } from "../../config/env";
+import { validate_email } from "./validate_email";
 
 let opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -27,5 +27,6 @@ passport.use(new JWTStrategy(opts, async (jwt_payload, done) => {
 
 export const auth = {
     login,
-    logout
+    logout,
+    validate_email
 };
