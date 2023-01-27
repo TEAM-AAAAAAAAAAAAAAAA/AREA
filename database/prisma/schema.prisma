@@ -1,16 +1,75 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("POSTGRES_URI")
+  provider = "postgresql"
+  url      = env("POSTGRES_URI")
 }
 
 model User {
-    id        String      @id @default(uuid())
-    email     String   @unique
-    name      String
-    password  String
-    createdAt DateTime @default(now())
+  id        String    @id @unique @default(uuid())
+  email     String    @unique
+  name      String
+  password  String
+  createdAt DateTime  @default(now())
+  emailVerified Boolean @default(false)
+  tokens    Token[]
+  Webhook   Webhook[]
+}
+
+model Token {
+  id        String    @id @unique @default(uuid())
+  userId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  valid     Boolean   @default(true)
+  user      User      @relation(fields: [userId], references: [id])
+  type      TokenType
+}
+
+model Service {
+  id     Int      @id @unique @default(autoincrement())
+  name   String
+  Action Action[]
+}
+
+model Webhook {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  reactionId Int      @unique
+  reaction   Reaction @relation(fields: [reactionId], references: [id])
+}
+
+model Action {
+  id        Int        @id @default(autoincrement())
+  name      String
+  serviceId Int
+  service   Service    @relation(fields: [serviceId], references: [id])
+  Reaction  Reaction[]
+}
+
+model Reaction {
+  id        Int              @id @default(autoincrement())
+  actionId  Int
+  action    Action           @relation(fields: [actionId], references: [id])
+  Webhook   Webhook?
+  actions   ActionReaction[] @relation("action")
+  reactions ActionReaction[] @relation("reaction")
+}
+
+model ActionReaction {
+  actionId   Int
+  reactionId Int
+  action     Reaction @relation(name: "action", map: "action", fields: [actionId], references: [id])
+  reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [id])
+
+  @@id([actionId, reactionId])
+}
+
+enum TokenType {
+  EMAIL_VERIFICATION
+  API
+  PASSWORD_RESET
 }

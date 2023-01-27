@@ -8,21 +8,17 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY yarn.lock ./
 COPY tsconfig.json ./
-COPY prisma ./
-COPY src ./
-COPY .env .env/
+COPY prisma ./prisma
+COPY src ./src
 
 #Install dependencies (could be modified/extend)
 RUN yarn install
 
-
 #Build the app
 RUN yarn run build
 
-RUN npx prisma generate --schema=./src/prisma/schema.prisma
-
-RUN npx dotenv -e .env/.dev.env -- npx prisma migrate dev --schema=./src/prisma/schema.prisma
-
+RUN npx prisma generate --schema=./prisma/schema.prisma
 
 EXPOSE 4000
-CMD [ "yarn", "start:apollo" ]
+
+CMD [ "npm", "run", "dev" ]

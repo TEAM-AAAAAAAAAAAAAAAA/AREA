@@ -1,17 +1,17 @@
 FROM node:14-alpine
 
 #Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir /app/
+WORKDIR /app/
 
 #Install dependencies (could be modified/extend)
 COPY package*.json ./
 RUN yarn install
 
 #Bundle app source
-COPY ../client ./mobile
+COPY . .
 
 #Build the app
-RUN yarn run build
+RUN npx ionic capacitor add android
 
-CMD [ "yarn", "start:mobile" ]
+CMD [ "npm", "run" ]

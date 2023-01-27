@@ -1,7 +1,7 @@
 import { ustring } from "../types/ustring";
-import { AService } from "./AService";
+import { IService } from "./IService";
 
-export class Teams extends AService {
+export class Teams implements IService {
     read(data: any): void {
         this._authorId = data.from.id;
         this._authorName = data.from.name
@@ -14,7 +14,7 @@ export class Teams extends AService {
     //     this._message = data.getNormalText();
     // }
 
-    push(): void {
+    push(webhookLink: string): void {
         // push to user-configured teams webhook
     }
 

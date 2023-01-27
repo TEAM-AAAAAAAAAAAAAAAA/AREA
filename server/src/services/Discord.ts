@@ -1,7 +1,7 @@
 import { ustring } from "../types/ustring";
-import { AService } from "./AService";
+import { IService } from "./IService";
 
-export class Discord extends AService {
+export class Discord implements IService {
     read(data: any): void {
         this._authorName = data.author;
         this._message = data.content;
@@ -12,7 +12,7 @@ export class Discord extends AService {
     //     this._message = data.getNormalText();
     // }
 
-    push(): void {
+    push(webhookLink: string): void {
         // push to user-configured discord webhook
     }
     //#endregion

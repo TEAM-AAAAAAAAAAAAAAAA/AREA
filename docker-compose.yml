@@ -6,33 +6,46 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-#  web_client:
-#    build:
-#      context: ./client
-#      dockerfile: client_web.dockerfile
-#    ports:
-#      - "8081:8081"
-#    depends_on:
-#      - mobile_client
-#      - server
-#    volumes:
-#      - client_data:/data/client
-#  mobile_client:
-#    build:
-#      context: ./client
-#      dockerfile: client_mobile.dockerfile
-#    volumes:
-#      - client_data:/data/client
+  client_web:
+    build:
+      context: ./client
+      dockerfile: client_web.dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - client_mobile
+      - server
+    volumes:
+      - client_data:/data/client
+  client_mobile:
+    build:
+      context: ./client
+      dockerfile: client_mobile.dockerfile
+    volumes:
+      - client_data:/data/client
   apollo:
     build:
       context: ./database
       dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - ./database/.env/.env.dev
+    environment:
+      POSTGRES_URI: ${POSTGRES_URI}
     ports:
       - "8082:8082"
     depends_on:
       - db
   db:
     image: postgres
+    restart: always
+    env_file:
+      - ./database/.env/.env.dev
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_URL: ${POSTGRES_URL}
+      POSTGRES_USER: ${POSTGRES_USER}
     volumes:
       - postgres_data:/data/db
 volumes:
