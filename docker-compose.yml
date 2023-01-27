@@ -1,28 +1,28 @@
 version: '3'
 services:
-  server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-  client_web:
-    build:
-      context: ./client
-      dockerfile: client_web.dockerfile
-    ports:
-      - "8081:8081"
-    depends_on:
-      - client_mobile
-      - server
-    volumes:
-      - client_data:/data/client
-  client_mobile:
-    build:
-      context: ./client
-      dockerfile: client_mobile.dockerfile
-    volumes:
-      - client_data:/data/client
+#  server:
+#    build:
+#      context: ./server
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#  client_web:
+#    build:
+#      context: ./client
+#      dockerfile: client_web.dockerfile
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      - client_mobile
+#      - server
+#    volumes:
+#      - client_data:/data/client
+#  client_mobile:
+#    build:
+#      context: ./client
+#      dockerfile: client_mobile.dockerfile
+#    volumes:
+#      - client_data:/data/client
   apollo:
     build:
       context: ./database
