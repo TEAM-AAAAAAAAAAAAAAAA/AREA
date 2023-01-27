@@ -63,19 +63,19 @@ all_down() {
 }
 
 server_up() {
-  sudo docker-compose up -d server
+  sudo docker-compose up --build -d server
 }
 
 client_web_up() {
-  sudo docker-compose up -d client_web
+  sudo docker-compose up --build -d client_web
 }
 
 client_mobile_up() {
-  sudo docker-compose up -d client_mobile
+  sudo docker-compose up --build -d client_mobile
 }
 
 apollo_up() {
-  sudo docker-compose up -d apollo
+  sudo docker-compose up --build -d apollo
 }
 
 parse_options "$@"
