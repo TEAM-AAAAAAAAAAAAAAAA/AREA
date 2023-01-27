@@ -1,46 +1,53 @@
 version: '3'
 services:
-#  server:
-#    build:
-#      context: ./server
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8080:8080"
-#  client_web:
-#    build:
-#      context: ./client
-#      dockerfile: client_web.dockerfile
-#    ports:
-#      - "8081:8081"
-#    depends_on:
-#      - client_mobile
-#      - server
-#    volumes:
-#      - client_data:/data/client
-#  client_mobile:
-#    build:
-#      context: ./client
-#      dockerfile: client_mobile.dockerfile
-#    volumes:
-#      - client_data:/data/client
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+  client_web:
+    build:
+      context: ./client
+      dockerfile: client_web.dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - client_mobile
+      - server
+    volumes:
+      - client_data:/data/client
+  client_mobile:
+    build:
+      context: ./client
+      dockerfile: client_mobile.dockerfile
+    volumes:
+      - client_data:/data/client
   apollo:
     build:
       context: ./database
       dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - ./database/.env/.env.dev
+    environment:
+      POSTGRES_URI: ${POSTGRES_URI}
     ports:
       - "8082:8082"
     depends_on:
       - db
-    environment:
-      PORT: ${PORT}
-      DATABASE_URL: ${DATABASE_URL}
-    volumes:
-      - .env/.dev.env
   db:
     image: postgres
+    restart: always
+    env_file:
+      - ./database/.env/.env.dev
+    environment:
+      PASSWORD: ${PASSWORD}
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      USER: ${USER}
     volumes:
       - postgres_data:/data/db
 volumes:
   postgres_data:
   client_data:
-  .env:
