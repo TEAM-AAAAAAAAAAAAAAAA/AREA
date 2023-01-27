@@ -42,10 +42,10 @@ services:
     env_file:
       - ./database/.env/.env.dev
     environment:
-      PASSWORD: ${PASSWORD}
-      PORT: ${PORT}
-      DATABASE_URL: ${DATABASE_URL}
-      USER: ${USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_URL: ${POSTGRES_URL}
+      POSTGRES_USER: ${POSTGRES_USER}
     volumes:
       - postgres_data:/data/db
 volumes:
