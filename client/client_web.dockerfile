@@ -1,10 +1,10 @@
 FROM node:14-alpine
 
-RUN mkdir /var/www/app
+RUN mkdir /app
 
-WORKDIR /var/www/app
+WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json /app/
 
 RUN yarn install
 
