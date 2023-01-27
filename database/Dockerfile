@@ -22,6 +22,7 @@ RUN npx prisma generate --schema=./prisma/schema.prisma
 EXPOSE 4000
 
 #set environement variables
-ENV $(cat .env | xargs)
+ENV DATABASE_URL $DATABASE_URL
+ENV PORT $PORT
 
 CMD [ "yarn", "start" ]
