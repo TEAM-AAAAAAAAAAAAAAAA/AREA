@@ -32,8 +32,8 @@ services:
     depends_on:
       - db
     environment:
-      - PORT
-      - DATABASE_URL
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
     volumes:
       - .env/.dev.env
   db:
@@ -41,6 +41,6 @@ services:
     volumes:
       - postgres_data:/data/db
 volumes:
-  #postgres_data:
+  postgres_data:
   client_data:
   .env:
