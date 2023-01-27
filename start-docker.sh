@@ -5,7 +5,7 @@ help_list() {
   ${0##*/} [-h] [OPTIONS]
 
 [OPTIONS] :
-  up      : Do docker-compose up -d (Turn up every containers)(-d to execute in background)
+  up      : Do docker-compose up  (Turn up every containers)
   down    : Do docker-compose down (Turn down every containers)
   serv    : Start server container in background
   web     : Start web_client container in background
@@ -55,7 +55,7 @@ parse_options() {
 }
 
 all_up() {
-  sudo docker-compose up --build -d
+  sudo docker-compose up --build
 }
 
 all_down() {
@@ -63,19 +63,19 @@ all_down() {
 }
 
 server_up() {
-  sudo docker-compose up --build -d server
+  sudo docker-compose up --build  server
 }
 
 client_web_up() {
-  sudo docker-compose up --build -d client_web
+  sudo docker-compose up --build  client_web
 }
 
 client_mobile_up() {
-  sudo docker-compose up --build -d client_mobile
+  sudo docker-compose up --build  client_mobile
 }
 
 apollo_up() {
-  sudo docker-compose up --build -d apollo
+  sudo docker-compose up --build apollo
 }
 
 parse_options "$@"
