@@ -38,14 +38,14 @@ Available recipes:
 ```bash
 ❯ tree -a .env/
 .env/
-├── .dev.env
-├── .preprod.env
-└── .prod.env
+├── .env.dev
+├── .env.preprod
+└── .env.prod
 ```
 
 ### .env variables
 
-.dev.env example:
+.env.dev example:
 ```bash
 ENV_NAME = dev
 APOLLO_HOST = localhost
