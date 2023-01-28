@@ -14,5 +14,7 @@ COPY . .
 #Build the app
 RUN yarn run build
 
+RUN npx prisma generate --schema=./prisma/schema.prisma
+
 EXPOSE 8080
 CMD [ "npm", "run", "dev" ]
