@@ -33,7 +33,27 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+
 setupIonicReact();
+
+const client = new ApolloClient({
+  uri: 'http://localhost:4000/',
+  cache: new InMemoryCache(),
+});
+
+client
+  .query({
+    query: gql`
+      query Query {
+        allUsers {
+          name,
+          email
+        }
+      }
+    `,
+  })
+  .then((result) => console.log(result));
 
 const App: React.FC = () => (
   <IonApp>
