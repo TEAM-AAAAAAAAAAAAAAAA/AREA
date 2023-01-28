@@ -19,7 +19,7 @@ Copy these keys and set the values for each environment in the .env files you ju
 ```
 ENV_NAME=
 API_PORT=
-POSTGRES_URI=
+POSTGRES_URL=
 ```
 
 ## DB Setup

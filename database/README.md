@@ -50,7 +50,7 @@ Available recipes:
 ENV_NAME = dev
 APOLLO_HOST = localhost
 APOLLO_PORT = 4000
-POSTGRES_URI = postgresql://postgres:azer@localhost:5432/postgres
+POSTGRES_URL = postgresql://postgres:azer@localhost:5432/postgres
 ```
 
 ## Prisma
