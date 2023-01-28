@@ -14,4 +14,4 @@ COPY . .
 #Build the app
 RUN npx ionic capacitor add android
 
-CMD [ "npm", "run" ]
+CMD [ "yarn", "build" ]
