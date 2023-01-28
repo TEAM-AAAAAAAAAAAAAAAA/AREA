@@ -27,8 +27,6 @@ async function main() {
 }
 
 export async function seed() {
-    if (env.ENV_NAME !== "development")
-        return;
     await main()
         .then(async () => await prisma.$disconnect())
         .catch(async e => {
