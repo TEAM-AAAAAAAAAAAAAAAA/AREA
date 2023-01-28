@@ -7,10 +7,10 @@ help_list() {
 [OPTIONS] :
   up      : Do docker-compose up  (Turn up every containers)
   down    : Do docker-compose down (Turn down every containers)
-  serv    : Start server container in background
-  web     : Start web_client container in background
-  mobile  : Start mobile_client container in background
-  db      : Start apollo container in background
+  serv    : Start server container
+  web     : Start web_client container
+  mobile  : Start mobile_client container
+  db      : Start apollo container
   "
 
 }
