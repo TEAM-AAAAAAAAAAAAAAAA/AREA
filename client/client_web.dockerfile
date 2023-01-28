@@ -10,4 +10,4 @@ RUN yarn install
 
 COPY . /app
 
-CMD [ "npm", "run" ]
+CMD [ "yarn", "start" ]
