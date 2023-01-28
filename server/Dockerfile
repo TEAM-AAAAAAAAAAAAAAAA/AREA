@@ -5,16 +5,22 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 #Install dependencies (could be modified/extend)
-COPY package*.json ./
+COPY package.json ./
+
 RUN yarn install
 
 #Bundle app source
-COPY . .
+COPY ./src ./src
+COPY ./prisma ./prisma
+COPY ./tsconfig.json ./
+
+#Generate Prisma Client
+RUN npx prisma generate --schema=./prisma/schema.prisma
 
 #Build the app
-RUN yarn run build
+# RUN yarn run build
 
 RUN npx prisma generate --schema=./prisma/schema.prisma
 
 EXPOSE 8080
-CMD [ "npm", "run", "dev" ]
+CMD [ "yarn", "run", "dev" ]
