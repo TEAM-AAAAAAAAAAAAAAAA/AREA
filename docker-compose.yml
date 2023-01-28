@@ -38,7 +38,7 @@ services:
     env_file:
       - ./database/.env/.env.dev
     environment:
-      POSTGRES_URI: ${POSTGRES_URI}
+      POSTGRES_URL: ${POSTGRES_URL}
     ports:
       - "8082:8082"
     depends_on:
