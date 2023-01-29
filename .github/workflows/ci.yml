@@ -23,7 +23,7 @@ jobs:
         continue-on-error: true
 
       - name: Build the Docker image
-        run: docker build ./database/ --file Dockerfile --tag apollo:$(date +%s)
+        run: docker build /home/runner/work/AREA/database/ --file Dockerfile --tag apollo:$(date +%s)
 
   server_build:
     runs-on: ubuntu-latest
