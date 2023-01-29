@@ -77,10 +77,10 @@ jobs:
     steps:
       - name: Check status of previous builds
         run: |
-          if [ "$apollo_build_status" == "success" ] && [ "server_build_status" == "success" ] && [ "web_build_status" == "success" ] && [ "mobile_build_status" == "success" ]; then
+          if [ "$apollo_build_status" == "success" ] && [ "$server_build_status" == "success" ] && [ "$web_build_status" == "success" ] && [ "$mobile_build_status" == "success" ]; then
             echo "All builds succeed, now proceeding with push on mirror repo"
           else
-            echo "On of the builds failed, Push skipped";
+            echo "One of the builds failed, Push skipped";
             exit 1;
           fi
       - name: Push content of the current repo on mirror
