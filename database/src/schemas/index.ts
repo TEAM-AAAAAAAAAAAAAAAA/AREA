@@ -22,6 +22,13 @@ export const typeDefs = gql`
         user: User
     }
 
+    type CreateServiceResponse {
+        code: Int!
+        success: Boolean!
+        message: String!
+        service: Service
+    }
+
     type Query {
         user(id: ID!): User
         allUsers: [User!]!
@@ -30,6 +37,7 @@ export const typeDefs = gql`
 
     type Mutation {
         createUser(name: String!, email: String!, password: String!): CreateUserResponse!
+        createService(name: String!): CreateServiceResponse!
     }
 
     scalar DateTime
@@ -52,6 +60,42 @@ export const resolvers = {
         }
     },
     Mutation: {
+        createService: async (_: any, args: any, context: Context) => {
+            if (args.name === undefined || args.name === '') {
+                return await context.prisma.createServiceResponse.create({
+                    data: {
+                        code: 400,
+                        success: false,
+                        message: "Name is required"
+                    },
+                });
+            }
+            if (await context.prisma.service.findUnique({
+                where: {
+                    name: args.name
+                }
+            })) {
+                return await context.prisma.createServiceResponse.create({
+                    data: {
+                        code: 400,
+                        success: false,
+                        message: "Service already exists"
+                    },
+                });
+            }
+            return await context.prisma.createServiceResponse.create({
+                data: {
+                    code: 200,
+                    success: true,
+                    message: "Service created successfully",
+                    service: {
+                        create: {
+                            name: args.name
+                        }
+                    }
+                }
+            });
+        },
         createUser: async (_: any, args: any, context: Context) => {
             if (args.name === undefined || args.name === '') {
                 return await context.prisma.createUserResponse.create({
@@ -109,7 +153,7 @@ export const resolvers = {
                         connect: {
                             id: u.id
                         }
-                }
+                    }
                 },
             });
         }

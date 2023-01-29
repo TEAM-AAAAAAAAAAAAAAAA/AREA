@@ -30,9 +30,10 @@ model Token {
 }
 
 model Service {
-  id     Int      @id @unique @default(autoincrement())
-  name   String
-  Action Action[]
+  id                    Int                     @id @unique @default(autoincrement())
+  name                  String                  @unique
+  Action                Action[]
+  CreateServiceResponse CreateServiceResponse[]
 }
 
 model Webhook {
@@ -76,6 +77,15 @@ model CreateUserResponse {
   message String
   user    User?   @relation(fields: [userId], references: [id])
   userId  String?
+}
+
+model CreateServiceResponse {
+  id        Int      @id @default(autoincrement())
+  code      Int
+  success   Boolean
+  message   String
+  service   Service? @relation(fields: [serviceId], references: [id])
+  serviceId Int?
 }
 
 enum TokenType {
