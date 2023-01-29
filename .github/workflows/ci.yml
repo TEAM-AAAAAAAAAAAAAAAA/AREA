@@ -23,7 +23,7 @@ jobs:
         continue-on-error: true
 
       - name: Build the Docker image
-        run: docker build . --file ./database/Dockerfile --tag apollo:$(date +%s)
+        run: docker build ./database --file ./database/Dockerfile --tag apollo:$(date +%s)
 
   server_build:
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
         continue-on-error: true
 
       - name: Build the Docker image
-        run: docker build ./server --file Dockerfile --tag server:$(date +%s)
+        run: docker build ./server --file ./server/Dockerfile --tag server:$(date +%s)
 
   web_build:
     runs-on: ubuntu-latest
@@ -50,7 +50,7 @@ jobs:
         continue-on-error: true
 
       - name: Build the Docker image
-        run: docker build ./client --file web_client.dockerfile --tag web_client:$(date +%s)
+        run: docker build ./client --file ./client/web_client.dockerfile --tag web_client:$(date +%s)
 
   mobile_build:
     runs-on: ubuntu-latest
@@ -65,7 +65,7 @@ jobs:
         continue-on-error: true
 
       - name: Build the Docker image
-        run: docker build ./client --file client_mobile.dockerfile --tag mobile_client:$(date +%s)
+        run: docker build ./client --file ./client/client_mobile.dockerfile --tag mobile_client:$(date +%s)
 
   to_github:
     needs:
