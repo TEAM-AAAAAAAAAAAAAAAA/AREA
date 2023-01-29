@@ -5,7 +5,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # copy source files
-COPY package*.json ./
+COPY package.json ./
 COPY yarn.lock ./
 COPY tsconfig.json ./
 COPY prisma ./prisma
