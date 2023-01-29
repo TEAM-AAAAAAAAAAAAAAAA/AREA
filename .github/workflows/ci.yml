@@ -50,7 +50,7 @@ jobs:
         continue-on-error: true
 
       - name: Build the Docker image
-        run: docker build ./client --file ./client/web_client.dockerfile --tag web_client:$(date +%s)
+        run: docker build ./client --file ./client/client_web.dockerfile --tag web_client:$(date +%s)
 
   mobile_build:
     runs-on: ubuntu-latest
