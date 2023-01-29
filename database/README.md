@@ -38,19 +38,19 @@ Available recipes:
 ```bash
 ❯ tree -a .env/
 .env/
-├── .dev.env
-├── .preprod.env
-└── .prod.env
+├── .env.dev
+├── .env.preprod
+└── .env.prod
 ```
 
 ### .env variables
 
-.dev.env example:
+.env.dev example:
 ```bash
 ENV_NAME = dev
 APOLLO_HOST = localhost
 APOLLO_PORT = 4000
-POSTGRES_URI = postgresql://postgres:azer@localhost:5432/postgres
+POSTGRES_URL = postgresql://postgres:azer@localhost:5432/postgres
 ```
 
 ## Prisma

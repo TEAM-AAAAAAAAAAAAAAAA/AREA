@@ -5,7 +5,7 @@ RUN mkdir /app/
 WORKDIR /app/
 
 #Install dependencies (could be modified/extend)
-COPY package*.json ./
+COPY package.json ./
 RUN yarn install
 
 #Bundle app source
@@ -13,3 +13,5 @@ COPY . .
 
 #Build the app
 RUN npx ionic capacitor add android
+
+CMD [ "yarn", "build" ]
