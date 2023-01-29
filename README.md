@@ -5,24 +5,21 @@
 At the root of the repository you must create .env file containing the following properties : 
 
 ``` yaml
-POSTGRES_PORT=
-POSTGRES_URL=
 POSTGRES_PASSWORD=
 POSTGRES_USER=
+POSTGRES_URI=
+POSTGRES_DB=
 ```
 These variable will be used by the docker-compose to build different services used in the Area project like the db for example:
 
 ```yaml
-  db:
-    image: postgres
-    restart: always
-    env_file:
-      - ./database/.env/.env.dev
-    environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_URL: ${POSTGRES_URL}
-      POSTGRES_USER: ${POSTGRES_USER}
+    db:
+      image: postgres
+      restart: always
+      environment:
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_DB: ${POSTGRES_DB}
 ```
 It is a way to give the user the possibility to customise his own variables and to configure them according to his environment
 
@@ -50,6 +47,11 @@ The area project contains 5 services :
 - `client_mobile` More or less the same as the client_web but on mobile, thus adding access possibilities for the user
 - `Apollo` It allows you to make personalized queries, very practical when you need very precise information from the database
 - `Postgres` Used as the main server storage location for all services and users
+
+Note that each part of the project contains its own environment variables distributed in each corresponding folder in an .env folder containing at least :
+- `.env.dev`
+- `.env.preprod`
+- `.env.prod`
 
 ### Developer tools
 
