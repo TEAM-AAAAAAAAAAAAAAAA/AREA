@@ -18,3 +18,5 @@ RUN yarn install
 RUN yarn run build
 
 EXPOSE 4000
+
+CMD [ "npm", "run", "dev" ]
