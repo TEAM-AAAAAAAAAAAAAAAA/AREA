@@ -4,17 +4,21 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./server
+    restart: always
     depends_on:
-      - db
+      - apollo
     ports:
       - "8080:8080"
+    entrypoint: yarn run dev
+    command: npx prisma db push --force-reset
+    environment:
+      POSTGRES_URI: ${POSTGRES_URI}
     env_file:
       - ./server/.env/.env.dev
     networks:
       - server_network
     links:
-      - db:area_database
-    command: npx prisma migrate dev --preview-feature --schema=./prisma/schema.prisma
+      - db
   client_web:
     build:
       context: ./client
@@ -37,10 +41,6 @@ services:
       context: ./database
       dockerfile: Dockerfile
     restart: always
-    env_file:
-      - ./database/.env/.env.dev
-    environment:
-      POSTGRES_URL: ${POSTGRES_URL}
     ports:
       - "8082:8082"
     depends_on:
@@ -48,19 +48,16 @@ services:
   db:
     image: postgres
     restart: always
-    env_file:
-      - ./database/.env/.env.dev
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_URL: ${POSTGRES_URL}
       POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: db
     volumes:
-      - postgres_data:/data/db
-    ports:
-      - "5432:5432"
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - server_network
+    ports:
+      - "5432:5432"
 networks:
   server_network:
     driver: bridge
