@@ -17,8 +17,4 @@ RUN yarn install
 #Build the app
 RUN yarn run build
 
-RUN npx prisma generate --schema=./prisma/schema.prisma
-
 EXPOSE 4000
-
-CMD [ "npm", "run", "dev" ]
