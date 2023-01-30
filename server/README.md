@@ -11,15 +11,15 @@ Typescript project with ExpressJS
 ### Environment setup
 
 Create the following files:
-> - .env/.dev.env
-> - .env/.preprod.env
-> - .env/.prod.env
+> - .env/.env.dev
+> - .env/.env.preprod
+> - .env/.env.prod
 
 Copy these keys and set the values for each environment in the .env files you just created:
 ```
 ENV_NAME=
 API_PORT=
-POSTGRES_URI=
+POSTGRES_URL=
 ```
 
 ## DB Setup
@@ -73,7 +73,7 @@ This will create a new migration file in the `prisma/migrations` folder and appl
 > Using only the schema located in `./prisma/schema.prisma` will only generate the prisma-js client, if you want to use other generators, you'll need to modify the `./prisma/schema.prisma` file and add the generator you want to use.
 
 ```bash
-npx dotenv -e .env/.<dev | preprod | prod>.env -- npx prisma generate --schema=./prisma/schema.prisma
+npx dotenv -e .env/.<dev | preprod | prod>test -- npx prisma generate --schema=./prisma/schema.prisma
 ```
 
 #### 2. Migrate the db
@@ -82,7 +82,7 @@ npx dotenv -e .env/.<dev | preprod | prod>.env -- npx prisma generate --schema=.
 > For more information on how to setup the databse, refer the [database README](../database/README.md)
 
 ```bash
-npx dotenv -e .env/.<dev | preprod | prod>.env -- prisma migrate --schema=./prisma/schema.prisma --name init
+npx dotenv -e .env/.<dev | preprod | prod>test -- prisma migrate --schema=./prisma/schema.prisma --name init
 ```
 
 ## Run the project

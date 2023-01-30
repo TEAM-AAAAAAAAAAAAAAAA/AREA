@@ -2,10 +2,23 @@ version: '3'
 services:
   server:
     build:
-      context: ./server
       dockerfile: Dockerfile
+      context: ./server
+    restart: always
+    depends_on:
+      - apollo
     ports:
       - "8080:8080"
+    entrypoint: yarn run dev
+    command: npx prisma db push --force-reset
+    environment:
+      POSTGRES_URI: ${POSTGRES_URI}
+    env_file:
+      - ./server/.env/.env.dev
+    networks:
+      - server_network
+    links:
+      - db
   client_web:
     build:
       context: ./client
@@ -23,18 +36,31 @@ services:
       dockerfile: client_mobile.dockerfile
     volumes:
       - client_data:/data/client
-  #apollo:
-  #  build:
-  #    context: ./database
-  #    dockerfile: Dockerfile
-  #  ports:
-  #    - "8082:8082"
-  #  depends_on:
-  #    - db
-  #db:
-  #  image: postgres
-  #  volumes:
-  #    - postgres_data:/data/db
+  apollo:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - server_network
+    ports:
+      - "5432:5432"
+networks:
+  server_network:
+    driver: bridge
 volumes:
-  #postgres_data:
+  postgres_data:
   client_data:

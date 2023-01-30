@@ -1,0 +1,68 @@
+name: CodeQL Analysis
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  codeql-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code from repo
+        uses: actions/checkout@v2
+
+      # used to install codeQl on the testing machine
+      - name: Install CodeQL
+        run: |
+          wget https://github.com/github/codeql/releases/download/v2.1.1/codeql-2.1.1-linux64.tar.gz
+          tar -xzvf codeql-2.1.1-linux64.tar.gz
+          export PATH=$PWD/codeql-2.1.1-linux64:$PATH
+
+      # these actions are used to create database, run analyze, and store results of analysis
+      # We are creating a database for every folder we analyze : database, client & server
+      - name: Create CodeQL database for server folder
+        run: codeql database create --language=javascript --source-root server --output-path codeql-database-server
+
+      - name: Create CodeQL database for client folder
+        run: codeql database create --language=javascript --source-root client --output-path codeql-database-client
+
+      - name: Create CodeQL database for database folder
+        run: codeql database create --language=javascript --source-root database --output-path codeql-database-database
+
+      # As above, we are running analysis on every folder using the db created above
+      - name: Run CodeQL Analysis for server folder
+        run: codeql analysis execute --language javascript --config-file config.yml --output-path codeql-results-server --database codeql-database-server
+
+      - name: Run CodeQL Analysis for client folder
+        run: codeql analysis execute --language javascript --config-file config.yml --output-path codeql-results-client --database codeql-database-client
+
+      - name: Run CodeQL Analysis for database folder
+        run: codeql analysis execute --language javascript --config-file config.yml --output-path codeql-results-database --database codeql-database-database
+
+      # Finally we store every result in the appropriate database
+      - name: Store CodeQL Results for server folder
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeql-results-server
+          path: codeql-results-server
+
+      - name: Store CodeQL Results for client folder
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeql-results-client
+          path: codeql-results-client
+
+      - name: Store CodeQL Results for database folder
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeql-results-database
+          path: codeql-results-database
+
+      # Used to notify that the analysis ended, then please check the report
+      - name: Send Notifications
+        uses: rtCamp/action-discord-notify@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          message: "CodeQL analysis has completed. Please review the results for any security vulnerabilities."
