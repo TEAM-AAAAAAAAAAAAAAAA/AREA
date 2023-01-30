@@ -4,3 +4,4 @@ import crypto from 'crypto';
 dotenv.config()
 export const env = process.env
 export const jwtSecret = crypto.randomBytes(32).toString('hex');
+export const mailSecret = crypto.randomBytes(32).toString('hex');
