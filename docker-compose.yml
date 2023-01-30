@@ -12,13 +12,13 @@ services:
     entrypoint: yarn run dev
     command: npx prisma db push --force-reset
     environment:
-      POSTGRES_URI: ${POSTGRES_URI}
+      POSTGRES_URL: ${POSTGRES_URL}
     env_file:
       - ./server/.env/.env.dev
     networks:
       - server_network
     links:
-      - db
+      - db:area_database
   client_web:
     build:
       context: ./client
