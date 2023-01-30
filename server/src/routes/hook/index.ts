@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { reactions } from '../../reactions/.reactions'
 import { services } from "../../services/.services";
 import { transcoders } from "../../transcoders/.transcoders";
 import https from "https";
@@ -43,8 +44,8 @@ export const hook = {
         var msg: string = getMsgFromHook(hook, req);
         res.status(418).send();
 
-        console.log(msg);
-        console.log(msg.substring(hook.indexOf('</at>') + 6));
+        // console.log(msg);
+        // console.log(msg.substring(hook.indexOf('</at>') + 6));
         // if (msg.substring(hook.indexOf('</at>') + 6).startsWith("teams ")) {
         //     msg = msg.substring(hook.indexOf('</at>') + 6);
         //     fetchOutgoingWebhook("text", msg, "https://epitechfr.webhook.office.com/webhookb2/5f4e8902-8b88-4418-9642-a994d3d14def@901cb4ca-b862-4029-9306-e5cd0f6d9f86/IncomingWebhook/d527c0c6eb5147319511db409a232808/dd5866dd-b491-4a87-bcd1-c59d6742bebb");
@@ -59,6 +60,7 @@ export const hook = {
             let inputService: services.Discord = new services.Discord();
             inputService.read(req.body);
             let outputService: services.Teams = transcoders.discordToTeams(inputService);
+            reactions.Teams.sendMessage(outputService);
         }
     }]
 };

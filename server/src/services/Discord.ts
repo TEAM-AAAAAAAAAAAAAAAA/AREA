@@ -12,11 +12,6 @@ export class Discord implements IService {
     //     this._message = data.getNormalText();
     // }
 
-    push(webhookLink: string): void {
-        // push to user-configured discord webhook
-    }
-    //#endregion
-
     getAuthorName(): ustring {
         return this._authorName;
     }
