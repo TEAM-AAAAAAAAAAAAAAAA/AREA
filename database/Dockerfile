@@ -14,9 +14,14 @@ COPY src ./src
 #Install dependencies (could be modified/extend)
 RUN yarn install
 
+COPY entrypoint.sh ./
+ENTRYPOINT [ "./entrypoint.sh" ]
+
+RUN npx prisma generate
+
 #Build the app
 RUN yarn run build
 
 EXPOSE 4000
 
-CMD [ "npm", "run", "dev" ]
+CMD [ "yarn", "run", "dev" ]

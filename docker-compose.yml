@@ -9,16 +9,14 @@ services:
       - apollo
     ports:
       - "8080:8080"
-    entrypoint: yarn run dev
-    command: npx prisma db push --force-reset
     environment:
-      POSTGRES_URI: ${POSTGRES_URI}
+      POSTGRES_URL: ${POSTGRES_URL}
     env_file:
       - ./server/.env/.env.dev
     networks:
       - server_network
     links:
-      - db
+      - db:area_database
   client_web:
     build:
       context: ./client
@@ -42,9 +40,15 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "8082:8082"
+      - "4000:4000"
+    env_file:
+      - ./database/.env/.env.dev
+    networks:
+      - server_network
     depends_on:
       - db
+    links:
+      - db:area_database
   db:
     image: postgres
     restart: always
