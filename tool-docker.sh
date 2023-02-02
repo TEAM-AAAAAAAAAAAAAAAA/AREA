@@ -15,7 +15,7 @@ help_list() {
 
 }
 
-NOCOLOR='\033[0m'
+RESET='\033[0m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
@@ -71,40 +71,40 @@ parse_options() {
 }
 
 remove_all() {
-  echo -e "${RED}[REMOVING]${NOCOLOR} Every images, containers and volumes : "
-  echo -e "${LIGHTCYAN}[IMAGES]${NOCOLOR}" && sudo docker image prune -f
-  echo -e "${LIGHTCYAN}[CONTAINERS]${NOCOLOR}" && sudo docker container prune -f
-  echo -e "${LIGHTCYAN}[DANGLING RESOURCES]${NOCOLOR}" && sudo docker system prune -f
-  echo -e "${LIGHTCYAN}[VOLUMES]${NOCOLOR}" && sudo docker volume prune -f
-  echo -e "${LIGHTGREEN}[SUCCESS]${NOCOLOR} removing"
+  echo -e "${RED}[REMOVING]${RESET} Every images, containers and volumes : "
+  echo -e "${LIGHTCYAN}[IMAGES]${RESET}" && sudo docker image prune -f
+  echo -e "${LIGHTCYAN}[CONTAINERS]${RESET}" && sudo docker container prune -f
+  echo -e "${LIGHTCYAN}[DANGLING RESOURCES]${RESET}" && sudo docker system prune -f
+  echo -e "${LIGHTCYAN}[VOLUMES]${RESET}" && sudo docker volume prune -f
+  echo -e "${LIGHTGREEN}[SUCCESS]${RESET} removing"
 }
 
 remove_images() {
-  echo -e "${RED}[REMOVING]${NOCOLOR} Every images "
+  echo -e "${RED}[REMOVING]${RESET} Every images "
   sudo docker image prune -f
-  echo -e "${LIGHTGREEN}[SUCCESS]${NOCOLOR} removing"
+  echo -e "${LIGHTGREEN}[SUCCESS]${RESET} removing"
 }
 
 remove_containers() {
-  echo -e "${RED}[REMOVING]${NOCOLOR} Every stopped containers "
+  echo -e "${RED}[REMOVING]${RESET} Every stopped containers "
   sudo docker container prune -f
-  echo -e "${LIGHTGREEN}[SUCCESS]${NOCOLOR} removing"
+  echo -e "${LIGHTGREEN}[SUCCESS]${RESET} removing"
 }
 
 remove_prune() {
-  echo -e "${RED}[REMOVING]${NOCOLOR} Every dangling resources "
+  echo -e "${RED}[REMOVING]${RESET} Every dangling resources "
   sudo docker system prune -f
-  echo -e "${LIGHTGREEN}[SUCCESS]${NOCOLOR} removing"
+  echo -e "${LIGHTGREEN}[SUCCESS]${RESET} removing"
 }
 
 remove_volumes() {
-  echo -e "${RED}[REMOVING]${NOCOLOR} Every unused volumes "
+  echo -e "${RED}[REMOVING]${RESET} Every unused volumes "
   sudo docker volume prune -f
-  echo -e "${LIGHTGREEN}[SUCCESS]${NOCOLOR} removing"
+  echo -e "${LIGHTGREEN}[SUCCESS]${RESET} removing"
 }
 
 list_active_containers() {
-  echo -e "${LIGHTCYAN}[INFO]${NOCOLOR} Every running containers :"
+  echo -e "${LIGHTCYAN}[INFO]${RESET} Every running containers :"
   sudo docker ps
 }
 
