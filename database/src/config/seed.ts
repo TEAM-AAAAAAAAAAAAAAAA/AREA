@@ -2,7 +2,7 @@ import { PrismaClient, Prisma } from '@prisma/client';
 import { env } from 'process';
 const prisma = new PrismaClient();
 
-const dummyUserData : Prisma.UserCreateInput[] = [
+const dummyUserData: Prisma.UserCreateInput[] = [
     {
         name: 'John Doe',
         email: 'john.doe@gmail.com',
@@ -26,12 +26,12 @@ async function main() {
     console.log(`Seeding finished.`);
 }
 
-export async function seed() {
-    await main()
-        .then(async () => await prisma.$disconnect())
-        .catch(async e => {
-            console.error(e);
-            await prisma.$disconnect();
-            process.exit(1);
-        });
-}
+main()
+    .then(async () => {
+        await prisma.$disconnect()
+    })
+    .catch(async (e) => {
+        console.error(e)
+        await prisma.$disconnect()
+        process.exit(1)
+    })
