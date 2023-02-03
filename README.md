@@ -7,7 +7,7 @@ At the root of the repository you must create .env file containing the following
 ``` yaml
 POSTGRES_PASSWORD=
 POSTGRES_USER=
-POSTGRES_URI=
+POSTGRES_URL=
 POSTGRES_DB=
 ```
 These variable will be used by the docker-compose to build different services used in the Area project like the db for example:
