@@ -1,17 +1,17 @@
 {
   "name": "area_database",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dbinit:prod": "dotenv -e .env/.prod.env -- prisma migrate dev --name init",
-    "dbinit:preprod": "dotenv -e .env/.preprod.env -- prisma migrate dev --name init",
-    "dbinit:dev": "dotenv -e .env/.dev.env -- prisma migrate dev --name init",
+    "dbinit:prod": "dotenv -e .env/.env.prod -- prisma migrate deploy --name init",
+    "dbinit:preprod": "dotenv -e .env/.env.preprod -- prisma migrate dev --name init",
+    "dbinit:dev": "dotenv -e .env/.env.dev -- prisma migrate dev --name init",
     "build": "npx tsc",
-    "prod": "dotenv -e .env/.prod.env -- node -r dotenv/config dist/app.js",
-    "preprod": "dotenv -e .env/.preprod.env -- node -r dotenv/config dist/app.js",
-    "dev": "dotenv -e .env/.dev.env -- npx nodemon -r dotenv/config src/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prod": "dotenv -e .env/.env.prod -- node -r dotenv/config dist/app.js",
+    "preprod": "dotenv -e .env/.env.preprod -- node -r dotenv/config dist/app.js",
+    "dev": "dotenv -e .env/.env.dev -- npx nodemon -r dotenv/config src/app.ts",
+    "test": "echo \\\"Error: no .env specified\\\" && exit 1"
   },
   "repository": {
     "type": "git",
