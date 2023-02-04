@@ -5,6 +5,7 @@ import { transcoders } from "../../transcoders/.transcoders";
 import https from "https";
 import fetch from "node-fetch-commonjs";
 import { prisma } from "../../config/db";
+import { Prisma, Webhook } from "@prisma/client";
 
 function getMsgFromHook(hook: string, req: any) {
     var msg: string = "";
@@ -29,39 +30,46 @@ function fetchOutgoingWebhook(textKey: string, msg: string, webhookUrl: string) 
     });
 }
 
+function runWebhook(webhook: Webhook | null) : boolean
+{
+    console.log(webhook)
+
+    return true;
+}
+
 export const hook = {
 
     GET: (req: Request, res: Response) => {
-        res.status(200).send('got a hook');
+        res.status(200).json('got a hook');
     },
 
     POST: [
     async (req: any, res: Response) => {
         let hook: string = req.params.hook;
-        if (hook.indexOf('/') != hook.lastIndexOf('/')) {
-            res.status(400).send();
-            return;
-        }
+        if (hook.indexOf('/') != hook.lastIndexOf('/'))
+            return res.status(400).json();
 
         let hookUser: string = hook.substring(0, hook.indexOf('/'))
         let hookId: string = hook.substring(hook.indexOf('/') + 1)
-        if (!(hookUser != null && hookUser != "" && hookId != null && hookId != "")) {
-            res.status(400).send();
-            return;
-        }
+        if (!(hookUser != null && hookUser != "" && hookId != null && hookId != ""))
+            return res.status(400).json();
         
         console.log(hookUser)
         console.log(hookId)
 
-        let webhook: any = await prisma.webhook.findFirst({
+        let webhook: Webhook | null = await prisma.webhook.findFirst({
             where: {
                 id: hookId,
                 userId: hookUser
             }
         });
 
-        console.log(webhook)
+        if (!webhook)
+            return res.status(404).json();
 
-        res.status(200).send();
+        if (runWebhook(webhook) != true)
+            return res.status(500).json();
+
+        return res.status(200).json();
     }]
 };
