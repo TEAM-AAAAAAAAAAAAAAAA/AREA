@@ -8,12 +8,6 @@ export class Teams implements IService {
         this._message = data?.text?.substring(data?.text?.indexOf(';') + 1, data?.text?.length - 1);
     }
 
-    // receive(data: AService): void {
-    //     this._authorId = data.getAuthorId();
-    //     this._authorName = data.getSmallText();
-    //     this._message = data.getNormalText();
-    // }
-
     getAuthorName(): ustring {
         return this._authorName;
     }
@@ -22,7 +16,7 @@ export class Teams implements IService {
         return this._authorId;
     }
 
-    getNormalText(): ustring {
+    getMessage(): ustring {
         return this._message;
     }
 

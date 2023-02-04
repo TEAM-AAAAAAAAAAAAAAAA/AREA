@@ -7,24 +7,14 @@ export class Discord implements IService {
         this._message = data.content;
     }
 
-    // receive(data: AService): void {
-    //     this._authorName = data.getSmallText();
-    //     this._message = data.getNormalText();
-    // }
-
     getAuthorName(): ustring {
         return this._authorName;
     }
 
-    getAuthorId(): ustring {
-        return this._authorId;
-    }
-
-    getNormalText(): ustring {
+    getMessage(): ustring {
         return this._message;
     }
 
     _authorName: ustring;
-    _authorId: ustring;
     _message: ustring;
 }
