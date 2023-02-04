@@ -1,14 +1,14 @@
 import { services } from "../services/.services"
 
 export class Teams {
-    static sendMessage(service: services.Teams): void
+    static postMessage(service: services.Teams): void
     {
         // push
-        console.log(service.getNormalText());
+        console.log(service.getMessage());
         console.log("wait, that should be displayed on teams");
     }
 
-    static sendMeeting(service: services.Teams): void
+    static postMeeting(service: services.Teams): void
     {
         // push cool meeting embed
     }

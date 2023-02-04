@@ -56,7 +56,8 @@ model Reaction {
   id        Int              @id @default(autoincrement())
   actionId  Int
   action    Action           @relation(fields: [actionId], references: [id])
-  Webhook   Webhook?
+  incomingWebhook   Webhook?
+  outgoingWebhook   String?
   actions   ActionReaction[] @relation("action")
   reactions ActionReaction[] @relation("reaction")
 }
