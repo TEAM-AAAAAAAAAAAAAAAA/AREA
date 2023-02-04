@@ -18,7 +18,7 @@ prisma_migrate env:
         import os
         import subprocess
         import sys
-        subprocess.run(["npx", "dotenv", "-e", ".env/.{{env}}.env", "--", "npx", "prisma", "migrate", "dev", "--name", "db_init" ,"--schema=../database/prisma/schema.prisma"])
+        subprocess.run(["npx", "dotenv", "-e", ".env/.env.{{env}}", "--", "npx", "prisma", "migrate", "dev", "--name", "db_init" ,"--schema=../database/prisma/schema.prisma"])
     else:
         print("Invalid environment")
         sys.exit(1)
@@ -30,7 +30,7 @@ prisma_studio env:
         import os
         import subprocess
         import sys
-        subprocess.run(["npx", "dotenv", "-e", ".env/.{{env}}.env", "--", "npx", "prisma", "studio"])
+        subprocess.run(["npx", "dotenv", "-e", ".env/.env.{{env}}", "--", "npx", "prisma", "studio"])
     else:
         print("Invalid environment")
         sys.exit(1)
