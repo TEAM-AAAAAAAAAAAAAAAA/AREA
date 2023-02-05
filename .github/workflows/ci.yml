@@ -26,8 +26,7 @@ jobs:
         with:
           context: ${{ github.workspace }}/${{ matrix.service }}
           file: ${{ github.workspace }}/${{ matrix.service }}/Dockerfile
-          push: true
-          tags: ghcr.io/${{ github.repository_owner }}/area_${{ matrix.service }}:${{ github.ref_name }}
+          tags: area_${{ matrix.service }}:${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - uses: docker/build-push-action@v4
@@ -35,8 +34,7 @@ jobs:
         with:
           context: ${{ github.workspace }}/client
           file: ${{ github.workspace }}/client/${{ matrix.service }}.dockerfile
-          push: true
-          tags: ghcr.io/${{ github.repository_owner }}/area_${{ matrix.service }}:${{ github.ref_name }}
+          tags: area_${{ matrix.service }}:${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
