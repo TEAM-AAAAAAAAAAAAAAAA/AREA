@@ -1,11 +1,11 @@
-import { MapPrismaReaction, MapPrismaService } from "../utils/mappings";
+import { area } from "../area/.area";
 
 export * from "./Discord";
 export * from "./Teams";
 
-@MapPrismaService
+@area.Service
 export class MagicDoNotTouch {
-    @MapPrismaReaction
+    @area.Reaction
     start(): void
     {
         // DO NOT TOUCH

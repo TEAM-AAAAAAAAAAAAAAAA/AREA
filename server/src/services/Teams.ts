@@ -1,8 +1,8 @@
 import { ustring } from "../types/ustring";
-import { MapPrismaReaction, MapPrismaService } from "../utils/mappings";
+import { area } from "../area/.area";
 import { IService } from "./IService";
 
-@MapPrismaService
+@area.Service
 export class Teams implements IService {
     read(data: any): void {
         this._authorId = data.from.id;
@@ -10,7 +10,7 @@ export class Teams implements IService {
         this._message = data?.text?.substring(data?.text?.indexOf(';') + 1, data?.text?.length - 1);
     }
     
-    @MapPrismaReaction
+    @area.Reaction
     postMessage(): void
     {
         // push
@@ -18,7 +18,7 @@ export class Teams implements IService {
         console.log("wait, that should be displayed on teams");
     }
 
-    @MapPrismaReaction
+    @area.Reaction
     postMeeting(): void
     {
         console.log("meeting time")

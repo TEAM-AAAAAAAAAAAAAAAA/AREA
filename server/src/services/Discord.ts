@@ -1,15 +1,15 @@
 import { ustring } from "../types/ustring";
-import { MapPrismaReaction, MapPrismaService } from "../utils/mappings";
+import { area } from "../area/.area";
 import { IService } from "./IService";
 
-@MapPrismaService
+@area.Service
 export class Discord implements IService {
     read(data: any): void {
         this._authorName = data.author;
         this._message = data.content;
     }
 
-    @MapPrismaReaction
+@   area.Reaction
     postMessage(): void {
         console.log("discord");
     }
