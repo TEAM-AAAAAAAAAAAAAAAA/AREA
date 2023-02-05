@@ -21,8 +21,8 @@ jobs:
       - uses: docker/build-push-action@v4
         if: matrix.service == 'apollo' || matrix.service == 'server'
         with:
-          context: ./${{ matrix.service }}
-          file: ./${{ matrix.service }}/Dockerfile
+          context: ${{ github.workspace }}/${{ matrix.service }}
+          file: ${{ github.workspace }}/${{ matrix.service }}/Dockerfile
           push: true
           tags: user/${{ matrix.service}}:${{ github.ref_name }}
           cache-from: type=gha
@@ -30,8 +30,8 @@ jobs:
       - uses: docker/build-push-action@v4
         if: matrix.service == 'client_web' || matrix.service == 'client_mobile'
         with:
-          context: ./client
-          file: ./client/${{ matrix.service }}.dockerfile
+          context: ${{ github.workspace }}/client
+          file: ${{ github.workspace }}/client/${{ matrix.service }}.dockerfile
           push: true
           tags: user/${{ matrix.service}}:${{ github.ref_name }}
           cache-from: type=gha
