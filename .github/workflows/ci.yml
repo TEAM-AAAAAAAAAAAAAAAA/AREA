@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ main, 51-ci-caching-docker-images-in-github ]
+    branches: [ main ]
   delete:
     branches: [ main ]
   pull_request:
@@ -28,7 +28,7 @@ jobs:
           file: ${{ github.workspace }}/${{ matrix.service }}/Dockerfile
           tags: area_${{ matrix.service }}:${{ github.ref_name }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
       - uses: docker/build-push-action@v4
         if: matrix.service == 'client_web' || matrix.service == 'client_mobile'
         with:
@@ -36,7 +36,7 @@ jobs:
           file: ${{ github.workspace }}/client/${{ matrix.service }}.dockerfile
           tags: area_${{ matrix.service }}:${{ github.ref_name }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
 
   to_github:
     needs:
