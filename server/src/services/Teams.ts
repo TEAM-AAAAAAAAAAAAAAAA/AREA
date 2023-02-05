@@ -5,8 +5,8 @@ import { IService } from "./IService";
 @area.Service
 export class Teams implements IService {
     read(data: any): void {
-        this._authorId = data.from.id;
-        this._authorName = data.from.name
+        this._authorId = data?.from?.id;
+        this._authorName = data?.from?.name
         this._message = data?.text?.substring(data?.text?.indexOf(';') + 1, data?.text?.length - 1);
     }
     

@@ -14,10 +14,10 @@ export function Reaction(target: any, propertyKey: string, descriptor: PropertyD
 export function Transcoder(incoming: string, outgoing: string) {
     console.log("Mapped Transcoder: " + incoming + ' to ' + outgoing)
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        mapTranscoders.set([incoming, outgoing], target[propertyKey]);
+        mapTranscoders.set(incoming + '.' + outgoing, target[propertyKey]);
     }
 }
 
 export var mapPrismaServices: Map<string, new () => IService> = new Map<string, new () => IService>();
 export var PrismaReactions: Map<string, new () => Function> = new Map<string, new () => Function>();
-export var mapTranscoders: Map<[string, string], new () => Function> = new Map<[string, string], new () => Function>();
+export var mapTranscoders: Map<string, new () => Function> = new Map<string, new () => Function>();
