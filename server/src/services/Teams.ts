@@ -21,6 +21,7 @@ export class Teams implements IService {
     @MapPrismaReaction
     postMeeting(): void
     {
+        console.log("meeting time")
         // push cool meeting embed
     }
 

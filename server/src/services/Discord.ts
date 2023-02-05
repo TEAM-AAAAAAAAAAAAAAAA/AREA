@@ -10,8 +10,8 @@ export class Discord implements IService {
     }
 
     @MapPrismaReaction
-    sendMessage(): void {
-        // push
+    postMessage(): void {
+        console.log("discord");
     }
 
     _authorName: ustring;
