@@ -79,9 +79,9 @@ async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
     let serviceReturn = mapPrismaServices.get(incomingService.name);
     if (!serviceReturn)
         return false;
-    const serviceInstance = new serviceReturn();
+    let serviceInstance = new serviceReturn();
     serviceInstance.read(requestBody);
-
+    
     if (serviceInstance.constructor.name != outgoingService.name) {
         let transcoder = mapTranscoders.get(serviceInstance.constructor.name + '.' + outgoingService.name);
         if (!transcoder) {
@@ -90,14 +90,15 @@ async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
         }
         console.log(transcoder);
         (function(f: Function) {
-            outgoingService = (f.apply(transcoders, [serviceInstance]));
+            serviceInstance = (f.apply(transcoders, [serviceInstance]));
         })(transcoder);
     }
-
+    
+    serviceInstance.setOutgoing(outgoingReaction.outgoingWebhook);
     const reaction = PrismaReactions.get(outgoingAction.name);
     if (reaction) {
         (function(f: Function) {
-            f.apply(outgoingService, []);
+            f.apply(serviceInstance, []);
         })(reaction);
         return true;
     }
