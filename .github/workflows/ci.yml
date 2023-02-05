@@ -24,7 +24,7 @@ jobs:
           context: ./${{ matrix.service }}
           file: ./${{ matrix.service }}/Dockerfile
           push: true
-          tags: ${{ matrix.service }}:${{ github.event.repository.updated_at}}
+          tags: user/${{ matrix.service}} ${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - uses: docker/build-push-action@v4
@@ -33,7 +33,7 @@ jobs:
           context: ./client
           file: ./client/${{ matrix.service }}.dockerfile
           push: true
-          tags: ${{ matrix.service }}:${{ github.event.repository.updated_at }}
+          tags: user/${{ matrix.service}} ${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
