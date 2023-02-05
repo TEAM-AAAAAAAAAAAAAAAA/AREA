@@ -2,87 +2,46 @@ name: Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 51-ci-caching-docker-images-in-github ]
   delete:
     branches: [ main ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  apollo_build:
+  build:
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [ apollo, server, client_web, client_mobile ]
     steps:
-      - uses: actions/checkout@v2
-
-      # In this step, this action saves a list of existing images,
-      # the cache is created without them in the post run.
-      # It also restores the cache if it exists.
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        # Ignore the failure of a step and avoid terminating the job.
-        continue-on-error: true
-
-      - name: Build the Docker image
-        run: docker build ./database --file ./database/Dockerfile --tag apollo:$(date +%s)
-
-  server_build:
-    runs-on: ubuntu-latest
-    needs:
-      - apollo_build
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-
-      - name: Build the Docker image
-        run: docker build ./server --file ./server/Dockerfile --tag server:$(date +%s)
-
-  web_build:
-    runs-on: ubuntu-latest
-    needs:
-      - apollo_build
-      - server_build
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-
-      - name: Build the Docker image
-        run: docker build ./client --file ./client/client_web.dockerfile --tag web_client:$(date +%s)
-
-  mobile_build:
-    runs-on: ubuntu-latest
-    needs:
-      - apollo_build
-      - server_build
-      - web_build
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-
-      - name: Build the Docker image
-        run: docker build ./client --file ./client/client_mobile.dockerfile --tag mobile_client:$(date +%s)
+      - uses: actions/checkout@v3
+      - uses: docker/setup-buildx-action@v1
+      - uses: docker/build-push-action@v4
+        if: ${{ matrix.service == apollo || matrix.service == server }}
+        with:
+          context: ./${{ matrix.service }}
+          file: ./${{ matrix.service }}/Dockerfile
+          push: true
+          tags: ${{ matrix.service }}:${{ github.event.repository.updated_at}}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - uses: docker/build-push-action@v4
+        if: ${{ matrix.service == client_web || matrix.service == client_mobile }}
+        with:
+          context: ./client
+          file: ./client/${{ matrix.service }}.dockerfile
+          push: true
+          tags: ${{ matrix.service }}:${{ github.event.repository.updated_at }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   to_github:
     needs:
-      - apollo_build
-      - server_build
-      - web_build
-      - mobile_build
+      - build
     runs-on: ubuntu-latest
     steps:
-      - name: Check status of previous builds
-        run: |
-          if [ "$apollo_build_status" == "success" ] && [ "$server_build_status" == "success" ] && [ "$web_build_status" == "success" ] && [ "$mobile_build_status" == "success" ]; then
-            echo "All builds succeed, now proceeding with push on mirror repo"
-          else
-            echo "One of the builds failed, Push skipped";
-            exit 1;
-          fi
       - name: Push content of the current repo on mirror
         uses: actions/checkout@v3
         with:
