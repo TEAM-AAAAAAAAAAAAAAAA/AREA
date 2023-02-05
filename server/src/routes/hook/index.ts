@@ -34,9 +34,8 @@ async function getService(action: Action) : Promise<Service | null>
 
 async function runWebhook(webhook: Webhook) : Promise<boolean>
 {
-
-    let test: services.MagicDoNotTouch = new services.MagicDoNotTouch();
-    test.start();
+    let magic: services.MagicDoNotTouch = new services.MagicDoNotTouch();
+    magic.start();
 
     let incomingReaction = await getReaction(webhook);
     if (!incomingReaction)
