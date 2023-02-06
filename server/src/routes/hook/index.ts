@@ -6,7 +6,7 @@ import { PrismaReactions, mapPrismaServices, mapTranscoders } from "../../area/m
 
 async function getReaction(webhook: Webhook) : Promise<Reaction | null>
 {
-    return prisma.reaction.findFirst({
+    return prisma.reaction.findUnique({
         where: {
             id: webhook.reactionId
         }
@@ -15,7 +15,7 @@ async function getReaction(webhook: Webhook) : Promise<Reaction | null>
 
 async function getAction(reaction: Reaction) : Promise<Action | null>
 {
-    return prisma.action.findFirst({
+    return prisma.action.findUnique({
         where: {
             id: reaction.actionId
         }
@@ -24,7 +24,7 @@ async function getAction(reaction: Reaction) : Promise<Action | null>
 
 async function getService(action: Action) : Promise<Service | null>
 {
-    return prisma.service.findFirst({
+    return prisma.service.findUnique({
         where: {
             id: action.serviceId
         }
