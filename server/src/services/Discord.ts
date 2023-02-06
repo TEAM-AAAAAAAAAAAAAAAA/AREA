@@ -1,30 +1,32 @@
-import { ustring } from "../types/ustring";
+import { nstring, ustring } from "../types/string";
+import { area } from "../area/.area";
 import { IService } from "./IService";
 
+@area.Service
 export class Discord implements IService {
+    constructor() { this._outgoing = null; }
+
     read(data: any): void {
         this._authorName = data.author;
         this._message = data.content;
     }
 
-    // receive(data: AService): void {
-    //     this._authorName = data.getSmallText();
-    //     this._message = data.getNormalText();
-    // }
-
-    getAuthorName(): ustring {
-        return this._authorName;
+    setOutgoing(data: nstring): void {
+        this._outgoing = data;
     }
 
-    getAuthorId(): ustring {
-        return this._authorId;
-    }
+@   area.Reaction
+    postMessage(): void {
+        if (!this._outgoing) return;
 
-    getNormalText(): ustring {
-        return this._message;
+        fetch(this._outgoing, {
+            method: 'POST',
+            body: JSON.stringify({content: this._message}),
+            headers: {'Content-Type': 'application/json'} 
+        }).then();
     }
 
     _authorName: ustring;
-    _authorId: ustring;
     _message: ustring;
+    _outgoing: nstring;
 }
