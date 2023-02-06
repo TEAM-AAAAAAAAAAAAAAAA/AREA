@@ -30,35 +30,37 @@ model Token {
 }
 
 model Service {
-  name                  String                  @id @unique
+  serviceName           String                  @id @unique
   Action                Action[]
   CreateServiceResponse CreateServiceResponse[]
   Webhook               Webhook[]
 }
 
 model Webhook {
-  id            String   @id @default(uuid())
+  webhookId     String   @id @default(uuid())
   userId        String
   user          User     @relation(fields: [userId], references: [id])
   reactionId    Int      @unique
-  reaction      Reaction @relation(fields: [reactionId], references: [id])
+  reaction      Reaction @relation(fields: [reactionId], references: [reactionId])
   serviceName   String
-  serviceDataId Service  @relation(fields: [serviceName], references: [name])
+  serviceDataId Service  @relation(fields: [serviceName], references: [serviceName])
 }
 
 model Action {
-  name        String     @unique
+  actionName  String
   serviceName String
-  service     Service    @relation(fields: [serviceName], references: [name])
+  service     Service    @relation(fields: [serviceName], references: [serviceName])
   Reaction    Reaction[]
 
-  @@id([serviceName, name])
+  @@id([serviceName, actionName])
+  @@unique([serviceName, actionName])
 }
 
 model Reaction {
-  id              Int              @id @default(autoincrement())
+  reactionId      Int              @id @default(autoincrement())
+  serviceName     String
   actionName      String
-  action          Action           @relation(fields: [actionName], references: [name])
+  action          Action           @relation(fields: [serviceName, actionName], references: [serviceName, actionName])
   incomingWebhook Webhook?
   outgoingWebhook String?
   actions         ActionReaction[] @relation("action")
@@ -68,8 +70,8 @@ model Reaction {
 model ActionReaction {
   actionId   Int
   reactionId Int
-  action     Reaction @relation(name: "action", map: "action", fields: [actionId], references: [id])
-  reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [id])
+  action     Reaction @relation(name: "action", map: "action", fields: [actionId], references: [reactionId])
+  reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [reactionId])
 
   @@id([actionId, reactionId])
 }
@@ -88,7 +90,7 @@ model CreateServiceResponse {
   code        Int
   success     Boolean
   message     String
-  service     Service? @relation(fields: [serviceName], references: [name])
+  service     Service? @relation(fields: [serviceName], references: [serviceName])
   serviceName String?
 }
 
