@@ -30,8 +30,7 @@ model Token {
 }
 
 model Service {
-  id                    Int                     @id @unique @default(autoincrement())
-  name                  String                  @unique
+  name                  String                  @id @unique
   Action                Action[]
   CreateServiceResponse CreateServiceResponse[]
   Webhook               Webhook[]
@@ -43,22 +42,23 @@ model Webhook {
   user          User     @relation(fields: [userId], references: [id])
   reactionId    Int      @unique
   reaction      Reaction @relation(fields: [reactionId], references: [id])
-  serviceId     Int
-  serviceDataId Service  @relation(fields: [serviceId], references: [id])
+  serviceName   String
+  serviceDataId Service  @relation(fields: [serviceName], references: [name])
 }
 
 model Action {
-  id        Int        @id @default(autoincrement())
-  name      String
-  serviceId Int
-  service   Service    @relation(fields: [serviceId], references: [id])
-  Reaction  Reaction[]
+  name        String     @unique
+  serviceName String
+  service     Service    @relation(fields: [serviceName], references: [name])
+  Reaction    Reaction[]
+
+  @@id([serviceName, name])
 }
 
 model Reaction {
   id              Int              @id @default(autoincrement())
-  actionId        Int
-  action          Action           @relation(fields: [actionId], references: [id])
+  actionName      String
+  action          Action           @relation(fields: [actionName], references: [name])
   incomingWebhook Webhook?
   outgoingWebhook String?
   actions         ActionReaction[] @relation("action")
@@ -84,12 +84,12 @@ model CreateUserResponse {
 }
 
 model CreateServiceResponse {
-  id        Int      @id @default(autoincrement())
-  code      Int
-  success   Boolean
-  message   String
-  service   Service? @relation(fields: [serviceId], references: [id])
-  serviceId Int?
+  id          Int      @id @default(autoincrement())
+  code        Int
+  success     Boolean
+  message     String
+  service     Service? @relation(fields: [serviceName], references: [name])
+  serviceName String?
 }
 
 enum TokenType {
