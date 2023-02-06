@@ -53,8 +53,7 @@ async function getService(action: Action) : Promise<Service | null>
 
 async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
 {
-    let magic: services.MagicDoNotTouch = new services.MagicDoNotTouch();
-    magic.start();
+    services.prisma.sync();
 
     let outgoingReaction = await getReaction(webhook);
     if (!outgoingReaction)

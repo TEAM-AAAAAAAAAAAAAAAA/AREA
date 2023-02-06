@@ -4,10 +4,10 @@ export * from "./Discord";
 export * from "./Teams";
 
 @area.Service
-export class MagicDoNotTouch {
+export class prisma {
     @area.Reaction
-    start(): void
+    static sync(): void
     {
-        // DO NOT TOUCH
+        // DO NOT TOUCH, LET THE MAGIC HAPPEN
     }
 }
