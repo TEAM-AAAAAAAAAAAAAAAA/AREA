@@ -65,6 +65,8 @@ model Reaction {
   outgoingWebhook String?
   actions         ActionReaction[] @relation("action")
   reactions       ActionReaction[] @relation("reaction")
+  enabled         Boolean          @default(true)
+  enabledChain    Boolean          @default(true)
 }
 
 model ActionReaction {
