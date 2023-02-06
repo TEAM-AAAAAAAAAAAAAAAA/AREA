@@ -58,6 +58,9 @@ async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
     let outgoingReaction = await getReaction(webhook);
     if (!outgoingReaction)
         return false;
+    
+    if (!outgoingReaction.enabled)
+        return false;
 
     let outgoingAction = await getAction(outgoingReaction);
     if (!outgoingAction)
