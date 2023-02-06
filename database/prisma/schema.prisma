@@ -37,13 +37,13 @@ model Service {
 }
 
 model Webhook {
-  webhookId     String   @id @default(uuid())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id])
-  reactionId    Int      @unique
-  reaction      Reaction @relation(fields: [reactionId], references: [reactionId])
-  serviceName   String
-  serviceDataId Service  @relation(fields: [serviceName], references: [serviceName])
+  webhookId           String   @id @default(uuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id])
+  reactionId          Int      @unique
+  reaction            Reaction @relation(fields: [reactionId], references: [reactionId])
+  incomingServiceName String
+  incomingService     Service  @relation(fields: [incomingServiceName], references: [serviceName])
 }
 
 model Action {
