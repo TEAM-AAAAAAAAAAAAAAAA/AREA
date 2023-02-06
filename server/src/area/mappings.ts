@@ -7,7 +7,7 @@ export function Service(target: any)
 }
 
 export function Reaction(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-    PrismaReactions.set([target.constructor.name, propertyKey], target[propertyKey]);
+    PrismaActions.set([target.constructor.name, propertyKey], target[propertyKey]);
     console.log("Mapped Action: " + target.constructor.name + '.' + propertyKey)
 }
 
@@ -19,5 +19,5 @@ export function Transcoder(incoming: string, outgoing: string) {
 }
 
 export var PrismaServices: Map<string, new () => IService> = new Map<string, new () => IService>();
-export var PrismaReactions: Map<[string, string], new () => Function> = new Map<[string, string], new () => Function>();
+export var PrismaActions: Map<[string, string], new () => Function> = new Map<[string, string], new () => Function>();
 export var Transcoders: Map<string, new () => Function> = new Map<string, new () => Function>();
