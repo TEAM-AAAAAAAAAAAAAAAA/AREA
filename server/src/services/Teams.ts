@@ -16,7 +16,7 @@ export class Teams implements IService {
         this._outgoing = data;
     }
     
-    @area.Reaction
+    @area.Action
     postMessage(): void
     {
         if (!this._outgoing) return;
@@ -29,7 +29,7 @@ export class Teams implements IService {
         
     }
 
-    @area.Reaction
+    @area.Action
     postMeeting(): void
     {
         console.log("meeting time")

@@ -28,8 +28,8 @@ export class DB {
             });
 
             await PrismaActions.forEach(async (value, key) => {
-                let thisServiceName = key[0];
-                let actionName = key[1];
+                let thisServiceName = key.substring(0, key.indexOf('.'));
+                let actionName = key.substring(key.indexOf('.') + 1);
 
                 if (thisServiceName == serviceName) {
                     await prisma.action.upsert({

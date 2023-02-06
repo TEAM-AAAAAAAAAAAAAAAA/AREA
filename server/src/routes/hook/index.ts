@@ -3,7 +3,6 @@ import { transcoders } from "../../transcoders/transcoders";
 import { prisma } from "../../config/db";
 import { Action, Reaction, Service, Webhook } from "@prisma/client";
 import { PrismaActions, PrismaServices, Transcoders } from "../../area/mappings";
-import { services } from "../../services/.services";
 
 async function getReaction(webhook: Webhook) : Promise<Reaction | null>
 {
@@ -72,7 +71,7 @@ async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
 
     let incomingService = await prisma.service.findFirst({
         where: {
-            serviceName: webhook.serviceName
+            serviceName: webhook.incomingServiceName
         }
     });
     if (!incomingService)
@@ -94,10 +93,12 @@ async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
         (function(f: Function) {
             serviceInstance = (f.apply(transcoders, [serviceInstance]));
         })(transcoder);
+    } else {
+        console.log("no transcoder needed (same service)");
     }
     
     serviceInstance.setOutgoing(outgoingReaction.outgoingWebhook);
-    const reaction = PrismaActions.get([outgoingAction.serviceName, outgoingAction.actionName]);
+    const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.actionName);
     if (reaction) {
         (function(f: Function) {
             f.apply(serviceInstance, []);
