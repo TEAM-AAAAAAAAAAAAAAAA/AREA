@@ -4,88 +4,74 @@ import { PrismaServices, PrismaReactions } from "../area/mappings";
 export * from "./Discord";
 export * from "./Teams";
 
-async function syncServices() : Promise<boolean> {
+async function syncService(serviceName: string) : Promise<boolean> {
     var isSynced: boolean = false;
 
-    PrismaServices.forEach(element => {
-        prisma.service.upsert({
-            where: {
-                name: element.name
-            },
-            update: {},
-            create: {
-                name: element.name
-            }
-        }).then((res) => {
-            console.debug("Upserted Service: " + res.name);
-            isSynced = true;
-        }).catch((err) => {
-            console.error("Failed to upsert Service: " + element.name);
-            isSynced = false;
-        });
+    await new Promise(r => setTimeout(r, 2000));
+
+    await prisma.service.upsert({
+        where: {
+            serviceName: serviceName,
+        },
+        update: {
+            serviceName: serviceName,
+        },
+        create: {
+            serviceName: serviceName,
+        }
+    }).then((res) => {
+        console.debug("Upserted Service: " + res.serviceName);
+        isSynced = true;
+    }).catch((err) => {
+        console.error("Failed to upsert Service: " + serviceName);
+        isSynced = false;
     });
+
     return isSynced;
 }
 
-// async function syncActions() : Promise<boolean> {
-//     var isSynced: boolean = false;
+async function syncAction(serviceName: string, actionName: string) : Promise<boolean> {
+    var isSynced: boolean = false;
 
-//     PrismaReactions.forEach(element => {
-//         prisma.action.upsert({
-//             where: {
-//                 name: element.name,
-//                 serviceId: 
-//             },
-//             update: {},
-//             create: {
-//                 // name: element.name
-//             }
-//         });
-//     });
-//     return isSynced;
-// }
+    await prisma.action.upsert({
+        where: {
+            serviceName_actionName: {
+                serviceName: serviceName,
+                actionName: actionName
+            }
+        },
+        update: {
+            actionName: actionName,
+            serviceName: serviceName
+        },
+        create: {
+            actionName: actionName,
+            serviceName: serviceName
+        }
+    }).then((res) => {
+        console.debug("Upserted Action: " + res.serviceName + '.' + res.actionName);
+        isSynced = true;
+    }).catch((err) => {
+        console.error("Failed to upsert Action: " + serviceName + '.' + actionName + " - " + err);
+        isSynced = false;
+    });
+
+    return isSynced;
+}
 
 export class DB {
     static async sync() : Promise<boolean>
     {
-        // PrismaReactions.forEach(element => {
-        //     let serviceName = element.name.substring(0, element.name.indexOf("."));
-        //     let actionName = element.name;
-        //     console.log(element.name);
-        //     prisma.service.upsert({
-        //         where: {
-        //             name: serviceName
-        //         },
-        //         update: {},
-        //         create: {
-        //             name: serviceName,
-        //             Action: {
-        //                 connectOrCreate: {
-        //                     where: {
-        //                         name: actionName
-        //                     },
-        //                     create: {
-        //                         name: actionName
-        //                     }
-        //                 }
-        //             }
-        //             // actions: {
-        //             //     create: {
-        //             //         name: element.name.substring(element.name.indexOf(".") + 1)
-        //             //     }
-        //             // }
-        //         }
-        //     }).then((res) => {
-        //         console.debug("Upserted Service: " + res.name);
-        //     }).catch((err) => {
-        //         console.error("Failed to upsert Service: " + err);
-        //     });
-        // });
+        await PrismaServices.forEach(async (value, key) => {
+            if (!await syncService(key))
+                return false;
+        });
 
-        // if (!await syncServices())
-        //     return false;
-        // if (!await syncActions())
-        //     return false;
+        await PrismaReactions.forEach(async (value, key) => {
+            if (!await syncAction(key[0], key[1]))
+                return false;
+        });
+
         return true;
     }
 };
