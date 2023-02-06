@@ -3,7 +3,7 @@ import { IService } from "../services/IService";
 export function Service(target: any)
 {
     mapPrismaServices.set(target.name, target);
-    console.log("Mapped service: " + target.name)
+    console.log("Mapped Service: " + target.name)
 }
 
 export function Reaction(target: any, propertyKey: string, descriptor: PropertyDescriptor) {

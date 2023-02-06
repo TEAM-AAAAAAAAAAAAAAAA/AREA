@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
-import { services } from "../../services/.services";
 import { transcoders } from "../../transcoders/transcoders";
 import { prisma } from "../../config/db";
-import { Action, Prisma, Reaction, Service, Webhook } from "@prisma/client";
+import { Action, Reaction, Service, Webhook } from "@prisma/client";
 import { PrismaReactions, mapPrismaServices, mapTranscoders } from "../../area/mappings";
-import { IService } from "../../services/IService";
 
 async function getReaction(webhook: Webhook) : Promise<Reaction | null>
 {
@@ -53,8 +51,6 @@ async function getService(action: Action) : Promise<Service | null>
 
 async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
 {
-    services.prisma.sync();
-
     let outgoingReaction = await getReaction(webhook);
     if (!outgoingReaction)
         return false;
