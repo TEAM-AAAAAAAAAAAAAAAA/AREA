@@ -20,15 +20,13 @@ jobs:
         service: [ database, server, client_web, client_mobile ]
     steps:
       - uses: actions/checkout@v3
-      - name: test image name
-        run: echo area_${{ matrix.service }}/${{ github.ref_name }}
       - uses: docker/setup-buildx-action@v1
       - uses: docker/build-push-action@v4
         if: matrix.service == 'database' || matrix.service == 'server'
         with:
           context: ${{ github.workspace }}/${{ matrix.service }}
           file: ${{ github.workspace }}/${{ matrix.service }}/Dockerfile
-          tags: area_${{ matrix.service }}:${{ github.ref_name }}
+          tags: area_${{ matrix.service }}:${{ env.__BRANCH_NAME }}
           cache-from: type=gha
           cache-to: type=gha,mode=min
       - uses: docker/build-push-action@v4
@@ -36,9 +34,11 @@ jobs:
         with:
           context: ${{ github.workspace }}/client
           file: ${{ github.workspace }}/client/${{ matrix.service }}.dockerfile
-          tags: area_${{ matrix.service }}:${{ github.ref_name }}
+          tags: area_${{ matrix.service }}:${{ env.__BRANCH_NAME }}
           cache-from: type=gha
           cache-to: type=gha,mode=min
+    env:
+      __BRANCH_NAME: ${${{ github.ref_name }}//\//-}
 
   to_github:
     needs:
