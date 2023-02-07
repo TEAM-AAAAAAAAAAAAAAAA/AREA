@@ -28,7 +28,7 @@ jobs:
         with:
           context: ${{ github.workspace }}/${{ matrix.service }}
           file: ${{ github.workspace }}/${{ matrix.service }}/Dockerfile
-          tags: area_${{ matrix.service }}:$__BRANCH_NAME
+          tags: area_${{ matrix.service }}:${{ env.__BRANCH_NAME }}
           cache-from: type=gha
           cache-to: type=gha,mode=min
       - uses: docker/build-push-action@v4
@@ -36,7 +36,7 @@ jobs:
         with:
           context: ${{ github.workspace }}/client
           file: ${{ github.workspace }}/client/${{ matrix.service }}.dockerfile
-          tags: area_${{ matrix.service }}:$__BRANCH_NAME
+          tags: area_${{ matrix.service }}:${{ env.__BRANCH_NAME }}
           cache-from: type=gha
           cache-to: type=gha,mode=min
 
