@@ -81,7 +81,7 @@ export_env()
     exit 1
   fi
 
-  if [ ! -f ${1:-.env} ]; then
+  if [ ! -f $(realpath -s ${1:-.env}) ]; then
     echo -e "[${RED}File $(realpath -s ${1:-.env}) not found${RESET}">&2
     exit 1
   fi
