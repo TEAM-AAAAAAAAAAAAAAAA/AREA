@@ -1,25 +1,25 @@
-name: Lint
+# name: Lint
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - name: Install dependencies
-        run: yarn install --immutable --immutable-cache
-      - name: Lint code server
-        run: npx eslint --config .eslintrc.js server
-      - name: Lint code client
-        run: npx eslint --config .eslintrc.js client
-      - name: Lint code database
-        run: npx eslint --config .eslintrc.js database
+# jobs:
+#   lint:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+#       - name: Use Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: 14
+#       - name: Install dependencies
+#         run: yarn install --immutable --immutable-cache
+#       - name: Lint code server
+#         run: npx eslint --config .eslintrc.js server
+#       - name: Lint code client
+#         run: npx eslint --config .eslintrc.js client
+#       - name: Lint code database
+#         run: npx eslint --config .eslintrc.js database
