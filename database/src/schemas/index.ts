@@ -11,8 +11,7 @@ export const typeDefs = gql`
     }
 
     type Service {
-        id: ID!
-        name: String!
+        serviceName: String!
     }
 
     type CreateUserResponse {
@@ -29,6 +28,13 @@ export const typeDefs = gql`
         service: Service
     }
 
+    type CreateWebhookResponse {
+        code: Int!
+        success: Boolean!
+        message: String!
+        webhook: Webhook
+    }
+
     type Query {
         user(id: ID!): User
         allUsers: [User!]!
@@ -36,6 +42,7 @@ export const typeDefs = gql`
     }
 
     type Mutation {
+        createWebhook(userId: String!, actionId: String!, serviceId: String!, outgoingWebhook: String!): CreateWebhookResponse!
         createUser(name: String!, email: String!, password: String!): CreateUserResponse!
         createService(name: String!): CreateServiceResponse!
     }
@@ -60,6 +67,64 @@ export const resolvers = {
         }
     },
     Mutation: {
+        createWebhook: async (_: any, args: any, context: Context) => {
+            if (args.userId === undefined || args.userId === '') {
+                return await context.prisma.createWebhookResponse.create({
+                    data: {
+                        code: 400,
+                        success: false,
+                        message: "User ID is required"
+                    },
+                });
+            }
+            if (args.actionId === undefined || args.actionId === '') {
+                return await context.prisma.createWebhookResponse.create({
+                    data: {
+                        code: 400,
+                        success: false,
+                        message: "Action ID is required"
+                    },
+                });
+            }
+            if (args.serviceId === undefined || args.serviceId === '') {
+                return await context.prisma.createWebhookResponse.create({
+                    data: {
+                        code: 400,
+                        success: false,
+                        message: "Service ID is required"
+                    },
+                });
+            }
+            if (args.outgoingWebhook === undefined || args.outgoingWebhook === '') {
+                return await context.prisma.createWebhookResponse.create({
+                    data: {
+                        code: 400,
+                        success: false,
+                        message: "Outgoing webhook is required"
+                    },
+                });
+            }
+            const myHonest = await context.prisma.reaction.create({
+                data: {
+                    serviceName: args.serviceId,
+                    actionName: args.actionId,
+                }
+            });
+            return await context.prisma.createWebhookResponse.create({
+                data: {
+                    code: 200,
+                    success: true,
+                    message: "Webhook created successfully",
+                    webhook: {
+                        create: {
+                            userId: args.userId,
+                            reactionId: myHonest.reactionId,
+                            incomingServiceName: args.serviceId,
+                        },
+                    },
+                },
+            });
+        },
         createService: async (_: any, args: any, context: Context) => {
             if (args.name === undefined || args.name === '') {
                 return await context.prisma.createServiceResponse.create({

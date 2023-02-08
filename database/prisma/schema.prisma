@@ -37,13 +37,14 @@ model Service {
 }
 
 model Webhook {
-  webhookId           String   @id @default(uuid())
+  webhookId           String          @id @default(uuid())
   userId              String
-  user                User     @relation(fields: [userId], references: [id])
-  reactionId          Int      @unique
-  reaction            Reaction @relation(fields: [reactionId], references: [reactionId])
+  user                User            @relation(fields: [userId], references: [id])
+  reactionId          Int             @unique
+  reaction            Reaction        @relation(fields: [reactionId], references: [reactionId])
   incomingServiceName String
-  incomingService     Service  @relation(fields: [incomingServiceName], references: [serviceName])
+  incomingService     Service         @relation(fields: [incomingServiceName], references: [serviceName])
+  CreateWebhook       CreateWebhookResponse[]
 }
 
 model Action {
@@ -94,6 +95,15 @@ model CreateServiceResponse {
   message     String
   service     Service? @relation(fields: [serviceName], references: [serviceName])
   serviceName String?
+}
+
+model CreateWebhookResponse {
+  id        Int      @id @default(autoincrement())
+  code      Int
+  success   Boolean
+  message   String
+  webhook   Webhook? @relation(fields: [webhookId], references: [webhookId])
+  webhookId String?
 }
 
 enum TokenType {
