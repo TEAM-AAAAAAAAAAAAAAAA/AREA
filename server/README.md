@@ -110,3 +110,59 @@ Preprod env: `yarn run preprod`
 3- Implement the push() method that will format and push your data to the webhook specified in parameter
 
 4- Create transcoders for every service you want to be compatible
+
+# Create new services and new actions
+
+Service example
+- A service must be a class implementing IService with the @area.Service Decorator
+- An action must be a method returning void within this service class. It takes all the data stored in your service and posts it to the outgoing webhook/link
+
+```TS
+import { nstring, ustring } from "../types/string";
+import { area } from "../area/.area";
+import { IService } from "./IService";
+
+@area.Service
+export class Example implements IService {
+    constructor() { this._outgoing = null; }
+
+    // Parse the JSON request body as you like to fill your variables
+    read(data: any): void {
+        this._text = data.text;
+    }
+
+    // Let this function as is
+    setOutgoing(outgoing: nstring): void {
+        this._outgoing = outgoing;
+    }
+
+    // Example action
+@   area.Action
+    postExample(): void {
+        if (!this._outgoing) return;
+
+        fetch(this._outgoing, {
+            method: 'POST',
+            body: JSON.stringify({example: this._text}),
+            headers: {'Content-Type': 'application/json'} 
+        }).then();
+    }
+
+    _text: ustring;
+    _outgoing: nstring;
+}
+```
+
+After creating a service you must write some transcoders inside the 'transcoders' class in order to make them compatible with the other services, here's an example
+```TS
+@area.Transcoder(services.Discord.name, services.Teams.name)
+static discordToTeams(discord: services.Discord): services.Teams {
+    var teams: services.Teams = new services.Teams();
+    teams._authorName = discord._authorName;
+    teams._message = discord._message;
+    return teams;
+}
+```
+It takes a service and returns another one where you copied what you needed
+Btw, you need to add @area.Transcoder with the input and output services as a decorator
+

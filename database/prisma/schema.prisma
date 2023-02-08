@@ -30,46 +30,50 @@ model Token {
 }
 
 model Service {
-  id                    Int                     @id @unique @default(autoincrement())
-  name                  String                  @unique
+  serviceName           String                  @id @unique
   Action                Action[]
   CreateServiceResponse CreateServiceResponse[]
   Webhook               Webhook[]
 }
 
 model Webhook {
-  id            String   @id @default(uuid())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id])
-  reactionId    Int      @unique
-  reaction      Reaction @relation(fields: [reactionId], references: [id])
-  serviceId     Int
-  serviceDataId Service  @relation(fields: [serviceId], references: [id])
+  webhookId           String   @id @default(uuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id])
+  reactionId          Int      @unique
+  reaction            Reaction @relation(fields: [reactionId], references: [reactionId])
+  incomingServiceName String
+  incomingService     Service  @relation(fields: [incomingServiceName], references: [serviceName])
 }
 
 model Action {
-  id        Int        @id @default(autoincrement())
-  name      String
-  serviceId Int
-  service   Service    @relation(fields: [serviceId], references: [id])
-  Reaction  Reaction[]
+  actionName  String
+  serviceName String
+  service     Service    @relation(fields: [serviceName], references: [serviceName])
+  Reaction    Reaction[]
+
+  @@id([serviceName, actionName])
+  @@unique([serviceName, actionName])
 }
 
 model Reaction {
-  id              Int              @id @default(autoincrement())
-  actionId        Int
-  action          Action           @relation(fields: [actionId], references: [id])
+  reactionId      Int              @id @default(autoincrement())
+  serviceName     String
+  actionName      String
+  action          Action           @relation(fields: [serviceName, actionName], references: [serviceName, actionName])
   incomingWebhook Webhook?
   outgoingWebhook String?
   actions         ActionReaction[] @relation("action")
   reactions       ActionReaction[] @relation("reaction")
+  enabled         Boolean          @default(true)
+  enabledChain    Boolean          @default(true)
 }
 
 model ActionReaction {
   actionId   Int
   reactionId Int
-  action     Reaction @relation(name: "action", map: "action", fields: [actionId], references: [id])
-  reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [id])
+  action     Reaction @relation(name: "action", map: "action", fields: [actionId], references: [reactionId])
+  reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [reactionId])
 
   @@id([actionId, reactionId])
 }
@@ -84,12 +88,12 @@ model CreateUserResponse {
 }
 
 model CreateServiceResponse {
-  id        Int      @id @default(autoincrement())
-  code      Int
-  success   Boolean
-  message   String
-  service   Service? @relation(fields: [serviceId], references: [id])
-  serviceId Int?
+  id          Int      @id @default(autoincrement())
+  code        Int
+  success     Boolean
+  message     String
+  service     Service? @relation(fields: [serviceName], references: [serviceName])
+  serviceName String?
 }
 
 enum TokenType {

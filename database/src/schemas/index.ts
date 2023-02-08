@@ -72,7 +72,7 @@ export const resolvers = {
             }
             if (await context.prisma.service.findUnique({
                 where: {
-                    name: args.name
+                    serviceName: args.name
                 }
             })) {
                 return await context.prisma.createServiceResponse.create({
@@ -90,7 +90,7 @@ export const resolvers = {
                     message: "Service created successfully",
                     service: {
                         create: {
-                            name: args.name
+                            serviceName: args.name
                         }
                     }
                 }
