@@ -14,6 +14,24 @@ export const typeDefs = gql`
         serviceName: String!
     }
 
+    type Reaction {
+        reactionId: Int!
+        service: Service!
+        outgoingWebhook: String!
+    }
+
+    type Webhook {
+        webhookId: String!
+        user: User!
+        reaction: Reaction!
+        incomingService: Service!
+    }
+
+    type Action {
+        actionName: String!
+        serviceName: String!
+    }
+
     type CreateUserResponse {
         code: Int!
         success: Boolean!
@@ -39,9 +57,21 @@ export const typeDefs = gql`
         user(id: ID!): User
         allUsers: [User!]!
         allServices: [Service!]!
+        allWebhooks: [Webhook!]!
+        allReactions: [Reaction!]!
+        allActions: [Action!]!
+    }
+
+    type CreateActionResponse {
+        code: Int!
+        success: Boolean!
+        message: String!
+        action: Action
     }
 
     type Mutation {
+        removeWebhooks: Int!
+        createAction(actionName: String!, serviceName: String!): CreateActionResponse!
         createWebhook(userId: String!, actionId: String!, serviceId: String!, outgoingWebhook: String!): CreateWebhookResponse!
         createUser(name: String!, email: String!, password: String!): CreateUserResponse!
         createService(name: String!): CreateServiceResponse!
@@ -51,7 +81,32 @@ export const typeDefs = gql`
 `;
 
 export const resolvers = {
+    Webhook: {
+        user: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.webhook.findUnique({ where: { webhookId: parent.webhookId } }).user();
+        },
+        reaction: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.webhook.findUnique({ where: { webhookId: parent.webhookId } }).reaction();
+        },
+        incomingService: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.webhook.findUnique({ where: { webhookId: parent.webhookId } }).incomingService();
+        }
+    },
+    Reaction: {
+        service: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.reaction.findUnique({ where: { reactionId: parent.reactionId } }).service();
+        }
+    },
     Query: {
+        allActions: async (_: any, args: any, context: Context) => {
+            return await context.prisma.action.findMany();
+        },
+        allWebhooks: async (_: any, args: any, context: Context) => {
+            return await context.prisma.webhook.findMany();
+        },
+        allReactions: async (_: any, args: any, context: Context) => {
+            return await context.prisma.reaction.findMany();
+        },
         user: async (_: any, args: any, context: Context) => {
             return await context.prisma.user.findUnique({
                 where: {
@@ -67,6 +122,47 @@ export const resolvers = {
         }
     },
     Mutation: {
+        removeWebhooks: async (_: any, args: any, context: Context) => {
+            await context.prisma.webhook.deleteMany();
+            return 1;
+        },
+        createAction: async (_: any, args: any, context: Context) => {
+            if (args.actionName === undefined || args.actionName === '') {
+                return await context.prisma.createActionResponse.create({
+                    data: {
+                        code: 400,
+                        success: false,
+                        message: "Action name is required"
+                    },
+                });
+            }
+            if (args.serviceName === undefined || args.serviceName === '') {
+                return await context.prisma.createActionResponse.create({
+                    data: {
+                        code: 400,
+                        success: false,
+                        message: "Service name is required"
+                    },
+                });
+            }
+            return await context.prisma.createActionResponse.create({
+                data: {
+                    code: 200,
+                    success: true,
+                    message: "Action created successfully",
+                    action: {
+                        create: {
+                            actionName: args.actionName,
+                            service: {
+                                connect: {
+                                    serviceName: args.serviceName
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        },
         createWebhook: async (_: any, args: any, context: Context) => {
             if (args.userId === undefined || args.userId === '') {
                 return await context.prisma.createWebhookResponse.create({
@@ -108,6 +204,7 @@ export const resolvers = {
                 data: {
                     serviceName: args.serviceId,
                     actionName: args.actionId,
+                    outgoingWebhook: args.outgoingWebhook,
                 }
             });
             return await context.prisma.createWebhookResponse.create({
