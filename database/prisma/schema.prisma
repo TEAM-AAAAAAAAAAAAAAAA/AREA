@@ -34,10 +34,11 @@ model Service {
   Action                Action[]
   CreateServiceResponse CreateServiceResponse[]
   Webhook               Webhook[]
+  Reaction              Reaction[]
 }
 
 model Webhook {
-  webhookId            String                  @id @default(uuid())
+  webhookId            String                 @id @unique @default(uuid())
   userId              String
   user                User                    @relation(fields: [userId], references: [id])
   reactionId          Int                     @unique
@@ -61,6 +62,7 @@ model Action {
 model Reaction {
   reactionId      Int              @id @default(autoincrement())
   serviceName     String
+  service         Service          @relation(fields: [serviceName], references: [serviceName])
   actionName      String
   action          Action           @relation(fields: [serviceName, actionName], references: [serviceName, actionName])
   incomingWebhook Webhook?
