@@ -32,27 +32,6 @@ export const typeDefs = gql`
         serviceName: String!
     }
 
-    type CreateUserResponse {
-        code: Int!
-        success: Boolean!
-        message: String!
-        user: User
-    }
-
-    type CreateServiceResponse {
-        code: Int!
-        success: Boolean!
-        message: String!
-        service: Service
-    }
-
-    type CreateWebhookResponse {
-        code: Int!
-        success: Boolean!
-        message: String!
-        webhook: Webhook
-    }
-
     type Query {
         user(id: ID!): User
         allUsers: [User!]!
@@ -62,19 +41,12 @@ export const typeDefs = gql`
         allActions: [Action!]!
     }
 
-    type CreateActionResponse {
-        code: Int!
-        success: Boolean!
-        message: String!
-        action: Action
-    }
-
     type Mutation {
         removeWebhooks: Int!
-        createAction(actionName: String!, serviceName: String!): CreateActionResponse!
-        createWebhook(userId: String!, actionId: String!, serviceId: String!, outgoingWebhook: String!): CreateWebhookResponse!
-        createUser(name: String!, email: String!, password: String!): CreateUserResponse!
-        createService(name: String!): CreateServiceResponse!
+        createAction(actionName: String!, serviceName: String!): Int!
+        createWebhook(userId: String!, actionId: String!, serviceId: String!, outgoingWebhook: String!): Int!
+        createUser(name: String!, email: String!, password: String!): Int!
+        createService(name: String!): Int!
     }
 
     scalar DateTime
@@ -124,81 +96,39 @@ export const resolvers = {
     Mutation: {
         removeWebhooks: async (_: any, args: any, context: Context) => {
             await context.prisma.webhook.deleteMany();
-            return 1;
+            return 200;
         },
         createAction: async (_: any, args: any, context: Context) => {
             if (args.actionName === undefined || args.actionName === '') {
-                return await context.prisma.createActionResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "Action name is required"
-                    },
-                });
+                return 400
             }
             if (args.serviceName === undefined || args.serviceName === '') {
-                return await context.prisma.createActionResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "Service name is required"
-                    },
-                });
+                return 400
             }
-            return await context.prisma.createActionResponse.create({
+            await context.prisma.action.create({
                 data: {
-                    code: 200,
-                    success: true,
-                    message: "Action created successfully",
-                    action: {
-                        create: {
-                            actionName: args.actionName,
-                            service: {
-                                connect: {
-                                    serviceName: args.serviceName
-                                }
-                            }
+                    actionName: args.actionName,
+                    service: {
+                        connect: {
+                            serviceName: args.serviceName
                         }
                     }
                 }
             });
+            return 200
         },
         createWebhook: async (_: any, args: any, context: Context) => {
             if (args.userId === undefined || args.userId === '') {
-                return await context.prisma.createWebhookResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "User ID is required"
-                    },
-                });
+                return 400
             }
             if (args.actionId === undefined || args.actionId === '') {
-                return await context.prisma.createWebhookResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "Action ID is required"
-                    },
-                });
+                return 400
             }
             if (args.serviceId === undefined || args.serviceId === '') {
-                return await context.prisma.createWebhookResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "Service ID is required"
-                    },
-                });
+                return 400
             }
             if (args.outgoingWebhook === undefined || args.outgoingWebhook === '') {
-                return await context.prisma.createWebhookResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "Outgoing webhook is required"
-                    },
-                });
+                return 400
             }
             const myHonest = await context.prisma.reaction.create({
                 data: {
@@ -207,117 +137,44 @@ export const resolvers = {
                     outgoingWebhook: args.outgoingWebhook,
                 }
             });
-            return await context.prisma.createWebhookResponse.create({
+            await context.prisma.webhook.create({
                 data: {
-                    code: 200,
-                    success: true,
-                    message: "Webhook created successfully",
-                    webhook: {
-                        create: {
-                            userId: args.userId,
-                            reactionId: myHonest.reactionId,
-                            incomingServiceName: args.serviceId,
-                        },
-                    },
+                    userId: args.userId,
+                    reactionId: myHonest.reactionId,
+                    incomingServiceName: args.serviceId,
                 },
             });
+            return 200
         },
         createService: async (_: any, args: any, context: Context) => {
             if (args.name === undefined || args.name === '') {
-                return await context.prisma.createServiceResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "Name is required"
-                    },
-                });
+                return 400
             }
-            if (await context.prisma.service.findUnique({
-                where: {
+            await context.prisma.service.create({
+                data: {
                     serviceName: args.name
                 }
-            })) {
-                return await context.prisma.createServiceResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "Service already exists"
-                    },
-                });
-            }
-            return await context.prisma.createServiceResponse.create({
-                data: {
-                    code: 200,
-                    success: true,
-                    message: "Service created successfully",
-                    service: {
-                        create: {
-                            serviceName: args.name
-                        }
-                    }
-                }
             });
+            return 200
         },
         createUser: async (_: any, args: any, context: Context) => {
             if (args.name === undefined || args.name === '') {
-                return await context.prisma.createUserResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "Name is required"
-                    },
-                });
+                return 400
             }
             if (args.email === undefined || args.email === '') {
-                return await context.prisma.createUserResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "Email is required"
-                    },
-                });
+                return 400
             }
             if (args.password === undefined || args.password === '') {
-                return await context.prisma.createUserResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "Password is required"
-                    },
-                });
+                return 400
             }
-            if (await context.prisma.user.findUnique({
-                where: {
-                    email: args.email
-                }
-            })) {
-                return await context.prisma.createUserResponse.create({
-                    data: {
-                        code: 400,
-                        success: false,
-                        message: "Email already in use"
-                    },
-                });
-            }
-            const u = await context.prisma.user.create({
+            await context.prisma.user.create({
                 data: {
                     name: args.name,
                     email: args.email,
                     password: args.password
                 }
             })
-            return await context.prisma.createUserResponse.create({
-                data: {
-                    code: 200,
-                    success: true,
-                    message: "User created successfully",
-                    user: {
-                        connect: {
-                            id: u.id
-                        }
-                    }
-                },
-            });
+            return 200
         }
     }
 };
