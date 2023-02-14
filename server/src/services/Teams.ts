@@ -1,6 +1,7 @@
 import { nstring, ustring } from "../types/string";
 import { area } from "../area/.area";
 import { IService } from "./IService";
+// import { TeamsCards } from "../utils/TeamsCards";
 
 @area.Service
 export class Teams implements IService {
@@ -35,6 +36,32 @@ export class Teams implements IService {
         console.log("meeting time")
         // push cool meeting embed
     }
+
+    @area.Action
+    postIssue(): void
+    {
+        if (!this._outgoing) return;
+
+        // fetch(this._outgoing, {
+        //     method: 'POST',
+        //     body: TeamsCards.githubIssue(),
+        //     headers: {'Content-Type': 'application/json'} 
+        // }).then();
+    }
+
+    // @area.Action
+    // postTask(): void
+    // {
+    //     if (!this._outgoing) return;
+
+    //     fetch(this._outgoing, {
+    //         method: 'POST',
+    //         body: JSON.stringify(
+    //             {}
+    //         ),
+    //         headers: {'Content-Type': 'application/json'} 
+    //     })
+    // }
 
     _authorId: ustring;
     _authorName: ustring;
