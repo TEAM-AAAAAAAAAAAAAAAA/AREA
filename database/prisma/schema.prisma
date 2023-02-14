@@ -8,14 +8,14 @@ datasource db {
 }
 
 model User {
-  id                 String               @id @unique @default(uuid())
-  email              String               @unique
-  name               String
-  password           String
-  createdAt          DateTime             @default(now())
-  emailVerified      Boolean              @default(false)
-  tokens             Token[]
-  Webhook            Webhook[]
+  id            String    @id @unique @default(uuid())
+  email         String    @unique
+  name          String
+  password      String
+  createdAt     DateTime  @default(now())
+  emailVerified Boolean   @default(false)
+  tokens        Token[]
+  Webhook       Webhook[]
 }
 
 model Token {
@@ -29,27 +29,27 @@ model Token {
 }
 
 model Service {
-  serviceName           String                  @id @unique
-  Action                Action[]
-  Webhook               Webhook[]
-  Reaction              Reaction[]
+  serviceName String     @id @unique
+  Action      Action[]
+  Webhook     Webhook[]
+  Reaction    Reaction[]
 }
 
 model Webhook {
-  webhookId            String                 @id @unique @default(uuid())
+  webhookId           String   @id @unique @default(uuid())
   userId              String
-  user                User                    @relation(fields: [userId], references: [id])
-  reactionId          Int                     @unique
-  reaction            Reaction                @relation(fields: [reactionId], references: [reactionId])
+  user                User     @relation(fields: [userId], references: [id])
+  reactionId          Int      @unique
+  reaction            Reaction @relation(fields: [reactionId], references: [reactionId])
   incomingServiceName String
-  incomingService     Service                 @relation(fields: [incomingServiceName], references: [serviceName])
+  incomingService     Service  @relation(fields: [incomingServiceName], references: [serviceName])
 }
 
 model Action {
-  actionName           String
-  serviceName          String
-  service              Service                @relation(fields: [serviceName], references: [serviceName])
-  Reaction             Reaction[]
+  actionName  String
+  serviceName String
+  service     Service    @relation(fields: [serviceName], references: [serviceName])
+  Reaction    Reaction[]
 
   @@id([serviceName, actionName])
   @@unique([serviceName, actionName])
@@ -75,6 +75,7 @@ model ActionReaction {
   reactionId Int
   action     Reaction @relation(name: "action", map: "action", fields: [actionId], references: [reactionId])
   reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [reactionId])
+
   @@unique([actionId, reactionId])
 }
 
