@@ -46,7 +46,7 @@ model Webhook {
 }
 
 model Action {
-  actionName           String                 @unique
+  actionName           String
   serviceName          String
   service              Service                @relation(fields: [serviceName], references: [serviceName])
   Reaction             Reaction[]
@@ -75,7 +75,7 @@ model ActionReaction {
   reactionId Int
   action     Reaction @relation(name: "action", map: "action", fields: [actionId], references: [reactionId])
   reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [reactionId])
-  // @@id([actionId, reactionId])
+  @@unique([actionId, reactionId])
 }
 
 enum TokenType {
