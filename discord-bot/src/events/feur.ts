@@ -3,7 +3,7 @@ import type { ArgsOf, Client } from "discordx";
 import { Discord, On } from "discordx";
 
 @Discord()
-export class Example {
+export class Feur {
     @On({ event: Events.MessageCreate })
     messageCreate([message]: ArgsOf<"messageCreate">, client: Client): void {
         console.log("Message Created", client.user?.username, message.content);
