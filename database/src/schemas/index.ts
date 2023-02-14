@@ -32,6 +32,11 @@ export const typeDefs = gql`
         serviceName: String!
     }
 
+    type ActionReaction {
+        action: Reaction!
+        reaction: Reaction!
+    }
+
     type Query {
         user(id: ID!): User
         allUsers: [User!]!
@@ -39,6 +44,7 @@ export const typeDefs = gql`
         allWebhooks: [Webhook!]!
         allReactions: [Reaction!]!
         allActions: [Action!]!
+        allActionReactions: [ActionReaction!]!
     }
 
     type Mutation {
@@ -47,12 +53,21 @@ export const typeDefs = gql`
         createWebhook(userId: String!, actionId: String!, serviceId: String!, outgoingWebhook: String!): Int!
         createUser(name: String!, email: String!, password: String!): Int!
         createService(name: String!): Int!
+        createChainedReaction(actionId: Int!, serviceName: String!, actionName: String!, outgoingWebhook: String!): Int!
     }
 
     scalar DateTime
 `;
 
 export const resolvers = {
+    ActionReaction: {
+        action: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.actionReaction.findUnique({ where: { id: parent.id } }).action();
+        },
+        reaction: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.actionReaction.findUnique({ where: { id: parent.id } }).reaction();
+        }
+    },
     Webhook: {
         user: async (parent: any, _: any, context: Context) => {
             return await context.prisma.webhook.findUnique({ where: { webhookId: parent.webhookId } }).user();
@@ -91,9 +106,37 @@ export const resolvers = {
         },
         allServices: async (_: any, args: any, context: Context) => {
             return await context.prisma.service.findMany();
+        },
+        allActionReactions: async (_: any, args: any, context: Context) => {
+            return await context.prisma.actionReaction.findMany();
         }
     },
     Mutation: {
+        createChainedReaction: async (_: any, args: any, context: Context) => {
+            if (args.actionId === undefined || args.actionId === '') {
+                return 400
+            }
+            if (args.actionName === undefined || args.actionName === '') {
+                return 400
+            }
+            if (args.outgoingWebhook === undefined || args.outgoingWebhook === '') {
+                return 400
+            }
+            const myHonest = await context.prisma.reaction.create({
+                data: {
+                    actionName: args.actionName,
+                    serviceName: args.serviceName,
+                    outgoingWebhook: args.outgoingWebhook,
+                }
+            });
+            await context.prisma.actionReaction.create({
+                data: {
+                    actionId: args.actionId,
+                    reactionId: myHonest.reactionId,
+                }
+            });
+            return 200
+        },
         removeWebhooks: async (_: any, args: any, context: Context) => {
             await context.prisma.webhook.deleteMany();
             return 200;
