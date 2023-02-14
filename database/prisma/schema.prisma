@@ -57,7 +57,7 @@ model Action {
 }
 
 model Reaction {
-  reactionId      Int              @id @default(autoincrement())
+  reactionId      Int              @id @unique @default(autoincrement())
   serviceName     String
   actionName      String
   action          Action           @relation(fields: [serviceName, actionName], references: [serviceName, actionName])
@@ -70,7 +70,7 @@ model Reaction {
 }
 
 model ActionReaction {
-  actionId   Int
+  actionId   Int      @unique
   reactionId Int
   action     Reaction @relation(name: "action", map: "action", fields: [actionId], references: [reactionId])
   reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [reactionId])

@@ -15,9 +15,10 @@ export class Discord implements IService {
         this._outgoing = data;
     }
 
-@   area.Action
+    @area.Action
     postMessage(): void {
         console.debug("Posting message to Discord: " + this._message);
+        console.log(this._outgoing);
         if (!this._outgoing) return;
 
         fetch(this._outgoing, {
