@@ -1,4 +1,4 @@
-export function issueFormat(authorName: string, authorImage: string, repositoryName: string, repositoryUrl: string, issueId: number, issueTitle: string, issueContent: string, datetime: string, issueUrl: string)
+export function issueFormat(authorName: string, authorImage: string, repositoryName: string, repositoryUrl: string, issueId: number, issueTitle: string, issueContent: string, issueUrl: string, datetime: string)
 {
     var card = {
         "@type": "MessageCard",
