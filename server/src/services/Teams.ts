@@ -1,7 +1,7 @@
 import { nstring, ustring } from "../types/string";
 import { area } from "../area/.area";
 import { IService } from "./IService";
-// import { TeamsCards } from "../utils/TeamsCards";
+import * as AreaCards from '../utils/AreaCards';
 
 @area.Service
 export class Teams implements IService {
@@ -42,11 +42,11 @@ export class Teams implements IService {
     {
         if (!this._outgoing) return;
 
-        // fetch(this._outgoing, {
-        //     method: 'POST',
-        //     body: TeamsCards.githubIssue(),
-        //     headers: {'Content-Type': 'application/json'} 
-        // }).then();
+        fetch(this._outgoing, {
+            method: 'POST',
+            body: JSON.stringify(AreaCards.issueFormat("bill gates", "https://cdn.futura-sciences.com/cdn-cgi/image/width=1024,quality=60,format=auto/sources/images/scientist/persov6/Gates-1000.jpg", "Team-AAAAAAAAAAAAAAAA/AREA", 42, "Wow", "Very good code and project", "February 32, 2023")),
+            headers: {'Content-Type': 'application/json'} 
+        }).then();
     }
 
     // @area.Action
