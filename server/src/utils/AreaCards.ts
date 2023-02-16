@@ -1,4 +1,4 @@
-export function issueFormat(authorName: string, authorImage: string, repositoryName: string, repositoryUrl: string, issueId: number, issueTitle: string, issueContent: string, issueUrl: string, datetime: string)
+export function issueFormat(authorName: string, authorImage: string, repositoryName: string, repositoryUrl: string, issueId: number, issueTitle: string, issueContent: string, issueUrl: string, datetime: Date | undefined)
 {
     var card = {
         "@type": "MessageCard",
@@ -9,7 +9,7 @@ export function issueFormat(authorName: string, authorImage: string, repositoryN
         "sections": [
             {
                 "activityTitle": authorName,
-                "activitySubtitle": datetime,
+                "activitySubtitle": datetime?.toString(),
                 "activityImage": authorImage,
                 "facts": [
                     {
@@ -22,6 +22,28 @@ export function issueFormat(authorName: string, authorImage: string, repositoryN
                     }
                 ],
                 "text": issueContent
+            }
+        ],
+        "potentialAction": [
+            {
+                "@type": "OpenUri",
+                "name": "View repository",
+                "targets": [
+                    {
+                        "os": "default",
+                        "uri": repositoryUrl
+                    }
+                ]
+            },
+            {
+                "@type": "OpenUri",
+                "name": "View issue",
+                "targets": [
+                    {
+                        "os": "default",
+                        "uri": issueUrl
+                    }
+                ]
             }
         ]
     }

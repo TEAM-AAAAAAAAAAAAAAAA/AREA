@@ -44,7 +44,7 @@ export class Teams implements IService {
 
         fetch(this._outgoing, {
             method: 'POST',
-            body: JSON.stringify(AreaCards.issueFormat("bill gates", "https://cdn.futura-sciences.com/cdn-cgi/image/width=1024,quality=60,format=auto/sources/images/scientist/persov6/Gates-1000.jpg", "Team-AAAAAAAAAAAAAAAA/AREA", "", 42, "Wow", "Very good code and project", "", "February 32, 2023")),
+            body: JSON.stringify(AreaCards.issueFormat("bill gates", "https://cdn.futura-sciences.com/cdn-cgi/image/width=1024,quality=60,format=auto/sources/images/scientist/persov6/Gates-1000.jpg", "Team", "https://google.com", 42, "Wow", "Very good code and project", "http://test", this._datetime)),
             headers: {'Content-Type': 'application/json'} 
         }).then();
     }
@@ -65,6 +65,9 @@ export class Teams implements IService {
 
     _authorId: ustring;
     _authorName: ustring;
+    _authorImage: ustring;
+    _title: ustring;
+    _datetime: Date | undefined = new Date(Date.now());
     _message: ustring;
     _outgoing: nstring;
 }
