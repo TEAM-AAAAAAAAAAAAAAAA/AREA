@@ -5,6 +5,7 @@ import { env } from './config/env';
 import bodyParser from 'body-parser';import { sendMail } from './utils/mailer';
 import csrf from 'csurf';
 import passport from 'passport';
+import { services } from './services/.services';
 
 const app = express();
 
@@ -18,6 +19,10 @@ const appConfig = {
     host: '0.0.0.0',
     envName: env.ENV_NAME,
 };
+
+services.DB.sync().then((res: boolean) => {
+    console.log("Is DB synced?", res);
+});
 
 app.use('/', routes);
 

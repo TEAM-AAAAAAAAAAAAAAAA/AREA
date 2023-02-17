@@ -2,3 +2,4 @@
 node_modules/
 prisma/docs
 prisma/joi
+prisma/dbml

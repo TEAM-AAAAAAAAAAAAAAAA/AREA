@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "db:migrate:dev": "dotenv -e .env/.env.dev -- prisma migrate dev --name init --preview-feature",
-    "db:migrate:prod": "dotenv -e .env/.env.prod -- prisma migrate deploy",
+    "dbinit:prod": "dotenv -e .env/.env.prod -- prisma migrate deploy --name init",
+    "dbinit:preprod": "dotenv -e .env/.env.preprod -- prisma migrate dev --name init",
+    "dbinit:dev": "dotenv -e .env/.env.dev -- prisma migrate dev --name init",
     "build": "npx tsc",
     "prod": "dotenv -e .env/.env.prod -- node -r dotenv/config dist/app.js",
     "preprod": "dotenv -e .env/.env.preprod -- node -r dotenv/config dist/app.js",
