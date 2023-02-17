@@ -21,10 +21,10 @@ import {
   IonAlert
 } from '@ionic/react';
 
-function validateEmail(email: string) {
-  const re = /^((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
-  return re.test(String(email).toLowerCase());
-}
+//function validateEmail(email: string) {
+//  const re = /^((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
+//  return re.test(String(email).toLowerCase());
+//}
 
 const Login: React.FC = () => {
   const [
@@ -55,11 +55,11 @@ const Login: React.FC = () => {
       return;
     }
 
-    if (validateEmail(email) === false) {
-      setMessage("invalid email");
-      setIserror(true);
-      return;
-    }
+//    if (validateEmail(email) === false) {
+//      setMessage("invalid email");
+//      setIserror(true);
+//      return;
+//    }
 
     if (!password || password.length < 6) {
       setMessage("enter pw");
@@ -67,10 +67,10 @@ const Login: React.FC = () => {
       return;
     }
 
-    const loginData = {
-      "email": email,
-      "password": password
-    }
+//    const loginData = {
+//      "email": email,
+//      "password": password
+//    }
   };
 
   return (
@@ -132,7 +132,7 @@ const Login: React.FC = () => {
             <IonCol>
               <IonButton expand="block" onClick={handleLogin}>Login</IonButton>
               <p style={{ fontSize: "medium" }}>
-                <a href="#">sign-up</a>
+                <a href=".">sign-up</a>
               </p>
             </IonCol>
           </IonRow>

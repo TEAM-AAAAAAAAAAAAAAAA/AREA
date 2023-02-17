@@ -1,7 +1,10 @@
 import React from 'react';
 import {
-  IonContent
+  IonContent,
+  IonButton
 } from '@ionic/react';
+import {SessionProvider} from 'next-auth/react';
+import type {AppProps} from 'next/app';
 
 interface ContainerProps {
   name: string;
