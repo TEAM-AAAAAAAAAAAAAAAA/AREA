@@ -3,9 +3,7 @@ import {
   IonContent
 } from '@ionic/react';
 import {
-  useSession,
-  signOut,
-  signIn
+  useSession
 } from "next-auth/react"
 
 interface ContainerProps {
@@ -13,20 +11,25 @@ interface ContainerProps {
 }
 
 const LoginContainer: React.FC<ContainerProps> = ({ name }) => {
+  console.log("Coucou");
   const { data: session } = useSession();
+  //console.log(session);
   if (session) {
     return (
-      <>
-        Signed in as {session} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
+      <IonContent>
+        <>
+          aaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        </>
+      </IonContent>
     )
   }
   return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
+    <IonContent>
+      <>
+      bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+
+      </>
+    </IonContent>
   )
 };
 
