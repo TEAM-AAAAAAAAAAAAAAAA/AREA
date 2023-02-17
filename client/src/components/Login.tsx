@@ -4,16 +4,18 @@ import {
 } from '@ionic/react';
 import {
   useSession
-} from "next-auth/react"
+} from "next-auth/react";
+//import { env } from '../config/env';
 
 interface ContainerProps {
   name: string;
 }
 
 const LoginContainer: React.FC<ContainerProps> = ({ name }) => {
-  console.log("Coucou");
+  console.log("NEXTAUTH_URL 1: " + process.env.NEXTAUTH_URL);
+  //console.log("NEXTAUTH_URL 2: " + env.NEXTAUTH_URL);
+
   const { data: session } = useSession();
-  //console.log(session);
   if (session) {
     return (
       <IonContent>
