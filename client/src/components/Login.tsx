@@ -1,20 +1,33 @@
 import React from 'react';
 import {
-  IonContent,
-  IonButton
+  IonContent
 } from '@ionic/react';
-import {SessionProvider} from 'next-auth/react';
-import type {AppProps} from 'next/app';
+import {
+  useSession,
+  signOut,
+  signIn
+} from "next-auth/react"
 
 interface ContainerProps {
   name: string;
 }
 
 const LoginContainer: React.FC<ContainerProps> = ({ name }) => {
+  const { data: session } = useSession();
+  if (session) {
+    return (
+      <>
+        Signed in as {session} <br />
+        <button onClick={() => signOut()}>Sign out</button>
+      </>
+    )
+  }
   return (
-    <IonContent>
-    </IonContent>
-  );
+    <>
+      Not signed in <br />
+      <button onClick={() => signIn()}>Sign in</button>
+    </>
+  )
 };
 
 export default LoginContainer;

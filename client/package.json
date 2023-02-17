@@ -27,6 +27,7 @@
     "ionicons": "^6.0.3",
     "joi": "^17.7.0",
     "next": "^13.1.6",
+    "next-auth": "^4.19.2",
     "playwright": "^1.30.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -51,6 +52,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
