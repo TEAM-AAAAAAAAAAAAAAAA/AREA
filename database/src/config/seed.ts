@@ -2,26 +2,52 @@ import { PrismaClient, Prisma } from '@prisma/client';
 import { env } from 'process';
 const prisma = new PrismaClient();
 
-const dummyUserData : Prisma.UserCreateInput[] = [
+const dummyOAuthProviderData : Prisma.OAuthProviderCreateInput[] = [
     {
-        name: 'John Doe',
-        email: 'john.doe@gmail.com',
-        password: 'password',
+        name: 'discord',
     },
     {
-        name: 'Jane Doe',
-        email: 'jane.doe@gmail.com',
-        password: 'password',
+        name: 'deams',
     }
 ]
 
+const dummyUserData : Prisma.UserCreateInput[] = [
+    {
+        name: 'John Doe',
+        email: 'john.doe@azer.com',
+        password: 'password',
+        tokens: {
+            create: {
+                type: 'API'
+            }
+        }
+    },
+    {
+        name: 'Jane Doe',
+        email: 'jane.doe@azer.com',
+        password: 'password',
+    }
+]
 async function main() {
     console.log(`Start seeding ...`);
+    console.log(`Seeding OAuth Providers ...`);
+    for (const o of dummyOAuthProviderData) {
+        prisma.OAuthProvider.create({
+            data: o
+        })
+        .then((res) => console.log(`Seeded OAuth Provider: ${res.name}`))
+        .catch();
+    }
+    console.log(`Seeding Users ...`);
     for (const u of dummyUserData) {
-        const user = await prisma.user.create({
-            data: u
-        });
-        console.log(`Created user with id: ${user.id}`);
+        try {
+            prisma.user.create({
+                data: u
+            })
+            .then((res) => console.log(`Seeded User: ${res.name}`))
+            .catch();
+        } catch (e) {
+        }
     }
     console.log(`Seeding finished.`);
 }
