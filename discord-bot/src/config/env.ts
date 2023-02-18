@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv'
+import * as dotenv from "dotenv";
 
-dotenv.config()
-export const env = process.env
+dotenv.config();
+export const env = process.env;
