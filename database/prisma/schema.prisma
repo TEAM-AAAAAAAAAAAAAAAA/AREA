@@ -18,25 +18,28 @@ model User {
   Webhook            Webhook[]
   CreateUserResponse CreateUserResponse[]
   DiscordBotWebhook  DiscordBotWebhook[]
-  OAuthUserData      OAuthUserData[]
+  oAuthUserData      oAuthUserData[]
 }
 
-model OAuthUserData {
-  id                String        @id @default(uuid())
+model oAuthUserData {
+  oAuthUserDataId   String        @id @default(uuid())
   userId            String
   user              User          @relation(fields: [userId], references: [id])
   data              Json
   accessToken       String
   refreshToken      String
-  OAuthProvider     oAuthProvider @relation(fields: [OAuthProviderName], references: [name])
-  OAuthProviderName String
+  oAuthProviderName String
+  oAuthProvider     oAuthProvider @relation(fields: [oAuthProviderName], references: [oAuthProviderName])
+
+  @@unique([userId, oAuthProviderName])
 }
 
 model oAuthProvider {
-  name String @id @unique
+  oAuthProviderName String @id @unique
 
-  Service       Service?
-  OAuthUserData OAuthUserData[]
+  serviceName   String?         @unique
+  service       Service?        @relation(fields: [serviceName], references: [serviceName])
+  oAuthUserData oAuthUserData[]
 }
 
 model Token {
@@ -54,8 +57,8 @@ model Service {
   Action                Action[]
   CreateServiceResponse CreateServiceResponse[]
   Webhook               Webhook[]
-  OAuthProvider         oAuthProvider?          @relation(fields: [OAuthProviderName], references: [name])
-  OAuthProviderName     String?                 @unique
+  oAuthProviderName     String?                 @unique
+  oAuthProvider         oAuthProvider?
 }
 
 model Webhook {
