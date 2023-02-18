@@ -28,7 +28,7 @@ export class Discord implements IService {
         fetch(this._outgoing, {
             method: 'POST',
             body: JSON.stringify({content: this._message}),
-            headers: {'Content-Type': 'application/json'} 
+            headers: {'Content-Type': 'application/json'}
         }).then();
     }
 
