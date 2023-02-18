@@ -1,6 +1,7 @@
 import type { CommandInteraction } from "discord.js";
 import { ApplicationCommandOptionType } from "discord.js";
 import { Discord, Slash, SlashOption } from "discordx";
+import { prisma } from "../config/db";
 
 @Discord()
 export class Meeting {
@@ -43,6 +44,7 @@ export class Meeting {
     year: number,
     interaction: CommandInteraction
   ): void {
+    // prisma.
     interaction.reply("New meeting at " + hour + ":" + minute || "00" + ", ");
   }
 }
