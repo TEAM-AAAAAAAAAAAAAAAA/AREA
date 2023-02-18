@@ -27,11 +27,11 @@ model OAuthUserData {
   data              Json
   accessToken       String
   refreshToken      String
-  OAuthProvider     OAuthProvider @relation(fields: [OAuthProviderName], references: [name])
+  OAuthProvider     oAuthProvider @relation(fields: [OAuthProviderName], references: [name])
   OAuthProviderName String
 }
 
-model OAuthProvider {
+model oAuthProvider {
   name String @id @unique
 
   Service       Service?
@@ -53,7 +53,7 @@ model Service {
   Action                Action[]
   CreateServiceResponse CreateServiceResponse[]
   Webhook               Webhook[]
-  OAuthProvider         OAuthProvider?          @relation(fields: [OAuthProviderName], references: [name])
+  OAuthProvider         oAuthProvider?          @relation(fields: [OAuthProviderName], references: [name])
   OAuthProviderName     String?                 @unique
 }
 
