@@ -17,6 +17,7 @@ model User {
   tokens             Token[]
   Webhook            Webhook[]
   CreateUserResponse CreateUserResponse[]
+  DiscordBotWebhook  DiscordBotWebhook[]
 }
 
 model Token {
@@ -37,13 +38,14 @@ model Service {
 }
 
 model Webhook {
-  webhookId           String   @id @default(uuid())
+  webhookId           String              @id @default(uuid())
   userId              String
-  user                User     @relation(fields: [userId], references: [id])
-  reactionId          Int      @unique
-  reaction            Reaction @relation(fields: [reactionId], references: [reactionId])
+  user                User                @relation(fields: [userId], references: [id])
+  reactionId          Int                 @unique
+  reaction            Reaction            @relation(fields: [reactionId], references: [reactionId])
   incomingServiceName String
-  incomingService     Service  @relation(fields: [incomingServiceName], references: [serviceName])
+  incomingService     Service             @relation(fields: [incomingServiceName], references: [serviceName])
+  DiscordBotWebhook   DiscordBotWebhook[]
 }
 
 model Action {
@@ -94,6 +96,17 @@ model CreateServiceResponse {
   message     String
   service     Service? @relation(fields: [serviceName], references: [serviceName])
   serviceName String?
+}
+
+model DiscordBotWebhook {
+  command          String
+  userId           String
+  user             User?   @relation(fields: [userId], references: [id])
+  webhookWebhookId String
+  webhook          Webhook @relation(fields: [webhookWebhookId], references: [webhookId])
+
+  @@id([command, userId])
+  @@unique([command, userId])
 }
 
 enum TokenType {
