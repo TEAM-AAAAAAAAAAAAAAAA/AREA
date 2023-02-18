@@ -55,6 +55,9 @@ client
   })
   .then((result) => console.log(result));
 
+console.log(process.env.NEXTAUTH_URL);
+console.log(process.env.NEXT_PUBLIC_NEXTAUTH_URL);
+
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
