@@ -1,8 +1,8 @@
-import { CommandInteraction } from "discord.js";
-import { ApplicationCommandOptionType } from "discord.js";
-import { Discord, Slash, SlashOption } from "discordx";
-import { prisma } from "../config/db.js";
-import { env } from "../config/env.js";
+import { CommandInteraction } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
+import { Discord, Slash, SlashOption } from 'discordx';
+import { prisma } from '../config/db.js';
+import { env } from '../config/env.js';
 
 @Discord()
 export class Meeting {
