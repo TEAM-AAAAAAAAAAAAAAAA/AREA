@@ -28,7 +28,7 @@ export class Meeting {
 
         interaction: CommandInteraction
     ): void {
-        var webhook = prisma.discordBotWebhook.findUnique({
+        let webhook = prisma.discordBotWebhook.findUnique({
             where: {
                 command_userId: {
                     command: "meeting",
