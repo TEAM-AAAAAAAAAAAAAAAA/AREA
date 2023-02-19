@@ -34,18 +34,10 @@ export class Meeting {
                     command: "meeting",
                     userId: 'c3210928-6bc4-407b-805d-39825d59dcc8'
                 }
-            },
-            select: {
-                webhook: {
-                    select: {
-                        userId: true,
-                        webhookId: true
-                    }
-                }
             }
         });
 
-        let res = await fetch(env.API_URL + '/hook/' + webhook?.webhook.userId + '/' + webhook?.webhook.webhookId, {
+        let res = await fetch(env.API_URL + '/hook/' + webhook?.userId + '/' + webhook?.webhookWebhookId, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({bot: {
@@ -55,7 +47,7 @@ export class Meeting {
                     day: day,
                     month: month,
                     year: year,
-                    author: webhook?.webhook.userId
+                    author: webhook?.userId
                 }})
             });
 
