@@ -7,7 +7,7 @@ import { env } from '../config/env.js';
 @Discord()
 export class Meeting {
     @Slash({ description: "Meeting" })
-    meeting(
+    async meeting(
         @SlashOption({name: "subject", description: "subject of the meeting", required: true, type: ApplicationCommandOptionType.String})
         subject: string,
 
