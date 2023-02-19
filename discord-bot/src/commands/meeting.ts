@@ -27,66 +27,71 @@ export class Meeting {
         minute: number,
 
         interaction: CommandInteraction
-    ): void {
+    ): Promise<void> {
         // var thisId = prisma.oAuthUserData.findUnique({
 
         // })
 
-        var thisProvider = prisma.oAuthProvider.findUnique({
+        let thisProvider = await prisma.oAuthProvider.findUnique({
             where: {
                 serviceName: "Discord"
             }
-        }).then(provider => {
-            if (!provider) return null;
-
-            var thisUser = prisma.oAuthUserData.findUnique({
-                where: {
-                    providerUserId_oAuthProviderName: {
-                        providerUserId: interaction.user.id,
-                        oAuthProviderName: provider.oAuthProviderName
-                    }
-                }
-            }).then(user => {
-                if (!user) return null;
-
-                var webhook = prisma.discordBotWebhook.findUnique({
-                    where: {
-                        command_userId: {
-                            command: "meeting",
-                            userId: user.userId
-                        }
-                    },
-                    select: {
-                        webhook: {
-                            select: {
-                                userId: true,
-                                webhookId: true
-                            }
-                        }
-                    }
-                }).then(hook => {
-                    if (!hook) return null;
-
-                    console.log(hook)
-                    fetch(env.API_URL + '/hook/' + hook?.webhook.userId + '/' + hook?.webhook.webhookId, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({bot: {
-                            content: subject,
-                            hour: hour,
-                            minute: minute,
-                            day: day,
-                            month: month,
-                            year: year,
-                            author: hook?.webhook.userId
-                        }})
-                    }).then(res => {
-                        console.log(Math.floor(new Date(year, month, day, hour, minute, 0, 0).getTime() / 1000));
-                        console.log(res);
-                        interaction.reply("Meeting created");
-                    })
-                })
-            });
         });
+        if (!thisProvider)
+        {
+            interaction.reply("This AREA server's administrator has not set up the Discord OAuth provider yet");
+            return;
+        }
+
+        let thisUser = await prisma.oAuthUserData.findUnique({
+            where: {
+                providerUserId_oAuthProviderName: {
+                    providerUserId: interaction.user.id,
+                    oAuthProviderName: thisProvider.oAuthProviderName
+                }
+            }
+        });
+        if (!thisUser)
+        {
+            interaction.reply("You need to be linked to an AREA account to use commands");
+            return;
+        }
+
+        let webhook = await prisma.discordBotWebhook.findUnique({
+            where: {
+                command_userId: {
+                    command: "meeting",
+                    userId: thisUser.userId
+                }
+            }
+        });
+        if (!webhook)
+        {
+            interaction.reply("You need to set up a webhook for this command");
+            return;
+        }
+        console.log(webhook)
+        let res = await fetch(env.API_URL + '/hook/' + webhook.userId + '/' + webhook.webhookWebhookId, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({bot: {
+                content: subject,
+                hour: hour,
+                minute: minute,
+                day: day,
+                month: month,
+                year: year,
+                author: webhook.userId
+            }})
+        });
+        if (!res || !res.ok)
+        {
+            interaction.reply("Unknown error");
+            return;
+        }
+
+        console.log(Math.floor(new Date(year, month, day, hour, minute, 0, 0).getTime() / 1000));
+        console.log(res);
+        interaction.reply("Meeting created");
     }
 }
