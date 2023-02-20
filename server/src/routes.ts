@@ -17,9 +17,9 @@ const apolloRateLimit = rateLimit({
 });
 
 if (process.env.APOLLO_PORT != undefined)
-    app.use('/apollo', proxy('apollo_server:' + process.env.APOLLO_PORT));
+    app.use('/apollo', apolloRateLimit, proxy('apollo_server:' + process.env.APOLLO_PORT));
 else
-    app.use('/apollo', proxy('apollo_server:4000'));
+    app.use('/apollo', apolloRateLimit, proxy('apollo_server:4000'));
 routes.get('/', index.GET);
 routes.get('/hook/', hook.GET);
 routes.post('/hook/:hook(*)', ...hook.POST);
