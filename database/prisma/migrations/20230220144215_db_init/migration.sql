@@ -17,6 +17,7 @@ CREATE TABLE "User" (
 CREATE TABLE "oAuthUserData" (
     "oAuthUserDataId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "providerUserId" TEXT NOT NULL,
     "data" JSONB NOT NULL,
     "accessToken" TEXT NOT NULL,
     "refreshToken" TEXT NOT NULL,
@@ -27,16 +28,10 @@ CREATE TABLE "oAuthUserData" (
 
 -- CreateTable
 CREATE TABLE "oAuthProvider" (
-<<<<<<<< HEAD:database/prisma/migrations/20230218221229_db_init/migration.sql
     "oAuthProviderName" TEXT NOT NULL,
     "serviceName" TEXT,
 
     CONSTRAINT "oAuthProvider_pkey" PRIMARY KEY ("oAuthProviderName")
-========
-    "name" TEXT NOT NULL,
-
-    CONSTRAINT "oAuthProvider_pkey" PRIMARY KEY ("name")
->>>>>>>> main:database/prisma/migrations/20230220093222_init/migration.sql
 );
 
 -- CreateTable
@@ -135,17 +130,16 @@ CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-<<<<<<<< HEAD:database/prisma/migrations/20230218221229_db_init/migration.sql
 CREATE UNIQUE INDEX "oAuthUserData_userId_oAuthProviderName_key" ON "oAuthUserData"("userId", "oAuthProviderName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "oAuthUserData_providerUserId_oAuthProviderName_key" ON "oAuthUserData"("providerUserId", "oAuthProviderName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "oAuthProvider_oAuthProviderName_key" ON "oAuthProvider"("oAuthProviderName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "oAuthProvider_serviceName_key" ON "oAuthProvider"("serviceName");
-========
-CREATE UNIQUE INDEX "oAuthProvider_name_key" ON "oAuthProvider"("name");
->>>>>>>> main:database/prisma/migrations/20230220093222_init/migration.sql
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Token_id_key" ON "Token"("id");
@@ -166,7 +160,6 @@ CREATE UNIQUE INDEX "Action_serviceName_actionName_key" ON "Action"("serviceName
 CREATE UNIQUE INDEX "DiscordBotWebhook_command_userId_key" ON "DiscordBotWebhook"("command", "userId");
 
 -- AddForeignKey
-<<<<<<<< HEAD:database/prisma/migrations/20230218221229_db_init/migration.sql
 ALTER TABLE "oAuthUserData" ADD CONSTRAINT "oAuthUserData_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -174,20 +167,11 @@ ALTER TABLE "oAuthUserData" ADD CONSTRAINT "oAuthUserData_oAuthProviderName_fkey
 
 -- AddForeignKey
 ALTER TABLE "oAuthProvider" ADD CONSTRAINT "oAuthProvider_serviceName_fkey" FOREIGN KEY ("serviceName") REFERENCES "Service"("serviceName") ON DELETE SET NULL ON UPDATE CASCADE;
-========
-ALTER TABLE "OAuthUserData" ADD CONSTRAINT "OAuthUserData_OAuthProviderName_fkey" FOREIGN KEY ("OAuthProviderName") REFERENCES "oAuthProvider"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
->>>>>>>> main:database/prisma/migrations/20230220093222_init/migration.sql
 
 -- AddForeignKey
 ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-<<<<<<<< HEAD:database/prisma/migrations/20230218221229_db_init/migration.sql
-========
-ALTER TABLE "Service" ADD CONSTRAINT "Service_OAuthProviderName_fkey" FOREIGN KEY ("OAuthProviderName") REFERENCES "oAuthProvider"("name") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
->>>>>>>> main:database/prisma/migrations/20230220093222_init/migration.sql
 ALTER TABLE "Webhook" ADD CONSTRAINT "Webhook_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
