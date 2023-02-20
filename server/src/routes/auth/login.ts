@@ -6,6 +6,7 @@ import { jwtSecret, mailSecret } from '../../config/env';
 import * as argon2id from 'argon2';
 import { sendMail } from '../../utils/mailer';
 import _ from 'lodash';
+import { rateLimit } from 'express-rate-limit';
 
 export const login = {
     GET: (req: Request, res: Response) => {
@@ -13,6 +14,12 @@ export const login = {
     },
 
     POST: [
+rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    standardHeaders: true,
+    legacyHeaders: false,
+}),
 async (req: Request, res: Response) => {
 let userInputScheme = Joi.object(({
     email: Joi.string().email().required(),
