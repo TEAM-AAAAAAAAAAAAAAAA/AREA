@@ -3,10 +3,18 @@ import { index } from "./routes/index";
 import { hook } from "./routes/hook";
 import { auth } from "./routes/auth";
 import _ from "lodash";
+import { rateLimit } from "express-rate-limit";
 
 export const routes = Router();
 var proxy = require('express-http-proxy');
 var app = require('express')();
+
+const apolloRateLimit = rateLimit({
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    max: 200, // limit each IP to 100 requests per windowMs
+    standardHeaders: true,
+    legacyHeaders: false,
+});
 
 if (process.env.APOLLO_PORT != undefined)
     app.use('/apollo', proxy('apollo_server:' + process.env.APOLLO_PORT));
