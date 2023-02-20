@@ -17,6 +17,25 @@ model User {
   tokens             Token[]
   Webhook            Webhook[]
   CreateUserResponse CreateUserResponse[]
+  OAuthUserData      OAuthUserData[]
+}
+
+model OAuthUserData {
+  id                String        @id @default(uuid())
+  userId            String
+  user              User          @relation(fields: [userId], references: [id])
+  data              Json
+  accessToken       String
+  refreshToken      String
+  OAuthProvider     oAuthProvider @relation(fields: [OAuthProviderName], references: [name])
+  OAuthProviderName String
+}
+
+model oAuthProvider {
+  name String @id @unique
+
+  Service       Service?
+  OAuthUserData OAuthUserData[]
 }
 
 model Token {
@@ -34,6 +53,8 @@ model Service {
   Action                Action[]
   CreateServiceResponse CreateServiceResponse[]
   Webhook               Webhook[]
+  OAuthProvider         oAuthProvider?          @relation(fields: [OAuthProviderName], references: [name])
+  OAuthProviderName     String?                 @unique
 }
 
 model Webhook {
