@@ -26,10 +26,10 @@ CREATE TABLE "OAuthUserData" (
 );
 
 -- CreateTable
-CREATE TABLE "OAuthProvider" (
+CREATE TABLE "oAuthProvider" (
     "name" TEXT NOT NULL,
 
-    CONSTRAINT "OAuthProvider_pkey" PRIMARY KEY ("name")
+    CONSTRAINT "oAuthProvider_pkey" PRIMARY KEY ("name")
 );
 
 -- CreateTable
@@ -119,7 +119,7 @@ CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "OAuthProvider_name_key" ON "OAuthProvider"("name");
+CREATE UNIQUE INDEX "oAuthProvider_name_key" ON "oAuthProvider"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Token_id_key" ON "Token"("id");
@@ -140,13 +140,13 @@ CREATE UNIQUE INDEX "Action_serviceName_actionName_key" ON "Action"("serviceName
 ALTER TABLE "OAuthUserData" ADD CONSTRAINT "OAuthUserData_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OAuthUserData" ADD CONSTRAINT "OAuthUserData_OAuthProviderName_fkey" FOREIGN KEY ("OAuthProviderName") REFERENCES "OAuthProvider"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "OAuthUserData" ADD CONSTRAINT "OAuthUserData_OAuthProviderName_fkey" FOREIGN KEY ("OAuthProviderName") REFERENCES "oAuthProvider"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Service" ADD CONSTRAINT "Service_OAuthProviderName_fkey" FOREIGN KEY ("OAuthProviderName") REFERENCES "OAuthProvider"("name") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Service" ADD CONSTRAINT "Service_OAuthProviderName_fkey" FOREIGN KEY ("OAuthProviderName") REFERENCES "oAuthProvider"("name") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Webhook" ADD CONSTRAINT "Webhook_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
