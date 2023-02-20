@@ -1,4 +1,8 @@
-FROM node:14-alpine@sha256:e389e6411b9951c74289fd51834f59b2b45655ba7aecd3df96e62d1741f4f902
+WORKDIR /app
+
+COPY package.json yarn.lock /app/
+
+RUN yarn install
 
 COPY . /app
 
