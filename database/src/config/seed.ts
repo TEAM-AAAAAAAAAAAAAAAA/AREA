@@ -7,7 +7,7 @@ const dummyOAuthProviderData : Prisma.oAuthProviderCreateInput[] = [
         name: 'discord',
     },
     {
-        name: 'deams',
+        name: 'teams',
     }
 ]
 
