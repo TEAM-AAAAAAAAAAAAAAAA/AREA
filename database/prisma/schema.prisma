@@ -8,14 +8,33 @@ datasource db {
 }
 
 model User {
-  id            String    @id @unique @default(uuid())
-  email         String    @unique
+  id            String          @id @unique @default(uuid())
+  email         String          @unique
   name          String
   password      String
-  createdAt     DateTime  @default(now())
-  emailVerified Boolean   @default(false)
+  createdAt     DateTime        @default(now())
+  emailVerified Boolean         @default(false)
   tokens        Token[]
   Webhook       Webhook[]
+  OAuthUserData OAuthUserData[]
+}
+
+model OAuthUserData {
+  id                String        @id @default(uuid())
+  userId            String
+  user              User          @relation(fields: [userId], references: [id])
+  data              Json
+  accessToken       String
+  refreshToken      String
+  OAuthProvider     oAuthProvider @relation(fields: [OAuthProviderName], references: [name])
+  OAuthProviderName String
+}
+
+model oAuthProvider {
+  name String @id @unique
+
+  Service       Service?
+  OAuthUserData OAuthUserData[]
 }
 
 model Token {
@@ -29,10 +48,12 @@ model Token {
 }
 
 model Service {
-  serviceName String     @id @unique
-  Action      Action[]
-  Webhook     Webhook[]
-  Reaction    Reaction[]
+  serviceName       String         @id @unique
+  Action            Action[]
+  Webhook           Webhook[]
+  OAuthProvider     oAuthProvider? @relation(fields: [OAuthProviderName], references: [name])
+  OAuthProviderName String?        @unique
+  Reaction          Reaction[]
 }
 
 model Webhook {

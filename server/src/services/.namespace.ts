@@ -23,7 +23,7 @@ export class DB {
             }).then((res) => {
                 console.debug("Upserted Service: " + res.serviceName);
             }).catch((err) => {
-                console.error("Failed to upsert Service: " + serviceName);
+                console.error(err);
                 isSynced = false;
             });
 

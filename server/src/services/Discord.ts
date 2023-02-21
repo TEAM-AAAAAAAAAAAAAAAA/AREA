@@ -15,7 +15,7 @@ export class Discord implements IService {
         this._outgoing = data;
     }
 
-@   area.Action
+    @area.Action
     postMessage(): void {
         console.debug("Posting message to Discord: " + this._message);
         if (!this._outgoing) return;
@@ -23,7 +23,7 @@ export class Discord implements IService {
         fetch(this._outgoing, {
             method: 'POST',
             body: JSON.stringify({content: this._message}),
-            headers: {'Content-Type': 'application/json'} 
+            headers: {'Content-Type': 'application/json'}
         }).then();
     }
 
