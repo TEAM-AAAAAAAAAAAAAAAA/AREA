@@ -9,7 +9,7 @@ export class Teams implements IService {
     read(data: any): void {
         this._authorId = data?.from?.id;
         this._authorName = data?.from?.name
-        this._message = data?.text?.substring(data?.text?.indexOf(';') + 1, data?.text?.length - 1);
+        this._message = data?.text?.substring(data?.text?.indexOf('</at> ') + 6);
     }
 
     setOutgoing(data: nstring): void {
