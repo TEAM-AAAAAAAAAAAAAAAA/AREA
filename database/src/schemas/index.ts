@@ -1,8 +1,13 @@
 import { gql } from 'apollo-server';
 import { DateTimeResolver } from 'graphql-scalars';
+import GraphQLJSON from 'graphql-type-json';
+import { GraphQLJSONObject } from 'graphql-type-json';
 import { Context } from '../context';
 
 export const typeDefs = gql`
+scalar JSON
+scalar JSONObject
+
     type User {
         id: ID!
         name: String!
@@ -37,6 +42,18 @@ export const typeDefs = gql`
         reaction: Reaction!
     }
 
+    type oAuthProvider {
+        oAuthProviderName: String!
+    }
+
+    type oAuthUserData {
+        user: User!
+        data: JSONObject!
+        oAuthProvider: oAuthProvider!
+        accessToken: String!
+        refreshToken: String!
+    }
+
     type Query {
         user(id: ID!): User
         allUsers: [User!]!
@@ -45,6 +62,8 @@ export const typeDefs = gql`
         allReactions: [Reaction!]!
         allActions: [Action!]!
         allActionReactions: [ActionReaction!]!
+        allOAuthUserData: [oAuthUserData!]!
+        allOAuthProviders: [oAuthProvider!]!
     }
 
     type Mutation {
@@ -54,12 +73,23 @@ export const typeDefs = gql`
         createUser(name: String!, email: String!, password: String!): Int!
         createService(name: String!): Int!
         createChainedReaction(actionId: Int!, serviceName: String!, actionName: String!, outgoingWebhook: String!): Int!
+        createOAuthUserData(userId: String!, refreshToken: String!, accessToken: String!, data: JSONObject!, oAuthProviderName: String!, providerUserId: String!): Int!
     }
 
     scalar DateTime
 `;
 
 export const resolvers = {
+    JSON: GraphQLJSON,
+    JSONObject: GraphQLJSONObject,
+    oAuthUserData: {
+        user: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.oAuthUserData.findUnique({ where: { oAuthUserDataId: parent.oAuthUserDataId } }).user();
+        },
+        oAuthProvider: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.oAuthUserData.findUnique({ where: { oAuthUserDataId: parent.oAuthUserDataId } }).oAuthProvider();
+        },
+    },
     ActionReaction: {
         action: async (parent: any, _: any, context: Context) => {
             return await context.prisma.actionReaction.findUnique({ where: { id: parent.id } }).action();
@@ -85,6 +115,12 @@ export const resolvers = {
         }
     },
     Query: {
+        allOAuthProviders: async (_: any, args: any, context: Context) => {
+            return await context.prisma.oAuthProvider.findMany();
+        },
+        allOAuthUserData: async (_: any, args: any, context: Context) => {
+            return await context.prisma.oAuthUserData.findMany();
+        },
         allActions: async (_: any, args: any, context: Context) => {
             return await context.prisma.action.findMany();
         },
@@ -112,6 +148,31 @@ export const resolvers = {
         }
     },
     Mutation: {
+        createOAuthUserData: async (_: any, args: any, context: Context) => {
+            if (args.userId === undefined || args.userId === '') {
+                return 400
+            }
+            if (args.refreshToken === undefined || args.refreshToken === '') {
+                return 400
+            }
+            if (args.accessToken === undefined || args.accessToken === '') {
+                return 400
+            }
+            if (args.data === undefined || args.data === '') {
+                return 400
+            }
+            await context.prisma.oAuthUserData.create({
+                data: {
+                    userId: args.userId,
+                    refreshToken: args.refreshToken,
+                    providerUserId: args.providerUserId,
+                    accessToken: args.accessToken,
+                    data: args.data,
+                    oAuthProviderName: args.oAuthProviderName
+                }
+            });
+            return 200
+        },
         createChainedReaction: async (_: any, args: any, context: Context) => {
             if (args.actionId === undefined || args.actionId === '') {
                 return 400
