@@ -9,7 +9,8 @@ export class Teams implements IService {
     read(data: any): void {
         this._authorId = data?.from?.id;
         this._authorName = data?.from?.name
-        this._message = data?.text?.substring(data?.text?.indexOf('</at> ') + 6);
+        this._message = data?.text?.substring(data?.text?.indexOf('</at>') + 5).replace("&nbsp;", " ");
+        // this._message = data?.text?.replace("<at>", "").replace("</at>", "").replace("&nbsp;", " ");
     }
 
     setOutgoing(data: nstring): void {
