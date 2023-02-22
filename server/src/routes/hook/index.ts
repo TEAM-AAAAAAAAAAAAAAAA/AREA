@@ -138,6 +138,9 @@ export const hook = {
         if (await runWebhook(webhook, req.body) != true)
             return res.status(500).json();
 
-        return res.status(200).json();
+        return res.status(200).json({
+            "type": "message",
+            "text": "Just received whatever you sent (OK)"
+        });
     }]
 };
