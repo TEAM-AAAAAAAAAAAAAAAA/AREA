@@ -8,16 +8,16 @@ datasource db {
 }
 
 model User {
-  id                 String               @id @unique @default(uuid())
-  email              String               @unique
-  name               String
-  password           String
-  createdAt          DateTime             @default(now())
-  emailVerified      Boolean              @default(false)
-  tokens             Token[]
-  Webhook            Webhook[]
-  DiscordBotWebhook  DiscordBotWebhook[]
-  oAuthUserData      oAuthUserData[]
+  id                String              @id @unique @default(uuid())
+  email             String              @unique
+  name              String
+  password          String
+  createdAt         DateTime            @default(now())
+  emailVerified     Boolean             @default(false)
+  tokens            Token[]
+  Webhook           Webhook[]
+  DiscordBotWebhook DiscordBotWebhook[]
+  oAuthUserData     oAuthUserData[]
 }
 
 model oAuthUserData {
@@ -54,15 +54,16 @@ model Token {
 }
 
 model Service {
-  serviceName           String                  @id @unique
-  Action                Action[]
-  Webhook               Webhook[]
-  oAuthProviderName     String?                 @unique
-  oAuthProvider         oAuthProvider?
+  serviceName       String         @id @unique
+  Action            Action[]
+  Webhook           Webhook[]
+  oAuthProviderName String?        @unique
+  oAuthProvider     oAuthProvider?
+  Reaction          Reaction[]
 }
 
 model Webhook {
-  webhookId           String   @id @unique @default(uuid())
+  webhookId           String              @id @unique @default(uuid())
   userId              String
   user                User                @relation(fields: [userId], references: [id])
   reactionId          Int                 @unique

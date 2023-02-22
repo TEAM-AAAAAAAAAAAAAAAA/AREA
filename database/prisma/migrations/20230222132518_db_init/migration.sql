@@ -86,32 +86,11 @@ CREATE TABLE "Reaction" (
 
 -- CreateTable
 CREATE TABLE "ActionReaction" (
+    "id" SERIAL NOT NULL,
     "actionId" INTEGER NOT NULL,
     "reactionId" INTEGER NOT NULL,
 
-    CONSTRAINT "ActionReaction_pkey" PRIMARY KEY ("actionId","reactionId")
-);
-
--- CreateTable
-CREATE TABLE "CreateUserResponse" (
-    "id" SERIAL NOT NULL,
-    "code" INTEGER NOT NULL,
-    "success" BOOLEAN NOT NULL,
-    "message" TEXT NOT NULL,
-    "userId" TEXT,
-
-    CONSTRAINT "CreateUserResponse_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "CreateServiceResponse" (
-    "id" SERIAL NOT NULL,
-    "code" INTEGER NOT NULL,
-    "success" BOOLEAN NOT NULL,
-    "message" TEXT NOT NULL,
-    "serviceName" TEXT,
-
-    CONSTRAINT "CreateServiceResponse_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "ActionReaction_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -151,10 +130,19 @@ CREATE UNIQUE INDEX "Service_serviceName_key" ON "Service"("serviceName");
 CREATE UNIQUE INDEX "Service_oAuthProviderName_key" ON "Service"("oAuthProviderName");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Webhook_webhookId_key" ON "Webhook"("webhookId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Webhook_reactionId_key" ON "Webhook"("reactionId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Action_serviceName_actionName_key" ON "Action"("serviceName", "actionName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ActionReaction_id_key" ON "ActionReaction"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ActionReaction_actionId_reactionId_key" ON "ActionReaction"("actionId", "reactionId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "DiscordBotWebhook_command_userId_key" ON "DiscordBotWebhook"("command", "userId");
@@ -184,6 +172,9 @@ ALTER TABLE "Webhook" ADD CONSTRAINT "Webhook_incomingServiceName_fkey" FOREIGN 
 ALTER TABLE "Action" ADD CONSTRAINT "Action_serviceName_fkey" FOREIGN KEY ("serviceName") REFERENCES "Service"("serviceName") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_serviceName_fkey" FOREIGN KEY ("serviceName") REFERENCES "Service"("serviceName") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_serviceName_actionName_fkey" FOREIGN KEY ("serviceName", "actionName") REFERENCES "Action"("serviceName", "actionName") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -191,12 +182,6 @@ ALTER TABLE "ActionReaction" ADD CONSTRAINT "action" FOREIGN KEY ("actionId") RE
 
 -- AddForeignKey
 ALTER TABLE "ActionReaction" ADD CONSTRAINT "reaction" FOREIGN KEY ("reactionId") REFERENCES "Reaction"("reactionId") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "CreateUserResponse" ADD CONSTRAINT "CreateUserResponse_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "CreateServiceResponse" ADD CONSTRAINT "CreateServiceResponse_serviceName_fkey" FOREIGN KEY ("serviceName") REFERENCES "Service"("serviceName") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "DiscordBotWebhook" ADD CONSTRAINT "DiscordBotWebhook_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
