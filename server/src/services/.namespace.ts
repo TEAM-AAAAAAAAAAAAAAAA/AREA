@@ -3,6 +3,7 @@ import { PrismaServices, PrismaActions } from "../area/mappings";
 
 export * from "./Discord";
 export * from "./Teams";
+export * from "./OpenWeatherMap";
 
 export class DB {
     static async sync() : Promise<boolean>
