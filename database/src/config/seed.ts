@@ -4,10 +4,10 @@ const prisma = new PrismaClient();
 
 const dummyOAuthProviderData : Prisma.oAuthProviderCreateInput[] = [
     {
-        name: 'discord',
+        oAuthProviderName: 'discord',
     },
     {
-        name: 'teams',
+        oAuthProviderName: 'teams',
     }
 ]
 
@@ -36,10 +36,10 @@ async function main() {
             create: o,
             update: o,
             where: {
-                name: o.name
+                oAuthProviderName: o.oAuthProviderName
             }
         })
-        .then((res) => console.log(`Seeded OAuth Provider: ${res.name}`))
+        .then((res) => console.log(`Seeded OAuth Provider: ${res.oAuthProviderName}`))
         .catch((e) => console.info(e));
     }
     console.log(`Seeding Users ...`);

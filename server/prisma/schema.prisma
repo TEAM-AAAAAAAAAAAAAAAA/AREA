@@ -8,33 +8,39 @@ datasource db {
 }
 
 model User {
-  id            String          @id @unique @default(uuid())
-  email         String          @unique
-  name          String
-  password      String
-  createdAt     DateTime        @default(now())
-  emailVerified Boolean         @default(false)
-  tokens        Token[]
-  Webhook       Webhook[]
-  OAuthUserData OAuthUserData[]
+  id                String              @id @unique @default(uuid())
+  email             String              @unique
+  name              String
+  password          String
+  createdAt         DateTime            @default(now())
+  emailVerified     Boolean             @default(false)
+  tokens            Token[]
+  Webhook           Webhook[]
+  DiscordBotWebhook DiscordBotWebhook[]
+  oAuthUserData     oAuthUserData[]
 }
 
-model OAuthUserData {
-  id                String        @id @default(uuid())
+model oAuthUserData {
+  oAuthUserDataId   String        @id @default(uuid())
   userId            String
   user              User          @relation(fields: [userId], references: [id])
+  providerUserId    String
   data              Json
   accessToken       String
   refreshToken      String
-  OAuthProvider     oAuthProvider @relation(fields: [OAuthProviderName], references: [name])
-  OAuthProviderName String
+  oAuthProviderName String
+  oAuthProvider     oAuthProvider @relation(fields: [oAuthProviderName], references: [oAuthProviderName])
+
+  @@unique([userId, oAuthProviderName])
+  @@unique([providerUserId, oAuthProviderName])
 }
 
 model oAuthProvider {
-  name String @id @unique
+  oAuthProviderName String @id @unique
 
-  Service       Service?
-  OAuthUserData OAuthUserData[]
+  serviceName   String?         @unique
+  service       Service?        @relation(fields: [serviceName], references: [serviceName])
+  oAuthUserData oAuthUserData[]
 }
 
 model Token {
@@ -51,19 +57,20 @@ model Service {
   serviceName       String         @id @unique
   Action            Action[]
   Webhook           Webhook[]
-  OAuthProvider     oAuthProvider? @relation(fields: [OAuthProviderName], references: [name])
-  OAuthProviderName String?        @unique
+  oAuthProviderName String?        @unique
+  oAuthProvider     oAuthProvider?
   Reaction          Reaction[]
 }
 
 model Webhook {
-  webhookId           String   @id @unique @default(uuid())
+  webhookId           String              @id @unique @default(uuid())
   userId              String
-  user                User     @relation(fields: [userId], references: [id])
-  reactionId          Int      @unique
-  reaction            Reaction @relation(fields: [reactionId], references: [reactionId])
+  user                User                @relation(fields: [userId], references: [id])
+  reactionId          Int                 @unique
+  reaction            Reaction            @relation(fields: [reactionId], references: [reactionId])
   incomingServiceName String
-  incomingService     Service  @relation(fields: [incomingServiceName], references: [serviceName])
+  incomingService     Service             @relation(fields: [incomingServiceName], references: [serviceName])
+  DiscordBotWebhook   DiscordBotWebhook[]
 }
 
 model Action {
@@ -98,6 +105,17 @@ model ActionReaction {
   reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [reactionId])
 
   @@unique([actionId, reactionId])
+}
+
+model DiscordBotWebhook {
+  command          String
+  userId           String
+  user             User?   @relation(fields: [userId], references: [id])
+  webhookWebhookId String
+  webhook          Webhook @relation(fields: [webhookWebhookId], references: [webhookId])
+
+  @@id([command, userId])
+  @@unique([command, userId])
 }
 
 enum TokenType {
