@@ -9,6 +9,7 @@ export class Discord implements IService {
     read(data: any): void {
         this._authorName = data.bot?.author;
         this._message = data.bot?.content;
+        this._subject = data.bot?.subject;
         this._hour = data.bot?.hour;
         this._minute = data.bot?.minute;
         this._day = data.bot?.day;
@@ -47,7 +48,7 @@ export class Discord implements IService {
                 "embeds": [
                   {
                     "title": "New meeting",
-                    "description": this._message,
+                    "description": this._subject,
                     "color": 5814783,
                     "fields": [
                       {
@@ -69,6 +70,7 @@ export class Discord implements IService {
     _month: number | undefined;
     _year: number | undefined;
     _authorName: ustring;
+    _subject: ustring;
     _message: ustring;
     _outgoing: nstring;
 }

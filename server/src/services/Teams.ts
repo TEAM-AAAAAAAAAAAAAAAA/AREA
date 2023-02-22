@@ -10,6 +10,22 @@ export class Teams implements IService {
         this._authorId = data?.from?.id;
         this._authorName = data?.from?.name
         this._message = data?.text?.substring(data?.text?.indexOf('</at>') + 5).replace("&nbsp;", " ");
+        
+        if (this._message)
+        {
+            let dateFormatRegex = /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}) (.+)/g; // ex: 2022-02-21 14:30 r-Thai meeting
+            let tryParseDate = dateFormatRegex.exec(this._message);
+
+            if (tryParseDate)
+            {
+                this._year = parseInt(tryParseDate[1]);
+                this._month = parseInt(tryParseDate[2]) - 1;
+                this._day = parseInt(tryParseDate[3]);
+                this._hour = parseInt(tryParseDate[4]);
+                this._minute = parseInt(tryParseDate[5]);
+                this._subject = tryParseDate[6];
+            }
+        }
         // this._message = data?.text?.replace("<at>", "").replace("</at>", "").replace("&nbsp;", " ");
     }
 
@@ -42,7 +58,7 @@ export class Teams implements IService {
 
         fetch(this._outgoing, {
             method: 'POST',
-            body: JSON.stringify({text: "New meeting created: " + this._message + " at " + targetDate.toLocaleString() + " by " + this._authorName}),
+            body: JSON.stringify({text: "New meeting created: " + this._subject + " at " + targetDate.toLocaleString() + " by " + this._authorName}),
             headers: {'Content-Type': 'application/json'} 
         }).then();
     }
@@ -55,5 +71,6 @@ export class Teams implements IService {
     _authorId: ustring;
     _authorName: ustring;
     _message: ustring;
+    _subject: ustring;
     _outgoing: nstring;
 }
