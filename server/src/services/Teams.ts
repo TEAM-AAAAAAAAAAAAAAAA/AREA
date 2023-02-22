@@ -32,10 +32,25 @@ export class Teams implements IService {
     @area.Action
     postMeeting(): void
     {
-        console.log("meeting time")
-        // push cool meeting embed
+        if (!this._outgoing) return;
+
+        console.log(this._message);
+        const dateNow = new Date(Date.now());
+        const targetDate = new Date(this._year || dateNow.getFullYear(), this._month || dateNow.getMonth(), this._day || dateNow.getDate(), this._hour || dateNow.getHours(), this._minute || 0, 0, 0);
+
+
+        fetch(this._outgoing, {
+            method: 'POST',
+            body: JSON.stringify({text: "New meeting created: " + this._message + " at " + targetDate.toLocaleString() + " by " + this._authorName}),
+            headers: {'Content-Type': 'application/json'} 
+        }).then();
     }
 
+    _hour: number | undefined;
+    _minute: number | undefined;
+    _day: number | undefined;
+    _month: number | undefined;
+    _year: number | undefined;
     _authorId: ustring;
     _authorName: ustring;
     _message: ustring;

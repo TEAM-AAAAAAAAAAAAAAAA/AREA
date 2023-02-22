@@ -8,6 +8,11 @@ export class transcoders
         var teams: services.Teams = new services.Teams();
         teams._authorName = discord._authorName;
         teams._message = discord._message;
+        teams._year = discord._year;
+        teams._month = discord._month;
+        teams._day = discord._day;
+        teams._hour = discord._hour;
+        teams._minute = discord._minute;
         return teams;
     }
     
