@@ -8,9 +8,9 @@ export async function getUserOAuthDataFromToken(token: string, provider: string)
         where: {
             id: token
         }
-    })?.user()?.OAuthUserData({
+    })?.user()?.oAuthUserData({
         where: {
-            OAuthProviderName: provider
+            oAuthProviderName: provider
         }
     });
 }
