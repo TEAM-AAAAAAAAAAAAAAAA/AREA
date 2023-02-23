@@ -75,7 +75,7 @@ export class Meeting {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({bot: {
-                content: subject,
+                subject: subject,
                 hour: hour,
                 minute: minute,
                 day: day,
