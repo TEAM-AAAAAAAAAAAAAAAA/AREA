@@ -26,8 +26,6 @@
     "history": "^4.9.0",
     "ionicons": "^6.0.3",
     "joi": "^17.7.0",
-    "next": "^13.1.6",
-    "next-auth": "^4.19.2",
     "playwright": "^1.30.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
