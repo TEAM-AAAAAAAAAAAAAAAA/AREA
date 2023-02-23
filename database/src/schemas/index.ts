@@ -48,10 +48,10 @@ scalar JSONObject
 
     type oAuthUserData {
         user: User!
-        data: JSONObject!
+        data: JSONObject
         oAuthProvider: oAuthProvider!
-        accessToken: String!
-        refreshToken: String!
+        accessToken: String
+        refreshToken: String
     }
 
     type Query {
@@ -73,7 +73,7 @@ scalar JSONObject
         createUser(name: String!, email: String!, password: String!): Int!
         createService(name: String!): Int!
         createChainedReaction(actionId: Int!, serviceName: String!, actionName: String!, outgoingWebhook: String!): Int!
-        createOAuthUserData(userId: String!, refreshToken: String!, accessToken: String!, data: JSONObject!, oAuthProviderName: String!, providerUserId: String!): Int!
+        createOAuthUserData(userId: String!, refreshToken: String, accessToken: String, data: JSONObject, oAuthProviderName: String!, providerUserId: String!): Int!
     }
 
     scalar DateTime
@@ -152,22 +152,22 @@ export const resolvers = {
             if (args.userId === undefined || args.userId === '') {
                 return 400
             }
-            if (args.refreshToken === undefined || args.refreshToken === '') {
+            if (args.oAuthProviderName === undefined || args.oAuthProviderName === '') {
                 return 400
             }
-            if (args.accessToken === undefined || args.accessToken === '') {
+            if (args.providerUserId === undefined || args.providerUserId === '') {
                 return 400
             }
-            if (args.data === undefined || args.data === '') {
-                return 400
-            }
+            const accToken = args.accessToken === undefined ? '' : args.accessToken
+            const refToken = args.refreshToken === undefined ? '' : args.refreshToken
+            const myData = args.data === undefined ? {} : args.data
             await context.prisma.oAuthUserData.create({
                 data: {
                     userId: args.userId,
-                    refreshToken: args.refreshToken,
+                    refreshToken: refToken,
                     providerUserId: args.providerUserId,
-                    accessToken: args.accessToken,
-                    data: args.data,
+                    accessToken: accToken,
+                    data: myData,
                     oAuthProviderName: args.oAuthProviderName
                 }
             });
