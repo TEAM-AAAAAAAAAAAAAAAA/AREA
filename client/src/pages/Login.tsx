@@ -11,7 +11,10 @@ import {
   IonRow,
   IonCol
 } from '@ionic/react';
-import { personCircle } from "ionicons/icons";
+import {
+  personCircle,
+  logoDiscord
+} from "ionicons/icons";
 import {
   IonItem,
   IonLabel,
@@ -20,7 +23,6 @@ import {
   IonIcon,
   IonAlert
 } from '@ionic/react';
-import { SessionProvider } from "next-auth/react";
 import LoginContainer from '../components/Login';
 
 //function validateEmail(email: string) {
@@ -49,6 +51,10 @@ const Login: React.FC = () => {
     setMessage
   ] = useState<string>("");
 
+  const loginWithDiscord = () => {
+    console.log(process.env);
+  }
+
   const handleLogin = () => {
 
     if (!email) {
@@ -57,11 +63,11 @@ const Login: React.FC = () => {
       return;
     }
 
-//    if (validateEmail(email) === false) {
-//      setMessage("invalid email");
-//      setIserror(true);
-//      return;
-//    }
+    //    if (validateEmail(email) === false) {
+    //      setMessage("invalid email");
+    //      setIserror(true);
+    //      return;
+    //    }
 
     if (!password || password.length < 6) {
       setMessage("enter pw");
@@ -69,85 +75,83 @@ const Login: React.FC = () => {
       return;
     }
 
-//    const loginData = {
-//      "email": email,
-//      "password": password
-//    }
+    //    const loginData = {
+    //      "email": email,
+    //      "password": password
+    //    }
   };
-  const session : any = null;
+  const session: any = null;
   return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Login</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent fullscreen className="ion-padding ion-text-center">
-          <IonGrid>
-            <IonRow>
-              <IonCol>
-                <IonAlert
-                  isOpen={iserror}
-                  onDidDismiss={() => setIserror(false)}
-                  cssClass="my-custom-class"
-                  header={"Error!"}
-                  message={message}
-                  buttons={["Dismiss"]}
-                />
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Login</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent fullscreen className="ion-padding ion-text-center">
+        <IonGrid>
+          <IonRow>
+            <IonCol>
+              <IonAlert
+                isOpen={iserror}
+                onDidDismiss={() => setIserror(false)}
+                cssClass="my-custom-class"
+                header={"Error!"}
+                message={message}
+                buttons={["Dismiss"]}
+              />
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol>
+              <IonIcon
+                style={{ fontSize: "70px", color: "#0040ff" }}
+                icon={personCircle}
+              />
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol>
+              <IonItem>
+                <IonLabel position="floating"> Email</IonLabel>
+                <IonInput
+                  type="email"
+                  value={email}
+                  onIonChange={(e) => setEmail(e.detail.value!)}
+                >
+                </IonInput>
+              </IonItem>
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol>
+              <IonItem>
+                <IonLabel position="floating"> Password</IonLabel>
+                <IonInput
+                  type="password"
+                  value={password}
+                  onIonChange={(e) => setPassword(e.detail.value!)}
+                >
+                </IonInput>
+              </IonItem>
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol>
+              <IonButton expand="block" onClick={handleLogin}>Login</IonButton>
+              <p style={{ fontSize: "medium" }}>
+                <a href=".">sign-up</a>
+              </p>
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol>
+              <IonButton expand="block" fill="solid" color="discord" onClick={loginWithDiscord}>Login With Discord<IonIcon icon={logoDiscord} size="large"></IonIcon></IonButton>
               </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol>
-                <IonIcon
-                  style={{ fontSize: "70px", color: "#0040ff" }}
-                  icon={personCircle}
-                />
-              </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol>
-                <IonItem>
-                  <IonLabel position="floating"> Email</IonLabel>
-                  <IonInput
-                    type="email"
-                    value={email}
-                    onIonChange={(e) => setEmail(e.detail.value!)}
-                  >
-                  </IonInput>
-                </IonItem>
-              </IonCol>
-            </IonRow>
-
-            <IonRow>
-              <SessionProvider session={session}>
-                <LoginContainer name="Login page" />
-              </SessionProvider>
-            </IonRow>
-
-            <IonRow>
-              <IonCol>
-                <IonItem>
-                  <IonLabel position="floating"> Password</IonLabel>
-                  <IonInput
-                    type="password"
-                    value={password}
-                    onIonChange={(e) => setPassword(e.detail.value!)}
-                  >
-                  </IonInput>
-                </IonItem>
-              </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol>
-                <IonButton expand="block" onClick={handleLogin}>Login</IonButton>
-                <p style={{ fontSize: "medium" }}>
-                  <a href=".">sign-up</a>
-                </p>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        </IonContent>
-      </IonPage>
+          </IonRow>
+        </IonGrid>
+      </IonContent>
+    </IonPage>
 
   );
 };
