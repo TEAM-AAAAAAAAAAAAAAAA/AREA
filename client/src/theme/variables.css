@@ -251,3 +251,7 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-shade: var(--ion-color-discord-shade);
 	--ion-color-tint: var(--ion-color-discord-tint);
 }
+
+.ion-discord-avatar {
+  margin:0 auto;
+}
