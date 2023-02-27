@@ -1,17 +1,17 @@
 import React from 'react';
 import {
-    IonContent
+  IonContent
 } from '@ionic/react';
 
 interface ContainerProps {
-    name: string;
+  name: string;
 }
 
-const LoginContainer: React.FC<ContainerProps> = () => {
-    return (
-        <IonContent>
-        </IonContent>
-    );
+const LoginContainer: React.FC<ContainerProps> = ({ name }) => {
+  return (
+    <IonContent>
+    </IonContent>
+  );
 };
 
 export default LoginContainer;
