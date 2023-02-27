@@ -59,8 +59,8 @@ app.get('/about.json', async (req: Request, res: Response) => {
                 })
         aboutServices.push({
             name: services[i].serviceName,
-            actions: aboutActions,
-            reactions: aboutReactions
+            actions: aboutReactions,
+            reactions: aboutActions
         })
     }
     let about = {
