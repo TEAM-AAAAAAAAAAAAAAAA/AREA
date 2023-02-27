@@ -75,6 +75,7 @@ model Webhook {
 
 model Action {
   actionName  String
+  description String
   serviceName String
   service     Service    @relation(fields: [serviceName], references: [serviceName])
   Reaction    Reaction[]
@@ -85,6 +86,7 @@ model Action {
 
 model Reaction {
   reactionId      Int              @id @default(autoincrement())
+  description     String
   serviceName     String
   service         Service          @relation(fields: [serviceName], references: [serviceName])
   actionName      String

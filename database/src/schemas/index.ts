@@ -21,6 +21,7 @@ scalar JSONObject
 
     type Reaction {
         reactionId: Int!
+        descrition: String!
         service: Service!
         outgoingWebhook: String!
     }
@@ -34,6 +35,7 @@ scalar JSONObject
 
     type Action {
         actionName: String!
+        description: String!
         serviceName: String!
     }
 
@@ -64,15 +66,16 @@ scalar JSONObject
         allActionReactions: [ActionReaction!]!
         allOAuthUserData: [oAuthUserData!]!
         allOAuthProviders: [oAuthProvider!]!
+        userInfo(id: ID!): [Webhook!]!
     }
 
     type Mutation {
         removeWebhooks: Int!
-        createAction(actionName: String!, serviceName: String!): Int!
-        createWebhook(userId: String!, actionId: String!, serviceId: String!, outgoingWebhook: String!): Int!
+        createAction(actionName: String!, description: String!, serviceName: String!): Int!
+        createWebhook(userId: String!, actionId: String!, serviceId: String!, description: String!, outgoingWebhook: String!): Int!
         createUser(name: String!, email: String!, password: String!): Int!
         createService(name: String!): Int!
-        createChainedReaction(actionId: Int!, serviceName: String!, actionName: String!, outgoingWebhook: String!): Int!
+        createChainedReaction(actionId: Int!, description: String!, serviceName: String!, actionName: String!, outgoingWebhook: String!): Int!
         createOAuthUserData(userId: String!, refreshToken: String, accessToken: String, data: JSONObject, oAuthProviderName: String!, providerUserId: String!): Int!
     }
 
@@ -115,6 +118,13 @@ export const resolvers = {
         }
     },
     Query: {
+        userInfo: async (_: any, args: any, context: Context) => {
+            return await context.prisma.webhook.findMany({
+                where: {
+                    userId: args.id
+                }
+            });
+        },
         allOAuthProviders: async (_: any, args: any, context: Context) => {
             return await context.prisma.oAuthProvider.findMany();
         },
@@ -183,10 +193,17 @@ export const resolvers = {
             if (args.outgoingWebhook === undefined || args.outgoingWebhook === '') {
                 return 400
             }
+            if (args.serviceName === undefined || args.serviceName === '') {
+                return 400
+            }
+            if (args.description === undefined || args.description === '') {
+                return 400
+            }
             const myHonest = await context.prisma.reaction.create({
                 data: {
                     actionName: args.actionName,
                     serviceName: args.serviceName,
+                    description: args.description,
                     outgoingWebhook: args.outgoingWebhook,
                 }
             });
@@ -209,14 +226,14 @@ export const resolvers = {
             if (args.serviceName === undefined || args.serviceName === '') {
                 return 400
             }
+            if (args.description === undefined || args.description === '') {
+                return 400
+            }
             await context.prisma.action.create({
                 data: {
                     actionName: args.actionName,
-                    service: {
-                        connect: {
-                            serviceName: args.serviceName
-                        }
-                    }
+                    description: args.description,
+                    serviceName: args.serviceName,
                 }
             });
             return 200
@@ -234,10 +251,14 @@ export const resolvers = {
             if (args.outgoingWebhook === undefined || args.outgoingWebhook === '') {
                 return 400
             }
+            if (args.description === undefined || args.description === '') {
+                return 400
+            }
             const myHonest = await context.prisma.reaction.create({
                 data: {
                     serviceName: args.serviceId,
                     actionName: args.actionId,
+                    description: args.description,
                     outgoingWebhook: args.outgoingWebhook,
                 }
             });
