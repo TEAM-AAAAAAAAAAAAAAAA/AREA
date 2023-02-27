@@ -39,7 +39,6 @@ app.get('/about.json', async (req: Request, res: Response) => {
         return res;
     });
     let aboutServices: [any] = [{}];
-
     aboutServices.pop()
     for (let i = 0; i < services.length; i++) {
         let aboutActions: [any] = [{}];
@@ -63,7 +62,17 @@ app.get('/about.json', async (req: Request, res: Response) => {
             reactions: aboutReactions
         })
     }
-    res.status(200).send(aboutServices);
+    let about = {
+        client: {
+            host: req.headers.host,
+        },
+        server: {
+            current_time: (Date.now() - Date.now() % 1000) / 1000,
+            services: aboutServices
+        }
+    }
+
+    res.status(200).send(about);
 });
 
 app.listen(appConfig.port, appConfig.host, () => {
