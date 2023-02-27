@@ -1,13 +1,13 @@
 import { Redirect, Route } from 'react-router-dom';
 import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-  setupIonicReact
+    IonApp,
+    IonIcon,
+    IonLabel,
+    IonRouterOutlet,
+    IonTabBar,
+    IonTabButton,
+    IonTabs,
+    setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, triangle } from 'ionicons/icons';
@@ -38,13 +38,13 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 setupIonicReact();
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/',
-  cache: new InMemoryCache(),
+    uri: 'http://localhost:4000/',
+    cache: new InMemoryCache(),
 });
 
 client
-  .query({
-    query: gql`
+    .query({
+        query: gql`
       query Query {
         allUsers {
           name,
@@ -52,37 +52,37 @@ client
         }
       }
     `,
-  })
-  .then((result) => console.log(result));
+    })
+    .then((result) => console.log(result));
 
 const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/services">
-            <Services />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/login" />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="login" href="/login">
-            <IonIcon icon={triangle} />
-            <IonLabel>Login</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="services" href="/services">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Services</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
+    <IonApp>
+        <IonReactRouter>
+            <IonTabs>
+                <IonRouterOutlet>
+                    <Route exact path="/login">
+                        <Login />
+                    </Route>
+                    <Route exact path="/services">
+                        <Services />
+                    </Route>
+                    <Route exact path="/">
+                        <Redirect to="/login" />
+                    </Route>
+                </IonRouterOutlet>
+                <IonTabBar slot="bottom">
+                    <IonTabButton tab="login" href="/login">
+                        <IonIcon icon={triangle} />
+                        <IonLabel>Login</IonLabel>
+                    </IonTabButton>
+                    <IonTabButton tab="services" href="/services">
+                        <IonIcon icon={ellipse} />
+                        <IonLabel>Services</IonLabel>
+                    </IonTabButton>
+                </IonTabBar>
+            </IonTabs>
+        </IonReactRouter>
+    </IonApp>
 );
 
 export default App;
