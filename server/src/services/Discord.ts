@@ -7,14 +7,15 @@ export class Discord implements IService {
     constructor() { this._outgoing = null; }
 
     read(data: any): void {
-        this._authorName = data.bot?.author;
-        this._message = data.bot?.content;
-        this._subject = data.bot?.subject;
-        this._hour = data.bot?.hour;
-        this._minute = data.bot?.minute;
-        this._day = data.bot?.day;
-        this._month = data.bot?.month;
-        this._year = data.bot?.year;
+      this._authorName = data.bot?.author;
+      this._message = data.bot?.content;
+      this._subject = data.bot?.subject;
+      this._hour = data.bot?.hour;
+      this._minute = data.bot?.minute;
+      this._day = data.bot?.day;
+      this._month = data.bot?.month;
+      this._year = data.bot?.year;
+      this._city = data.bot?.city;
     }
 
     setOutgoing(data: nstring): void {
@@ -67,6 +68,7 @@ export class Discord implements IService {
     @area.Action
     dataCollector(): void {}
 
+    _city: ustring;
     _hour: number | undefined;
     _minute: number | undefined;
     _day: number | undefined;

@@ -36,7 +36,7 @@ export class transcoders
     @area.Transcoder(services.Discord.name, services.OpenWeatherMap.name)
     static discordToOpenWeatherMap(discord: services.Discord): services.OpenWeatherMap {
         var openWeatherMap: services.OpenWeatherMap = new services.OpenWeatherMap();
-        openWeatherMap._targetCity = discord._message;
+        openWeatherMap._targetCity = discord._city;
         // openWeatherMap._targetLat = discord._buffer?.lat;
         // openWeatherMap._targetLon = discord._buffer?.lon;
         return openWeatherMap;
