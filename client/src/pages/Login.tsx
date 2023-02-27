@@ -52,7 +52,7 @@ const Login: React.FC = () => {
   ] = useState<string>("");
 
   const loginWithDiscord = () => {
-    console.log(process.env);
+    window.location.replace(`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_DISCORD_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fdiscord%2Fcb&response_type=token&scope=identify%20email`);
   }
 
   const handleLogin = () => {
@@ -147,7 +147,7 @@ const Login: React.FC = () => {
           <IonRow>
             <IonCol>
               <IonButton expand="block" fill="solid" color="discord" onClick={loginWithDiscord}>Login With Discord<IonIcon icon={logoDiscord} size="large"></IonIcon></IonButton>
-              </IonCol>
+            </IonCol>
           </IonRow>
         </IonGrid>
       </IonContent>
