@@ -1,7 +1,14 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import {
+    IonContent,
+    IonHeader,
+    IonPage,
+    IonTitle,
+    IonToolbar
+} from '@ionic/react';
+
 import ServicesContainer from '../components/Services';
 
-const Tab2: React.FC = () => {
+const Services: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
@@ -21,4 +28,4 @@ const Tab2: React.FC = () => {
     );
 };
 
-export default Tab2;
+export default Services;
