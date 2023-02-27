@@ -10,7 +10,10 @@ import {
     setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, triangle } from 'ionicons/icons';
+import {
+    ellipse,
+    triangle
+} from 'ionicons/icons';
 import Login from './pages/Login';
 import Services from './pages/Services';
 
@@ -30,7 +33,11 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import {
+    ApolloClient,
+    InMemoryCache,
+    gql
+} from '@apollo/client';
 
 setupIonicReact();
 
