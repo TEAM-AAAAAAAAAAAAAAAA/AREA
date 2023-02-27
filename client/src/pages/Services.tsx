@@ -1,5 +1,5 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ServicesContainer from '../components/ServicesContainer';
+import ServicesContainer from '../components/Services';
 
 const Tab2: React.FC = () => {
   return (
