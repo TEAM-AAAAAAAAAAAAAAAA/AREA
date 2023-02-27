@@ -7,12 +7,13 @@ WORKDIR /usr/src/app
 # copy source files
 COPY package.json ./
 COPY yarn.lock ./
-COPY tsconfig.json ./
-COPY prisma ./prisma
-COPY src ./src
 
 #Install dependencies (could be modified/extend)
 RUN yarn install
+
+COPY tsconfig.json ./
+COPY prisma ./prisma
+COPY src ./src
 
 COPY entrypoint.sh ./
 ENTRYPOINT [ "./entrypoint.sh" ]

@@ -23,13 +23,14 @@ export class DB {
             }).then((res) => {
                 console.debug("Upserted Service: " + res.serviceName);
             }).catch((err) => {
-                console.error("Failed to upsert Service: " + serviceName);
+                console.error(err);
                 isSynced = false;
             });
 
             await PrismaActions.forEach(async (value, key) => {
                 let thisServiceName = key.substring(0, key.indexOf('.'));
-                let actionName = key.substring(key.indexOf('.') + 1);
+                let description = key.substring(key.indexOf('.') + 1);
+                let actionName = key.substring(key.indexOf('.') + 2);
 
                 if (thisServiceName == serviceName) {
                     await prisma.action.upsert({
@@ -41,16 +42,18 @@ export class DB {
                         },
                         update: {
                             actionName: actionName,
+                            description: description,
                             serviceName: serviceName
                         },
                         create: {
                             actionName: actionName,
+                            description: description,
                             serviceName: serviceName
                         }
                     }).then((res) => {
-                        console.debug("Upserted Action: " + res.serviceName + '.' + res.actionName);
+                        console.debug("Upserted Action: " + res.serviceName + '.' + res.description + '.' + res.actionName);
                     }).catch((err) => {
-                        console.error("Failed to upsert Action: " + serviceName + '.' + actionName + " - " + err);
+                        console.error("Failed to upsert Action: " + serviceName + '.' + description + '.' + actionName + " - " + err);
                         isSynced = false;
                     });
                 }
