@@ -27,22 +27,19 @@ export class OpenWeatherMap implements IService {
             this._targetLon = await thisLocation?.[0]?.lon;
         }
         
-        console.log(this._targetCity, this._targetLat, this._targetLon);
-        let thisWeather = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${this._targetLat}&lon=${this._targetLon}&appid=${env.WEATHER_API_KEY}&units=metric`).then(res => res.json());
+        let thisWeather = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${this._targetLat}&lon=${this._targetLon}&appid=${env.WEATHER_API_KEY}&units=metric`).then(res => res.json());
         this._buffer = {
             city: this._targetCity,
-            temp: await thisWeather?.[context]?.[delay]?.temp,
-            weather: await thisWeather?.[context]?.weather?.[0]?.description,
+            temp: await thisWeather?.main?.temp,
+            weather: await thisWeather?.weather?.[0]?.main,
         };
-        console.log(thisWeather);
-        console.log(thisWeather?.[context]?.[delay]?.temp);
     }
 
     @area.Action
     async fillCurrentWeather(): Promise<void> {
         await this.fillWeather('hourly', 0);
 
-        console.log(this._buffer);
+        console.log(await this._buffer);
     }
 
     _buffer: any = {};

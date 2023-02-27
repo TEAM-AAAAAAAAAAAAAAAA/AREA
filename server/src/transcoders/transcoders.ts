@@ -39,5 +39,12 @@ export class transcoders
         // openWeatherMap._targetLon = discord._buffer?.lon;
         return openWeatherMap;
     }
+
+    @area.Transcoder(services.OpenWeatherMap.name, services.Discord.name)
+    static openWeatherMapToDiscord(openWeatherMap: services.OpenWeatherMap): services.Discord {
+        var discord: services.Discord = new services.Discord();
+        discord._buffer = openWeatherMap._buffer;
+        return discord;
+    }
     
 }

@@ -116,28 +116,32 @@ export const hook = {
 
     POST: [
     async (req: any, res: Response) => {
-        let hook: string = req.params.hook;
-        if (hook.indexOf('/') != hook.lastIndexOf('/'))
-            return res.status(400).json();
+        try {
+            let hook: string = req.params.hook;
+            if (hook.indexOf('/') != hook.lastIndexOf('/'))
+                return res.status(400).json();
 
-        let hookUser: string = hook.substring(0, hook.indexOf('/'))
-        let hookId: string = hook.substring(hook.indexOf('/') + 1)
-        if (!(hookUser != null && hookUser != "" && hookId != null && hookId != ""))
-            return res.status(400).json();
-        
-        let webhook: Webhook | null = await prisma.webhook.findFirst({
-            where: {
-                webhookId: hookId,
-                userId: hookUser
-            }
-        });
+            let hookUser: string = hook.substring(0, hook.indexOf('/'))
+            let hookId: string = hook.substring(hook.indexOf('/') + 1)
+            if (!(hookUser != null && hookUser != "" && hookId != null && hookId != ""))
+                return res.status(400).json();
+            
+            let webhook: Webhook | null = await prisma.webhook.findFirst({
+                where: {
+                    webhookId: hookId,
+                    userId: hookUser
+                }
+            });
 
-        if (!webhook)
-            return res.status(404).json();
+            if (!webhook)
+                return res.status(404).json();
 
-        if (await runWebhook(webhook, req.body) != true)
-            return res.status(500).json();
+            if (await runWebhook(webhook, req.body) != true)
+                return res.status(500).json();
 
-        return res.status(200).json({});
+            return res.status(200).json({});
+        } catch (e: any) {
+            return res.status(500).json({});
+        }
     }]
 };
