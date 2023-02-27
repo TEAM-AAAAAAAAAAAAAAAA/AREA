@@ -22,6 +22,7 @@ export class Discord implements IService {
     }
 
     @area.Action
+    @area.Description("Post a message to Discord")
     postMessage(): void {
         console.debug("Posting message to Discord: " + this._message);
         console.log(this._outgoing);
@@ -35,6 +36,7 @@ export class Discord implements IService {
     }
 
     @area.Action
+    @area.Description("Post a meeting to Discord")
     postMeeting(): void {
         const dateNow = new Date(Date.now());
         const targetDate = new Date(this._year || dateNow.getFullYear(), this._month || dateNow.getMonth(), this._day || dateNow.getDate(), this._hour || dateNow.getHours(), this._minute || 0, 0, 0);
