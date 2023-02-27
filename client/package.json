@@ -46,11 +46,7 @@
     "workbox-streams": "^5.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
-    "dev": "npx ionic serve",
-    "eject": "react-scripts eject"
+    "start": "npx ionic serve -p 8081"
   },
   "browserslist": {
     "production": [
@@ -67,6 +63,5 @@
   "devDependencies": {
     "@capacitor/cli": "4.6.2",
     "react-scripts": "5.0.1"
-  },
-  "description": "An Ionic project"
+  }
 }

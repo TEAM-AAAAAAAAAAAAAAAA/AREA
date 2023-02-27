@@ -1,13 +1,11 @@
+FROM node:14-alpine
+
 WORKDIR /app
 
-COPY package.json yarn.lock /app/
+COPY package.json /app/
 
-RUN yarn install
+RUN npm i
 
 COPY . /app
 
-WORKDIR /app
-
-RUN yarn install && yarn cache clean
-
-CMD [ "yarn", "start" ]
+CMD [ "npm", "start" ]
