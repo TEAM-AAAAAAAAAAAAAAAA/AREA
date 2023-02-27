@@ -86,6 +86,7 @@ model Action {
 
 model Reaction {
   reactionId      Int              @id @unique @default(autoincrement())
+  name            String
   description     String
   serviceName     String
   service         Service          @relation(fields: [serviceName], references: [serviceName])
