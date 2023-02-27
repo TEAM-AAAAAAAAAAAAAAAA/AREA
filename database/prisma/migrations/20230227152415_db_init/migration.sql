@@ -141,6 +141,9 @@ CREATE UNIQUE INDEX "Webhook_reactionId_key" ON "Webhook"("reactionId");
 CREATE UNIQUE INDEX "Action_serviceName_actionName_key" ON "Action"("serviceName", "actionName");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Reaction_reactionId_key" ON "Reaction"("reactionId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "ActionReaction_id_key" ON "ActionReaction"("id");
 
 -- CreateIndex
