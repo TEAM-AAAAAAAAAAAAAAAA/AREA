@@ -26,7 +26,6 @@
     "history": "^4.9.0",
     "ionicons": "^6.0.3",
     "joi": "^17.7.0",
-    "playwright": "^1.30.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^5.2.0",
