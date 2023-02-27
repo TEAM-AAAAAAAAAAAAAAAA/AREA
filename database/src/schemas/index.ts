@@ -21,7 +21,8 @@ scalar JSONObject
 
     type Reaction {
         reactionId: Int!
-        descrition: String!
+        name: String!
+        description: String!
         service: Service!
         outgoingWebhook: String!
     }
@@ -72,10 +73,10 @@ scalar JSONObject
     type Mutation {
         removeWebhooks: Int!
         createAction(actionName: String!, description: String!, serviceName: String!): Int!
-        createWebhook(userId: String!, actionId: String!, serviceId: String!, description: String!, outgoingWebhook: String!): Int!
+        createWebhook(userId: String!, reactionName: String!, actionId: String!, serviceId: String!, description: String!, outgoingWebhook: String!): Int!
         createUser(name: String!, email: String!, password: String!): Int!
         createService(name: String!): Int!
-        createChainedReaction(actionId: Int!, description: String!, serviceName: String!, actionName: String!, outgoingWebhook: String!): Int!
+        createChainedReaction(actionId: Int!, reactionName: String!, description: String!, serviceName: String!, actionName: String!, outgoingWebhook: String!): Int!
         createOAuthUserData(userId: String!, refreshToken: String, accessToken: String, data: JSONObject, oAuthProviderName: String!, providerUserId: String!): Int!
     }
 
@@ -202,6 +203,7 @@ export const resolvers = {
             const myHonest = await context.prisma.reaction.create({
                 data: {
                     actionName: args.actionName,
+                    name: args.reactionName,
                     serviceName: args.serviceName,
                     description: args.description,
                     outgoingWebhook: args.outgoingWebhook,
@@ -257,6 +259,7 @@ export const resolvers = {
             const myHonest = await context.prisma.reaction.create({
                 data: {
                     serviceName: args.serviceId,
+                    name: args.reactionName,
                     actionName: args.actionId,
                     description: args.description,
                     outgoingWebhook: args.outgoingWebhook,
