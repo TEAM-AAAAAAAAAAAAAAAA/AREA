@@ -1,5 +1,7 @@
 import { services } from "../services/.services";
 import { area } from "../area/.area";
+import { WeatherType } from "../services/OpenWeatherMap";
+import { ustring } from "../types/string";
 
 export class transcoders
 {
@@ -42,8 +44,29 @@ export class transcoders
 
     @area.Transcoder(services.OpenWeatherMap.name, services.Discord.name)
     static openWeatherMapToDiscord(openWeatherMap: services.OpenWeatherMap): services.Discord {
+        var isFirst: boolean = true;
+        function addWeatherParam(param: ustring) : void
+        {
+            if (param)
+            {
+                if (!isFirst)
+                    discord._message += ', ';
+                else
+                    isFirst = false;
+                discord._message += param;
+            }
+        }
+
         var discord: services.Discord = new services.Discord();
-        discord._buffer = openWeatherMap._buffer;
+        let when: string = "";
+        if (openWeatherMap._weatherType == WeatherType.Now)
+            when = "now";
+
+        discord._message = "Weather " + when + ": ";
+            
+        addWeatherParam(openWeatherMap._weather);
+        addWeatherParam(openWeatherMap._temp);
+
         return discord;
     }
     

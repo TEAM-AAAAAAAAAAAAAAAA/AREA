@@ -67,7 +67,6 @@ export class Discord implements IService {
     @area.Action
     dataCollector(): void {}
 
-    _buffer: any = {};
     _hour: number | undefined;
     _minute: number | undefined;
     _day: number | undefined;
