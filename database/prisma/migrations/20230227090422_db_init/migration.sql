@@ -67,6 +67,7 @@ CREATE TABLE "Webhook" (
 -- CreateTable
 CREATE TABLE "Action" (
     "actionName" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
     "serviceName" TEXT NOT NULL,
 
     CONSTRAINT "Action_pkey" PRIMARY KEY ("serviceName","actionName")
@@ -75,6 +76,7 @@ CREATE TABLE "Action" (
 -- CreateTable
 CREATE TABLE "Reaction" (
     "reactionId" SERIAL NOT NULL,
+    "description" TEXT NOT NULL,
     "serviceName" TEXT NOT NULL,
     "actionName" TEXT NOT NULL,
     "outgoingWebhook" TEXT,
