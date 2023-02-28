@@ -38,43 +38,43 @@ import './theme/variables.css';
 setupIonicReact();
 
 const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/services">
-            <Services />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/login" />
-          </Route>
-          <Route path="/auth/discord/cb">
-            <LoginWithDiscord />
-          </ Route>
-          <Route exact path="/setup">
-            <Setup />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="login" href="/login">
-            <IonIcon icon={triangle} />
-            <IonLabel>Login</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="services" href="/services">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Services</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="setup" href="/setup">
-            <IonIcon icon={diamond} />
-            <IonLabel>Setup</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
+    <IonApp>
+        <IonReactRouter>
+            <IonTabs>
+                <IonRouterOutlet>
+                    <Route exact path="/login">
+                        <Login />
+                    </Route>
+                    <Route exact path="/services">
+                        <Services />
+                    </Route>
+                    <Route exact path="/">
+                        <Redirect to="/login" />
+                    </Route>
+                    <Route path="/auth/discord/cb">
+                        <LoginWithDiscord />
+                    </ Route>
+                    <Route exact path="/setup">
+                        <Setup />
+                    </Route>
+                </IonRouterOutlet>
+                <IonTabBar slot="bottom">
+                    <IonTabButton tab="login" href="/login">
+                        <IonIcon icon={triangle} />
+                        <IonLabel>Login</IonLabel>
+                    </IonTabButton>
+                    <IonTabButton tab="services" href="/services">
+                        <IonIcon icon={ellipse} />
+                        <IonLabel>Services</IonLabel>
+                    </IonTabButton>
+                    <IonTabButton tab="setup" href="/setup">
+                        <IonIcon icon={diamond} />
+                        <IonLabel>Setup</IonLabel>
+                    </IonTabButton>
+                </IonTabBar>
+            </IonTabs>
+        </IonReactRouter>
+    </IonApp>
 );
 
 export default App;
