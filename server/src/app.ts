@@ -73,7 +73,7 @@ app.get('/about.json', async (req: Request, res: Response) => {
         }
     }
 
-    res.status(200).send(about);
+    res.status(200).json(about);
 });
 
 app.listen(appConfig.port, appConfig.host, () => {
