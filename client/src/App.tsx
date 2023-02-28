@@ -16,6 +16,7 @@ import {
 } from 'ionicons/icons';
 import Login from './pages/Login';
 import Services from './pages/Services';
+import LoginWithDiscord from './pages/LoginWithDiscord';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
