@@ -45,8 +45,7 @@
     "workbox-streams": "^5.1.4"
   },
   "scripts": {
-    "start": "npx ionic serve -p 8081",
-    "build": "npx ionic capacitor add android"
+    "start": "npx ionic serve -p 8081"
   },
   "browserslist": {
     "production": [
