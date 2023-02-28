@@ -34,6 +34,7 @@ export class Teams implements IService {
     }
     
     @area.Action
+    @area.Description("Post a message to Teams")
     postMessage(): void
     {
         if (!this._outgoing) return;
@@ -47,6 +48,7 @@ export class Teams implements IService {
     }
 
     @area.Action
+    @area.Description("Post a meeting to Teams")
     postMeeting(): void
     {
         if (!this._outgoing) return;
