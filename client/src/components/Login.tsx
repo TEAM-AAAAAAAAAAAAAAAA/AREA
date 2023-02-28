@@ -11,7 +11,6 @@ const LoginContainer: React.FC<ContainerProps> = ({ name }) => {
     return (
         <IonContent>
             <>
-                bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
             </>
         </IonContent>
     );
