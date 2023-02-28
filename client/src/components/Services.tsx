@@ -9,9 +9,32 @@ import {
     IonContent
 } from '@ionic/react';
 
+import {
+    ApolloClient,
+    InMemoryCache,
+    gql
+} from '@apollo/client';
+
 interface ContainerProps {
     name: string;
 }
+
+const client = new ApolloClient({
+    uri: 'http://localhost:4000/',
+    cache: new InMemoryCache(),
+});
+
+client
+    .query({
+        query: gql`
+      query Query {
+        allServices {
+          serviceName
+        }
+      }
+    `,
+    })
+    .then((result) => console.log(result));
 
 const ServicesContainer: React.FC<ContainerProps> = () => {
     return (
@@ -24,8 +47,6 @@ const ServicesContainer: React.FC<ContainerProps> = () => {
                 <IonCardContent>
                     Service Description
                 </IonCardContent>
-                <IonButton fill="clear">Action 1</IonButton>
-                <IonButton fill="clear">Action 2</IonButton>
             </IonCard>
         </IonContent>
     );
