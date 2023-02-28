@@ -6,6 +6,9 @@ import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
 import { jwtSecret } from "../../config/env";
 import { validate_email } from "./validate_email";
 
+// OAuth providers login routes
+import { discord_oauth } from "./oauth_providers/discord";
+
 let opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: jwtSecret
@@ -26,6 +29,7 @@ passport.use(new JWTStrategy(opts, async (jwt_payload, done) => {
 }));
 
 export const auth = {
+    discord_oauth,
     login,
     logout,
     validate_email
