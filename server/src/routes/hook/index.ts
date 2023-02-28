@@ -14,7 +14,7 @@ async function getReaction(webhook: Webhook) : Promise<Reaction | null>
     });
 }
 
-async function getAction(reaction: Reaction) : Promise<React | null>
+async function getReact(reaction: Reaction) : Promise<React | null>
 {
     return prisma.react.findUnique({
         where: {
@@ -41,7 +41,7 @@ async function getService(action: React) : Promise<Service | null>
 //     if (!outgoingReaction)
 //         return null;
 
-//     let outgoingAction = await getAction(outgoingReaction);
+//     let outgoingAction = await getReact(outgoingReaction);
 //     if (!outgoingAction)
 //         return null;
 
@@ -53,11 +53,88 @@ async function getService(action: React) : Promise<Service | null>
 //     return outgoingService;
 // }
 
-async function react(outgoingReaction: Reaction, parentServiceName: string) : Promise<boolean> {
-    if (!outgoingReaction.enabled)
-        return false;
+// async function react(outgoingReaction: Reaction, parentServiceName: string, parentService: IService | undefined) : Promise<IService | undefined> {
+//     if (!outgoingReaction.enabled)
+//         return undefined;
 
-    let outgoingAction = await getAction(outgoingReaction);
+//     let outgoingAction = await getReact(outgoingReaction);
+//     if (!outgoingAction)
+//         return undefined;
+
+//     let outgoingService = await getService(outgoingAction);
+//     if (!outgoingService)
+//         return undefined;
+
+//     let incomingService = await prisma.service.findFirst({
+//         where: {
+//             serviceName: parentServiceName
+//         }
+//     });
+//     if (!incomingService)
+//         return undefined;
+
+
+//     let serviceReturn = PrismaServices.get(incomingService.serviceName);
+//     if (!serviceReturn)
+//         return undefined;
+//     let serviceInstance = new serviceReturn();
+    
+//     if (serviceInstance.constructor.name != outgoingService.serviceName) {
+//         let transcoder = Transcoders.get(serviceInstance.constructor.name + '.' + outgoingService.serviceName);
+//         if (!transcoder) {
+//             console.log("no transcoder found");
+//             return undefined;
+//         }
+//         console.log(transcoder);
+//         (function(f: Function) {
+//             serviceInstance = (f.apply(transcoders, [parentService]));
+//         })(transcoder);
+//     } else {
+//         console.log("no transcoder needed (same service)");
+//     }
+    
+//     serviceInstance.setOutgoing(outgoingReaction.outgoingWebhook);
+//     const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactionName);
+//     if (reaction) {
+//         (function(f: Function) {
+//             f.apply(serviceInstance, []);
+//         })(reaction);
+//         // if (outgoingReaction.enabledChain) {
+//         //     await actionReaction(outgoingReaction);
+//         // }
+//         return serviceInstance;
+//     }
+
+//     return undefined;
+// }
+
+// async function actionReaction(action: Reaction, parentService: IService | undefined)
+// {
+//     // console.log(action.reactionId)
+//     let areas: ActionReaction[] = await prisma.actionReaction.findMany({
+//         where: {
+//             actionId: action.reactionId,
+//         }
+//     });
+
+//     areas.forEach(async element => {
+//         let newReaction: Reaction | null = await prisma.reaction.findUnique({
+//             where: {
+//                 reactionId: element.reactionId,
+//             }
+//         })
+//         if (newReaction) {
+//             parentService = await react(newReaction, action.serviceName, parentService);
+
+//             if (await parentService)
+//                 await actionReaction(newReaction, parentService);
+//         }
+//     });
+// }
+
+async function runReaction(reaction: Reaction, service: IService) : Promise<boolean>
+{
+    let outgoingAction = await getReact(reaction);
     if (!outgoingAction)
         return false;
 
@@ -65,84 +142,16 @@ async function react(outgoingReaction: Reaction, parentServiceName: string) : Pr
     if (!outgoingService)
         return false;
 
-    let incomingService = await prisma.service.findFirst({
-        where: {
-            serviceName: parentServiceName
-        }
-    });
-    if (!incomingService)
-        return false;
-
-
-    let serviceReturn = PrismaServices.get(incomingService.serviceName);
-    if (!serviceReturn)
-        return false;
-    let serviceInstance = new serviceReturn();
-
-    if (serviceInstance.constructor.name != outgoingService.serviceName) {
-        let transcoder = Transcoders.get(serviceInstance.constructor.name + '.' + outgoingService.serviceName);
-        if (!transcoder) {
-            console.log("no transcoder found");
-            return false;
-        }
+    service.setOutgoing(reaction.outgoingWebhook);
+    const action = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactionName);
+    if (action) {
         (function(f: Function) {
-            serviceInstance = (f.apply(transcoders, [outgoingReaction]));
-        })(transcoder);
-    } else {
-        console.log("no transcoder needed (same service)");
-    }
-
-    serviceInstance.setOutgoing(outgoingReaction.outgoingWebhook);
-    const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactionName);
-    if (reaction) {
-        (function(f: Function) {
-            f.apply(serviceInstance, []);
-        })(reaction);
-        // if (outgoingReaction.enabledChain) {
-        //     await actionReaction(outgoingReaction);
-        // }
+            f.apply(service, []);
+        })(action);
         return true;
     }
 
     return false;
-}
-
-async function actionReaction(action: Reaction)
-{
-    let outgoingAction = await getAction(action);
-    if (!outgoingAction)
-        return false;
-
-    let outgoingService = await getService(outgoingAction);
-    if (!outgoingService)
-        return false;
-
-    let incomingService = await prisma.service.findFirst({
-        where: {
-            serviceName: action.serviceName
-        }
-    });
-    if (!incomingService)
-        return false;
-
-    let areas: ActionReaction[] = await prisma.actionReaction.findMany({
-        where: {
-            actionId: action.reactionId,
-        }
-    });
-
-    areas.forEach(async element => {
-        let newReaction: Reaction | null = await prisma.reaction.findUnique({
-            where: {
-                reactionId: element.reactionId,
-            }
-        })
-        if (newReaction) {
-            react(newReaction, action.serviceName);
-
-            await actionReaction(newReaction);
-        }
-    });
 }
 
 async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
@@ -154,11 +163,11 @@ async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
     if (!outgoingReaction.enabled)
         return false;
 
-    let outgoingAction = await getAction(outgoingReaction);
-    if (!outgoingAction)
+    let outgoingReact = await getReact(outgoingReaction);
+    if (!outgoingReact)
         return false;
 
-    let outgoingService = await getService(outgoingAction);
+    let outgoingService = await getService(outgoingReact);
     if (!outgoingService)
         return false;
 
@@ -175,34 +184,64 @@ async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
         return false;
     let serviceInstance = new serviceReturn();
     serviceInstance.read(requestBody);
-    
-    if (serviceInstance.constructor.name != outgoingService.serviceName) {
-        let transcoder = Transcoders.get(serviceInstance.constructor.name + '.' + outgoingService.serviceName);
-        if (!transcoder) {
-            console.log("no transcoder found");
-            return false;
-        }
-        console.log(transcoder);
-        (function(f: Function) {
-            serviceInstance = (f.apply(transcoders, [serviceInstance]));
-        })(transcoder);
-    } else {
-        console.log("no transcoder needed (same service)");
-    }
-    
-    serviceInstance.setOutgoing(outgoingReaction.outgoingWebhook);
-    const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactionName);
-    if (reaction) {
-        (function(f: Function) {
-            f.apply(serviceInstance, []);
-        })(reaction);
-        // if (outgoingReaction.enabledChain) {
-        //     await actionReaction(outgoingReaction);
-        // }
-        return true;
-    }
 
-    return false;
+    return await runReaction(outgoingReaction, serviceInstance);
+
+    // let serviceReturn = PrismaServices.get(await getService(getReact(outgoingReaction)).then(();
+    // if (!serviceReturn)
+    //     return false;
+    // let serviceInstance = new serviceReturn();
+    // serviceInstance.read(requestBody);
+
+    // let outgoingAction = await getReact(outgoingReaction);
+    // if (!outgoingAction)
+    //     return false;
+
+    // let outgoingService = await getService(outgoingAction);
+    // if (!outgoingService)
+    //     return false;
+
+    // let incomingService = await prisma.service.findFirst({
+    //     where: {
+    //         serviceName: webhook.incomingServiceName
+    //     }
+    // });
+    // if (!incomingService)
+    //     return false;
+
+    // let serviceReturn = PrismaServices.get(incomingService.serviceName);
+    // if (!serviceReturn)
+    //     return false;
+    // let serviceInstance = new serviceReturn();
+    // serviceInstance.read(requestBody);
+    
+    // if (serviceInstance.constructor.name != outgoingService.serviceName) {
+    //     let transcoder = Transcoders.get(serviceInstance.constructor.name + '.' + outgoingService.serviceName);
+    //     if (!transcoder) {
+    //         console.log("no transcoder found");
+    //         return false;
+    //     }
+    //     console.log(transcoder);
+    //     (function(f: Function) {
+    //         serviceInstance = (f.apply(transcoders, [serviceInstance]));
+    //     })(transcoder);
+    // } else {
+    //     console.log("no transcoder needed (same service)");
+    // }
+    
+    // serviceInstance.setOutgoing(outgoingReaction.outgoingWebhook);
+    // const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactionName);
+    // if (reaction) {
+    //     (function(f: Function) {
+    //         f.apply(serviceInstance, []);
+    //     })(reaction);
+    //     // if (outgoingReaction.enabledChain) {
+    //     //     await actionReaction(outgoingReaction, serviceInstance);
+    //     // }
+    //     return true;
+    // }
+
+    // return false;
 }
 
 export const hook = {
