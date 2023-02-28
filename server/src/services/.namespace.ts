@@ -37,23 +37,23 @@ export class DB {
                     if (thisServiceName == serviceName) {
                         await prisma.react.upsert({
                             where: {
-                                serviceName_reactionName: {
+                                serviceName_reactName: {
                                     serviceName: serviceName,
-                                    reactionName: reactionName
+                                    reactName: reactionName
                                 }
                             },
                             update: {
-                                reactionName: reactionName,
+                                reactName: reactionName,
                                 description: description,
                                 serviceName: serviceName
                             },
                             create: {
-                                reactionName: reactionName,
+                                reactName: reactionName,
                                 description: description,
                                 serviceName: serviceName
                             }
                         }).then((res) => {
-                            console.debug("Upserted Action: " + res.serviceName + '.' + res.reactionName + ' - ' + res.description);
+                            console.debug("Upserted Action: " + res.serviceName + '.' + res.reactName + ' - ' + res.description);
                         }).catch((err) => {
                             console.error("Failed to upsert Action: " + serviceName + '.' + description + '.' + reactionName + " - " + err);
                             isSynced = false;

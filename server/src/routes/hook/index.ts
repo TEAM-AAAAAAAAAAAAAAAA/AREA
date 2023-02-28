@@ -18,9 +18,9 @@ async function getAction(reaction: Reaction) : Promise<React | null>
 {
     return prisma.react.findUnique({
         where: {
-            serviceName_reactionName: { 
+            serviceName_reactName: { 
                 serviceName: reaction.serviceName,
-                reactionName: reaction.reactionName
+                reactName: reaction.reactName
             },
         }
     });
@@ -93,7 +93,7 @@ async function react(outgoingReaction: Reaction, parentServiceName: string) : Pr
     }
 
     serviceInstance.setOutgoing(outgoingReaction.outgoingWebhook);
-    const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactionName);
+    const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactName);
     if (reaction) {
         (function(f: Function) {
             f.apply(serviceInstance, []);
@@ -191,7 +191,7 @@ async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
     }
     
     serviceInstance.setOutgoing(outgoingReaction.outgoingWebhook);
-    const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactionName);
+    const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactName);
     if (reaction) {
         (function(f: Function) {
             f.apply(serviceInstance, []);

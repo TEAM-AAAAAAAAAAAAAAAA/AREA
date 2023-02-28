@@ -78,29 +78,29 @@ model Action {
   actionName  String
   serviceName String
   service     Service @relation(fields: [serviceName], references: [serviceName])
-  description  String
+  description String
 
   @@id([actionName, serviceName])
   @@unique([actionName, serviceName])
 }
 
 model React {
-  reactionName String
-  description  String
-  serviceName  String
-  service      Service    @relation(fields: [serviceName], references: [serviceName])
-  Reaction     Reaction[]
+  reactName   String
+  description String
+  serviceName String
+  service     Service    @relation(fields: [serviceName], references: [serviceName])
+  Reaction    Reaction[]
 
-  @@id([serviceName, reactionName])
-  @@unique([serviceName, reactionName])
+  @@id([serviceName, reactName])
+  @@unique([serviceName, reactName])
 }
 
 model Reaction {
   reactionId      Int              @id @unique @default(autoincrement())
   serviceName     String
   service         Service          @relation(fields: [serviceName], references: [serviceName])
-  reactionName    String
-  reaction        React            @relation(fields: [serviceName, reactionName], references: [serviceName, reactionName])
+  reactName       String
+  react           React            @relation(fields: [serviceName, reactName], references: [serviceName, reactName])
   incomingWebhook Webhook?
   outgoingWebhook String?
   actions         ActionReaction[] @relation("action")

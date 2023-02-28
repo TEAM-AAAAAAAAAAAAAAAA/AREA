@@ -86,7 +86,7 @@ CREATE TABLE "React" (
 CREATE TABLE "Reaction" (
     "reactionId" SERIAL NOT NULL,
     "serviceName" TEXT NOT NULL,
-    "reactionName" TEXT NOT NULL,
+    "reactName" TEXT NOT NULL,
     "outgoingWebhook" TEXT,
     "enabled" BOOLEAN NOT NULL DEFAULT true,
     "enabledChain" BOOLEAN NOT NULL DEFAULT true,
@@ -194,7 +194,7 @@ ALTER TABLE "React" ADD CONSTRAINT "React_serviceName_fkey" FOREIGN KEY ("servic
 ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_serviceName_fkey" FOREIGN KEY ("serviceName") REFERENCES "Service"("serviceName") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_serviceName_reactionName_fkey" FOREIGN KEY ("serviceName", "reactionName") REFERENCES "React"("serviceName", "reactionName") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_serviceName_reactName_fkey" FOREIGN KEY ("serviceName", "reactName") REFERENCES "React"("serviceName", "reactionName") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ActionReaction" ADD CONSTRAINT "action" FOREIGN KEY ("actionId") REFERENCES "Reaction"("reactionId") ON DELETE RESTRICT ON UPDATE CASCADE;

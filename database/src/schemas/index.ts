@@ -21,10 +21,20 @@ scalar JSONObject
 
     type Reaction {
         reactionId: Int!
-        name: String!
-        description: String!
+        serviceName: String!
         service: Service!
-        outgoingWebhook: String!
+        reactName: String!
+        react: React!
+        outgoingWebhook: String
+        enabled: Boolean!
+        enabledChain: Boolean!
+    }
+
+    type React {
+        reactionName: String!
+        description: String!
+        serviceName: String!
+        service: Service!
     }
 
     type Webhook {
@@ -62,6 +72,7 @@ scalar JSONObject
         allUsers: [User!]!
         allServices: [Service!]!
         allWebhooks: [Webhook!]!
+        allReact: [React!]!
         allReactions: [Reaction!]!
         allActions: [Action!]!
         allActionReactions: [ActionReaction!]!
@@ -73,10 +84,10 @@ scalar JSONObject
     type Mutation {
         removeWebhooks: Int!
         createAction(actionName: String!, description: String!, serviceName: String!): Int!
-        createWebhook(userId: String!, reactionName: String!, actionId: String!, serviceId: String!, description: String!, outgoingWebhook: String!): Int!
+        createWebhook(userId: String!, reactionName: String!, actionId: String!, serviceId: String!, description: String!, outgoingWebhook: String): Int!
         createUser(name: String!, email: String!, password: String!): Int!
         createService(name: String!): Int!
-        createChainedReaction(actionId: Int!, reactionName: String!, description: String!, serviceName: String!, actionName: String!, outgoingWebhook: String!): Int!
+        createChainedReaction(actionId: Int!, reactionName: String!, description: String!, serviceName: String!, actionName: String!, outgoingWebhook: String): Int!
         createOAuthUserData(userId: String!, refreshToken: String, accessToken: String, data: JSONObject, oAuthProviderName: String!, providerUserId: String!): Int!
     }
 
@@ -113,7 +124,15 @@ export const resolvers = {
             return await context.prisma.webhook.findUnique({ where: { webhookId: parent.webhookId } }).incomingService();
         }
     },
+    React: {
+        service: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.react.findUnique({ where: { serviceName_reactName: { reactName: parent.reactionName, serviceName: parent.serviceName } } }).service();
+        }
+    },
     Reaction: {
+        react: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.reaction.findUnique({ where: { reactionId: parent.reactionId } }).react();
+        },
         service: async (parent: any, _: any, context: Context) => {
             return await context.prisma.reaction.findUnique({ where: { reactionId: parent.reactionId } }).service();
         }
@@ -137,6 +156,9 @@ export const resolvers = {
         },
         allWebhooks: async (_: any, args: any, context: Context) => {
             return await context.prisma.webhook.findMany();
+        },
+        allReact: async (_: any, args: any, context: Context) => {
+            return await context.prisma.react.findMany();
         },
         allReactions: async (_: any, args: any, context: Context) => {
             return await context.prisma.reaction.findMany();
@@ -191,9 +213,6 @@ export const resolvers = {
             if (args.actionName === undefined || args.actionName === '') {
                 return 400
             }
-            if (args.outgoingWebhook === undefined || args.outgoingWebhook === '') {
-                return 400
-            }
             if (args.serviceName === undefined || args.serviceName === '') {
                 return 400
             }
@@ -202,7 +221,7 @@ export const resolvers = {
             }
             const myHonest = await context.prisma.reaction.create({
                 data: {
-                    reactionName: args.reactionName,
+                    reactName: args.reactName,
                     serviceName: args.serviceName,
                     outgoingWebhook: args.outgoingWebhook,
                 }
@@ -248,16 +267,13 @@ export const resolvers = {
             if (args.serviceId === undefined || args.serviceId === '') {
                 return 400
             }
-            if (args.outgoingWebhook === undefined || args.outgoingWebhook === '') {
-                return 400
-            }
             if (args.description === undefined || args.description === '') {
                 return 400
             }
             const myHonest = await context.prisma.reaction.create({
                 data: {
                     serviceName: args.serviceId,
-                    reactionName: args.reactionName,
+                    reactName: args.reactName,
                     outgoingWebhook: args.outgoingWebhook,
                 }
             });
