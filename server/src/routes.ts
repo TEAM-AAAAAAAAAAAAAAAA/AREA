@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { index } from "./routes/index";
+import { Router } from 'express';
+import { index } from './routes/index';
 import { aboutJson } from './routes/aboutJson';
 import { hook } from "./routes/hook";
 import { auth } from "./routes/auth";
