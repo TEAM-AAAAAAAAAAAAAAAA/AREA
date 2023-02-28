@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { index } from "./routes/index";
-import { aboutJson } from "./routes/aboutJson";
+import { aboutJson } from './routes/aboutJson';
 import { hook } from "./routes/hook";
 import { auth } from "./routes/auth";
 import _ from "lodash";
