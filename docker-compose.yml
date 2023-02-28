@@ -27,13 +27,13 @@ services:
       - client_mobile
       - server
     volumes:
-      - client_data:/data/client
+      - ./client_data:/app
   client_mobile:
     build:
       context: ./client
       dockerfile: client_mobile.dockerfile
     volumes:
-      - client_data:/data/client
+      - ./client_data:/app/android
   apollo:
     build:
       context: ./database
@@ -57,7 +57,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
     networks:
       - server_network
     ports:
