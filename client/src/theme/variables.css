@@ -335,3 +335,17 @@ http://ionicframework.com/docs/theming/ */
 .button-icon {
   margin: 0 0.5rem;
 }
+
+.login-with-button {
+  margin: 20px 2;
+}
+
+.login-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-with-row {
+  width: fit-content;
+}
