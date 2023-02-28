@@ -14,7 +14,7 @@ import {
 import {
     personCircle,
     logoDiscord
-} from "ionicons/icons";
+} from 'ionicons/icons';
 import {
     IonItem,
     IonLabel,
@@ -34,12 +34,12 @@ const Login: React.FC = () => {
     const [
         email,
         setEmail
-    ] = useState<string>("majent4@majent4.dev");
+    ] = useState<string>('');
 
     const [
         password,
         setPassword
-    ] = useState<string>("");
+    ] = useState<string>('');
 
     const [
         iserror,
@@ -49,28 +49,28 @@ const Login: React.FC = () => {
     const [
         message,
         setMessage
-    ] = useState<string>("");
+    ] = useState<string>('');
 
     const loginWithDiscord = () => {
         window.location.replace(`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_DISCORD_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fdiscord%2Fcb&response_type=token&scope=identify%20email`);
-    }
+    };
 
     const handleLogin = () => {
 
         if (!email) {
-            setMessage("enter email");
+            setMessage('enter email');
             setIserror(true);
             return;
         }
 
         //    if (validateEmail(email) === false) {
-        //      setMessage("invalid email");
+        //      setMessage('invalid email');
         //      setIserror(true);
         //      return;
         //    }
 
         if (!password || password.length < 6) {
-            setMessage("enter pw");
+            setMessage('enter pw');
             setIserror(true);
             return;
         }
@@ -96,16 +96,16 @@ const Login: React.FC = () => {
                                 isOpen={iserror}
                                 onDidDismiss={() => setIserror(false)}
                                 cssClass="my-custom-class"
-                                header={"Error!"}
+                                header={'Error!'}
                                 message={message}
-                                buttons={["Dismiss"]}
+                                buttons={['Dismiss']}
                             />
                         </IonCol>
                     </IonRow>
                     <IonRow>
                         <IonCol>
                             <IonIcon
-                                style={{ fontSize: "70px", color: "#0040ff" }}
+                                style={{ fontSize: '70px', color: '#0040ff' }}
                                 icon={personCircle}
                             />
                         </IonCol>
@@ -139,7 +139,7 @@ const Login: React.FC = () => {
                     <IonRow>
                         <IonCol>
                             <IonButton expand="block" onClick={handleLogin}>Login</IonButton>
-                            <p style={{ fontSize: "medium" }}>
+                            <p style={{ fontSize: 'medium' }}>
                                 <a href=".">sign-up</a>
                             </p>
                         </IonCol>
