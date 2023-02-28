@@ -12,7 +12,7 @@ scalar JSONObject
         id: ID!
         name: String!
         email: String!
-        created_at: DateTime!
+        createdAt: DateTime!
     }
 
     type Service {
@@ -23,7 +23,7 @@ scalar JSONObject
         reactionId: Int!
         serviceName: String!
         service: Service!
-        reactName: String!
+        reactionName: String!
         react: React!
         outgoingWebhook: String
         enabled: Boolean!
@@ -126,7 +126,7 @@ export const resolvers = {
     },
     React: {
         service: async (parent: any, _: any, context: Context) => {
-            return await context.prisma.react.findUnique({ where: { serviceName_reactName: { reactName: parent.reactionName, serviceName: parent.serviceName } } }).service();
+            return await context.prisma.react.findUnique({ where: { serviceName_reactionName: { reactionName: parent.reactionName, serviceName: parent.serviceName } } }).service();
         }
     },
     Reaction: {
@@ -221,7 +221,7 @@ export const resolvers = {
             }
             const myHonest = await context.prisma.reaction.create({
                 data: {
-                    reactName: args.reactName,
+                    reactionName: args.reactionName,
                     serviceName: args.serviceName,
                     outgoingWebhook: args.outgoingWebhook,
                 }
@@ -273,7 +273,7 @@ export const resolvers = {
             const myHonest = await context.prisma.reaction.create({
                 data: {
                     serviceName: args.serviceId,
-                    reactName: args.reactName,
+                    reactionName: args.reactionName,
                     outgoingWebhook: args.outgoingWebhook,
                 }
             });
