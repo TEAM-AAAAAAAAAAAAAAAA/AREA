@@ -12,7 +12,7 @@ const Services: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
+            <IonToolbar className="ion-padding ion-text-center">
                     <IonTitle>Services</IonTitle>
                 </IonToolbar>
             </IonHeader>

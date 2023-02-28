@@ -95,7 +95,7 @@ const Login: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
+                <IonToolbar className="ion-padding ion-text-center">
                     <IonTitle>Login</IonTitle>
                 </IonToolbar>
             </IonHeader>

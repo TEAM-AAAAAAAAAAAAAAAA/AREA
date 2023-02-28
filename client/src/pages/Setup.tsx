@@ -27,7 +27,7 @@ const Setup: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
+                <IonToolbar className="ion-padding ion-text-center">
                     <IonTitle>AREA - setup</IonTitle>
                 </IonToolbar>
             </IonHeader>
