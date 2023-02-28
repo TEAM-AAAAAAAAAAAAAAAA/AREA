@@ -1,17 +1,13 @@
 FROM node:14-alpine
 
 #Create app directory
-RUN mkdir /app/
-WORKDIR /app/
+WORKDIR /app
 
 #Install dependencies (could be modified/extend)
-COPY package.json yarn.lock ./
-RUN yarn install
+COPY package.json /app/
+RUN npm i
 
 #Bundle app source
-COPY . .
+COPY . ./app
 
-#Build the app
-RUN npx ionic capacitor add android
-
-CMD [ "yarn", "build" ]
+CMD [ "npm", "build" ]
