@@ -10,7 +10,7 @@ export const aboutJson = {
         let actions: any = await prisma.action.findMany().then((res: any) => {
             return res;
         });
-        let reactions: any = await prisma.reaction.findMany().then((res: any) => {
+        let reactions: any = await prisma.react.findMany().then((res: any) => {
             return res;
         });
         let aboutServices: [any] = [{}];
@@ -29,13 +29,13 @@ export const aboutJson = {
             for (let j = 0; j < reactions.length; j++)
                 if (reactions[j].serviceName == services[i].serviceName)
                     aboutReactions.push({
-                        name: reactions[j].name,
+                        name: reactions[j].reactionName,
                         description: reactions[j].description
                     })
             aboutServices.push({
                 name: services[i].serviceName,
-                actions: aboutReactions,
-                reactions: aboutActions
+                actions: aboutActions,
+                reactions: aboutReactions
             })
         }
         let about = {
