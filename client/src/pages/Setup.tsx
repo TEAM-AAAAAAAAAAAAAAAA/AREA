@@ -1,29 +1,9 @@
 import React from 'react';
 import { IonButton, IonContent, IonGrid, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { cubeOutline, logoDiscord, logoGithub, logoMicrosoft, logoSoundcloud } from 'ionicons/icons';
+import { loginWithDiscord, loginWithGithub, loginWithSoundcloud, loginWithTeams } from './Login';
 
 const Setup: React.FC = () => {
-
-    const loginWithDiscord = () => {
-        window.location.replace('https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_DISCORD_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fdiscord%2Fcb&response_type=token&scope=identify%20email');
-    };
-
-    const loginWithGithub = () => {
-        window.location.replace('templink');
-    };
-
-    const loginWithTeams = () => {
-        window.location.replace('templink');
-    };
-
-    const loginWithSoundcloud = () => {
-        window.location.replace('templink');
-    };
-
-    const loginWithHtb = () => {
-        window.location.replace('templink');
-    };
-
     return (
         <IonPage>
             <IonHeader>
