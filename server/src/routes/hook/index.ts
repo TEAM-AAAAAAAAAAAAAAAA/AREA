@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { transcoders } from "../../transcoders/transcoders";
 import { prisma } from "../../config/db";
-import { Action, ActionReaction, Reaction, Service, Webhook } from "@prisma/client";
+import { Action, ActionReaction, React, Reaction, Service, Webhook } from "@prisma/client";
 import { PrismaActions, PrismaServices, Transcoders } from "../../area/mappings";
 import { IService } from "../../services/IService";
 
@@ -14,19 +14,19 @@ async function getReaction(webhook: Webhook) : Promise<Reaction | null>
     });
 }
 
-async function getAction(reaction: Reaction) : Promise<Action | null>
+async function getAction(reaction: Reaction) : Promise<React | null>
 {
-    return prisma.action.findUnique({
+    return prisma.react.findUnique({
         where: {
-            serviceName_actionName: { 
+            serviceName_reactionName: { 
                 serviceName: reaction.serviceName,
-                actionName: reaction.actionName
+                reactionName: reaction.reactionName
             },
         }
     });
 }
 
-async function getService(action: Action) : Promise<Service | null>
+async function getService(action: React) : Promise<Service | null>
 {
     return prisma.service.findUnique({
         where: {
@@ -93,7 +93,7 @@ async function react(outgoingReaction: Reaction, parentServiceName: string) : Pr
     }
 
     serviceInstance.setOutgoing(outgoingReaction.outgoingWebhook);
-    const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.actionName);
+    const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactionName);
     if (reaction) {
         (function(f: Function) {
             f.apply(serviceInstance, []);
@@ -191,7 +191,7 @@ async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
     }
     
     serviceInstance.setOutgoing(outgoingReaction.outgoingWebhook);
-    const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.actionName);
+    const reaction = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactionName);
     if (reaction) {
         (function(f: Function) {
             f.apply(serviceInstance, []);
