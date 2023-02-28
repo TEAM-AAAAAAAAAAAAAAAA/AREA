@@ -202,10 +202,8 @@ export const resolvers = {
             }
             const myHonest = await context.prisma.reaction.create({
                 data: {
-                    actionName: args.actionName,
-                    name: args.reactionName,
+                    reactionName: args.reactionName,
                     serviceName: args.serviceName,
-                    description: args.description,
                     outgoingWebhook: args.outgoingWebhook,
                 }
             });
@@ -234,8 +232,8 @@ export const resolvers = {
             await context.prisma.action.create({
                 data: {
                     actionName: args.actionName,
-                    description: args.description,
                     serviceName: args.serviceName,
+                    description: args.description
                 }
             });
             return 200
@@ -259,9 +257,7 @@ export const resolvers = {
             const myHonest = await context.prisma.reaction.create({
                 data: {
                     serviceName: args.serviceId,
-                    name: args.reactionName,
-                    actionName: args.actionId,
-                    description: args.description,
+                    reactionName: args.reactionName,
                     outgoingWebhook: args.outgoingWebhook,
                 }
             });

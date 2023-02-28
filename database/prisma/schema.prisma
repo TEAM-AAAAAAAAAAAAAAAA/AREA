@@ -78,6 +78,7 @@ model Action {
   actionName  String
   serviceName String
   service     Service @relation(fields: [serviceName], references: [serviceName])
+  description  String
 
   @@id([actionName, serviceName])
   @@unique([actionName, serviceName])

@@ -68,6 +68,7 @@ CREATE TABLE "Webhook" (
 CREATE TABLE "Action" (
     "actionName" TEXT NOT NULL,
     "serviceName" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
 
     CONSTRAINT "Action_pkey" PRIMARY KEY ("actionName","serviceName")
 );
