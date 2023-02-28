@@ -1,27 +1,28 @@
 import {
+    IonAvatar,
     IonContent,
     IonHeader,
     IonPage,
     IonTitle,
     IonToolbar
 } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     IonGrid,
     IonRow,
     IonCol
 } from '@ionic/react';
-import {
-    personCircle,
-    logoDiscord
-} from 'ionicons/icons';
+// import {
+//     personCircle,
+//     logoDiscord
+// } from "ionicons/icons";
 import {
     IonItem,
     IonLabel,
     IonInput,
     IonButton,
-    IonIcon,
-    IonAlert
+    IonAlert,
+    IonImg
 } from '@ionic/react';
 
 //function validateEmail(email: string) {
@@ -29,7 +30,7 @@ import {
 //  return re.test(String(email).toLowerCase());
 //}
 
-const Login: React.FC = () => {
+const LoginWithDiscord: React.FC = () => {
     const [
         email,
         setEmail
@@ -50,9 +51,10 @@ const Login: React.FC = () => {
         setMessage
     ] = useState<string>('');
 
-    const loginWithDiscord = () => {
-        window.location.replace(`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_DISCORD_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fdiscord%2Fcb&response_type=token&scope=identify%20email`);
-    };
+    const [
+        userAvatar,
+        setUserAvatar
+    ] = useState<string>('');
 
     const handleLogin = () => {
 
@@ -79,11 +81,31 @@ const Login: React.FC = () => {
         //      "password": password
         //    }
     };
+
+    useEffect(() => {
+        const access_token = window.location.hash.split('#')[1].split('&')[1].split('=')[1];
+        function getUserInfos() {
+            fetch('https://discord.com/api/v10/users/@me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + access_token
+                }
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    setUserAvatar(`https://cdn.discordapp.com/avatars/${data?.id}/${data?.avatar}.png`);
+                    setEmail(data?.email);
+                });
+        }
+        if (access_token)
+            getUserInfos();
+    });
+
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>Login</IonTitle>
+                    <IonTitle>Finalize your profile</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen className="ion-padding ion-text-center">
@@ -102,10 +124,7 @@ const Login: React.FC = () => {
                     </IonRow>
                     <IonRow>
                         <IonCol>
-                            <IonIcon
-                                style={{ fontSize: '70px', color: '#0040ff' }}
-                                icon={personCircle}
-                            />
+                            <IonAvatar class="ion-discord-avatar" ><IonImg src={userAvatar} /></IonAvatar>
                         </IonCol>
                     </IonRow>
                     <IonRow>
@@ -142,11 +161,6 @@ const Login: React.FC = () => {
                             </p>
                         </IonCol>
                     </IonRow>
-                    <IonRow>
-                        <IonCol>
-                            <IonButton expand="block" fill="solid" color="discord" onClick={loginWithDiscord}>Login With Discord<IonIcon icon={logoDiscord} size="large"></IonIcon></IonButton>
-                        </IonCol>
-                    </IonRow>
                 </IonGrid>
             </IonContent>
         </IonPage>
@@ -154,4 +168,4 @@ const Login: React.FC = () => {
     );
 };
 
-export default Login;
+export default LoginWithDiscord;

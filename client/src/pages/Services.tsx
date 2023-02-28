@@ -1,24 +1,31 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ServicesContainer from '../components/ServicesContainer';
+import {
+    IonContent,
+    IonHeader,
+    IonPage,
+    IonTitle,
+    IonToolbar
+} from '@ionic/react';
 
-const Tab2: React.FC = () => {
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>AREA - services</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Services</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ServicesContainer name="Services page" />
-      </IonContent>
-    </IonPage>
-  );
+import ServicesContainer from '../components/Services';
+
+const Services: React.FC = () => {
+    return (
+        <IonPage>
+            <IonHeader>
+                <IonToolbar>
+                    <IonTitle>Services</IonTitle>
+                </IonToolbar>
+            </IonHeader>
+            <IonContent fullscreen>
+                <IonHeader collapse="condense">
+                    <IonToolbar>
+                        <IonTitle size="large">Services</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
+                <ServicesContainer name="Services page" />
+            </IonContent>
+        </IonPage>
+    );
 };
 
-export default Tab2;
+export default Services;
