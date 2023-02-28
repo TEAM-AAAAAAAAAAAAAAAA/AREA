@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonButton, IonContent, IonGrid, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { cubeOutline, logoDiscord, logoGithub, logoMicrosoft, logoSoundcloud } from 'ionicons/icons';
-import { loginWithDiscord, loginWithGithub, loginWithSoundcloud, loginWithTeams } from './Login';
+import { loginWithDiscord, loginWithGithub, loginWithHtb, loginWithSoundcloud, loginWithTeams } from './Login';
 
 const Setup: React.FC = () => {
     return (
