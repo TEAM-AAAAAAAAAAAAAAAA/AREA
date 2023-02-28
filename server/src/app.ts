@@ -55,6 +55,7 @@ app.get('/about.json', async (req: Request, res: Response) => {
         for (let j = 0; j < reactions.length; j++)
             if (reactions[j].serviceName == services[i].serviceName)
                 aboutReactions.push({
+                    name: reactions[j].name,
                     description: reactions[j].description
                 })
         aboutServices.push({
