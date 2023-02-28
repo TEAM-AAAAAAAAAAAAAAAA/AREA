@@ -16,7 +16,7 @@ import {
 } from 'ionicons/icons';
 import Login from './pages/Login';
 import Services from './pages/Services';
-//import LoginWithDiscord from './pages/LoginWithDiscord';
+import LoginWithDiscord from './pages/LoginWithDiscord';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -76,6 +76,9 @@ const App: React.FC = () => (
                     </Route>
                     <Route exact path="/">
                         <Redirect to="/login" />
+                    </Route>
+                    <Route path="/auth/discord/cb">
+                        <LoginWithDiscord />
                     </Route>
                 </IonRouterOutlet>
                 <IonTabBar slot="bottom">

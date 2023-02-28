@@ -12,21 +12,18 @@ import {
     IonRow,
     IonCol
 } from '@ionic/react';
-import {
-    personCircle,
-    logoDiscord
-} from "ionicons/icons";
+// import {
+//     personCircle,
+//     logoDiscord
+// } from "ionicons/icons";
 import {
     IonItem,
     IonLabel,
     IonInput,
     IonButton,
-    IonIcon,
     IonAlert,
     IonImg
 } from '@ionic/react';
-
-import LoginContainer from '../components/Login';
 
 //function validateEmail(email: string) {
 //  const re = /^((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
@@ -37,12 +34,12 @@ const LoginWithDiscord: React.FC = () => {
     const [
         email,
         setEmail
-    ] = useState<string>("majent4@majent4.dev");
+    ] = useState<string>('');
 
     const [
         password,
         setPassword
-    ] = useState<string>("");
+    ] = useState<string>('');
 
     const [
         iserror,
@@ -52,29 +49,29 @@ const LoginWithDiscord: React.FC = () => {
     const [
         message,
         setMessage
-    ] = useState<string>("");
+    ] = useState<string>('');
 
     const [
         userAvatar,
         setUserAvatar
-    ] = useState<string>("");
+    ] = useState<string>('');
 
     const handleLogin = () => {
 
         if (!email) {
-            setMessage("enter email");
+            setMessage('enter email');
             setIserror(true);
             return;
         }
 
         //    if (validateEmail(email) === false) {
-        //      setMessage("invalid email");
+        //      setMessage('invalid email');
         //      setIserror(true);
         //      return;
         //    }
 
         if (!password || password.length < 6) {
-            setMessage("enter pw");
+            setMessage('enter pw');
             setIserror(true);
             return;
         }
@@ -94,17 +91,16 @@ const LoginWithDiscord: React.FC = () => {
                     'Authorization': 'Bearer ' + access_token
                 }
             })
-            .then((response) => response.json())
-            .then((data) => {
-                setUserAvatar(`https://cdn.discordapp.com/avatars/${data?.id}/${data?.avatar}.png`);
-                setEmail(data?.email);
-            })
+                .then((response) => response.json())
+                .then((data) => {
+                    setUserAvatar(`https://cdn.discordapp.com/avatars/${data?.id}/${data?.avatar}.png`);
+                    setEmail(data?.email);
+                });
         }
         if (access_token)
             getUserInfos();
     });
 
-    const session: any = null;
     return (
         <IonPage>
             <IonHeader>
@@ -120,9 +116,9 @@ const LoginWithDiscord: React.FC = () => {
                                 isOpen={iserror}
                                 onDidDismiss={() => setIserror(false)}
                                 cssClass="my-custom-class"
-                                header={"Error!"}
+                                header={'Error!'}
                                 message={message}
-                                buttons={["Dismiss"]}
+                                buttons={['Dismiss']}
                             />
                         </IonCol>
                     </IonRow>
@@ -160,7 +156,7 @@ const LoginWithDiscord: React.FC = () => {
                     <IonRow>
                         <IonCol>
                             <IonButton expand="block" onClick={handleLogin}>Login</IonButton>
-                            <p style={{ fontSize: "medium" }}>
+                            <p style={{ fontSize: 'medium' }}>
                                 <a href=".">sign-up</a>
                             </p>
                         </IonCol>
