@@ -9,59 +9,52 @@ export class DB {
     {
         let isSynced: boolean = true;
 
-        await PrismaServices.forEach(async (value, serviceName) => {
-            await prisma.service.upsert({
-                where: {
-                    serviceName: serviceName
-                },
-                update: {
-                    serviceName: serviceName
-                },
-                create: {
-                    serviceName: serviceName
-                }
-            }).then((res) => {
-                console.debug("Upserted Service: " + res.serviceName);
-            }).catch((err) => {
-                console.error(err);
-                isSynced = false;
-            });
-
-            await PrismaActions.forEach(async (value, key) => {
+        for (let serviceName of PrismaServices.keys()) {
+            let service = await prisma.service.upsert({
+                where: { serviceName: serviceName },
+                update: { serviceName: serviceName },
+                create: { serviceName: serviceName }
+            }).catch(() => { isSynced = false; }).then((service) => { return service; });
+            if (service)
+                console.debug("Upserted Service: " + service.serviceName);
+    
+            for (let key of PrismaActions.keys())
+            {
                 let thisServiceName = key.substring(0, key.indexOf('.'));
                 let reactionName = key.substring(key.indexOf('.') + 1);
                 let description = Descriptions.get(key);
                 if (!description) {
                     console.error("No description found for " + key);
-                } else {
-                    if (thisServiceName == serviceName) {
-                        await prisma.react.upsert({
-                            where: {
-                                serviceName_reactionName: {
-                                    serviceName: serviceName,
-                                    reactionName: reactionName
-                                }
-                            },
-                            update: {
-                                reactionName: reactionName,
-                                description: description,
-                                serviceName: serviceName
-                            },
-                            create: {
-                                reactionName: reactionName,
-                                description: description,
-                                serviceName: serviceName
-                            }
-                        }).then((res) => {
-                            console.debug("Upserted Action: " + res.serviceName + '.' + res.reactionName + ' - ' + res.description);
-                        }).catch((err) => {
-                            console.error("Failed to upsert Action: " + serviceName + '.' + description + '.' + reactionName + " - " + err);
-                            isSynced = false;
-                        });
-                    }
+                    continue;
                 }
-            });
-        });
+
+                if (thisServiceName == serviceName) {
+                    await prisma.react.upsert({
+                        where: {
+                            serviceName_reactionName: {
+                                serviceName: serviceName,
+                                reactionName: reactionName
+                            }
+                        },
+                        update: {
+                            reactionName: reactionName,
+                            description: description,
+                            serviceName: serviceName
+                        },
+                        create: {
+                            reactionName: reactionName,
+                            description: description,
+                            serviceName: serviceName
+                        }
+                    }).then((res) => {
+                        console.debug("Upserted Action: " + res.serviceName + '.' + res.reactionName + ' - ' + res.description);
+                    }).catch((err) => {
+                        console.error("Failed to upsert Action: " + serviceName + '.' + description + '.' + reactionName + " - " + err);
+                        isSynced = false;
+                    });
+                }
+            };
+        };
 
         return isSynced;
     }

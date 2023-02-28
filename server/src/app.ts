@@ -9,6 +9,7 @@ import passport from 'passport';
 import { services } from './services/.services';
 import { Request, Response } from 'express';
 import { prisma } from './config/db';
+import { seed } from './utils/seed';
 
 const app = express();
 
@@ -25,6 +26,7 @@ const appConfig = {
 
 services.DB.sync().then((res: boolean) => {
     console.log("Is DB synced?", res);
+    seed();
 });
 
 app.use('/', routes);
