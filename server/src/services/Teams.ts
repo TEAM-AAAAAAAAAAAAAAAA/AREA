@@ -1,6 +1,7 @@
 import { nstring, ustring } from "../types/string";
 import { area } from "../area/.area";
 import { IService } from "./IService";
+import { Description } from "../area/mappings";
 
 @area.Service
 export class Teams implements IService {
@@ -34,7 +35,7 @@ export class Teams implements IService {
     }
     
     @area.Action
-    @area.Description("Post a message to Teams")
+    @Description("Post a message to Teams")
     postMessage(): void
     {
         if (!this._outgoing) return;
@@ -48,7 +49,7 @@ export class Teams implements IService {
     }
 
     @area.Action
-    @area.Description("Post a meeting to Teams")
+    @Description("Post a meeting to Teams")
     postMeeting(): void
     {
         if (!this._outgoing) return;

@@ -1,4 +1,5 @@
 import { area } from "../area/.area";
+import { Description } from "../area/mappings";
 import { env } from "../config/env";
 import { nstring, ustring } from "../types/string";
 import { IService } from "./IService";
@@ -40,6 +41,7 @@ export class OpenWeatherMap implements IService {
     }
 
     @area.Action
+    @Description("Fill current weather")
     async fillCurrentWeather(): Promise<void> {
         await this.fillWeather('hourly', 0);
 
