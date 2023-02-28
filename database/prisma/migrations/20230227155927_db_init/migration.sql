@@ -76,6 +76,7 @@ CREATE TABLE "Action" (
 -- CreateTable
 CREATE TABLE "Reaction" (
     "reactionId" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "serviceName" TEXT NOT NULL,
     "actionName" TEXT NOT NULL,

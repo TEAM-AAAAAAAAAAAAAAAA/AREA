@@ -11,6 +11,13 @@ export function Action(target: any, propertyKey: string, descriptor: PropertyDes
     console.log("Mapped Action: " + target.constructor.name + '.' + propertyKey)
 }
 
+export function Description(description: string) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        console.log("Mapped Description: " + description + ' to ' + target.constructor.name + '.' + propertyKey)
+        Descriptions.set(target.constructor.name + '.' + propertyKey, description);
+    }
+}
+
 export function Transcoder(incoming: string, outgoing: string) {
     console.log("Mapped Transcoder: " + incoming + ' to ' + outgoing)
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -21,3 +28,4 @@ export function Transcoder(incoming: string, outgoing: string) {
 export var PrismaServices: Map<string, new () => IService> = new Map<string, new () => IService>();
 export var PrismaActions: Map<string, new () => Function> = new Map<string, new () => Function>();
 export var Transcoders: Map<string, new () => Function> = new Map<string, new () => Function>();
+export var Descriptions: Map<string, string> = new Map<string, string>();
