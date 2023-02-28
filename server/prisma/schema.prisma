@@ -112,7 +112,7 @@ model Reaction {
 model ActionReaction {
   id         Int      @id @unique @default(autoincrement())
   actionId   Int
-  reactionId Int
+  reactionId Int      @unique
   action     Reaction @relation(name: "action", map: "action", fields: [actionId], references: [reactionId])
   reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [reactionId])
 
