@@ -10,11 +10,9 @@ import {
     setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import {
-    ellipse,
-    triangle
-} from 'ionicons/icons';
+import { diamond, ellipse, triangle } from 'ionicons/icons';
 import Login from './pages/Login';
+import Setup from './pages/Setup';
 import Services from './pages/Services';
 import LoginWithDiscord from './pages/LoginWithDiscord';
 
@@ -37,31 +35,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-import {
-    ApolloClient,
-    InMemoryCache,
-    gql
-} from '@apollo/client';
-
 setupIonicReact();
-
-const client = new ApolloClient({
-    uri: 'http://localhost:4000/',
-    cache: new InMemoryCache(),
-});
-
-client
-    .query({
-        query: gql`
-      query Query {
-        allUsers {
-          name,
-          email
-        }
-      }
-    `,
-    })
-    .then((result) => console.log(result));
 
 const App: React.FC = () => (
     <IonApp>
@@ -79,6 +53,9 @@ const App: React.FC = () => (
                     </Route>
                     <Route path="/auth/discord/cb">
                         <LoginWithDiscord />
+                    </ Route>
+                    <Route exact path="/setup">
+                        <Setup />
                     </Route>
                 </IonRouterOutlet>
                 <IonTabBar slot="bottom">
@@ -89,6 +66,10 @@ const App: React.FC = () => (
                     <IonTabButton tab="services" href="/services">
                         <IonIcon icon={ellipse} />
                         <IonLabel>Services</IonLabel>
+                    </IonTabButton>
+                    <IonTabButton tab="setup" href="/setup">
+                        <IonIcon icon={diamond} />
+                        <IonLabel>Setup</IonLabel>
                     </IonTabButton>
                 </IonTabBar>
             </IonTabs>
