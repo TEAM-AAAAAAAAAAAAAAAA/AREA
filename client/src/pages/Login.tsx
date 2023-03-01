@@ -11,10 +11,7 @@ import {
     IonRow,
     IonCol
 } from '@ionic/react';
-import {
-    personCircle,
-    logoDiscord
-} from 'ionicons/icons';
+import { personCircle, cubeOutline, logoDiscord, logoGithub, logoMicrosoft, logoSoundcloud } from 'ionicons/icons';
 import {
     IonItem,
     IonLabel,
@@ -28,6 +25,9 @@ import {
 //  const re = /^((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
 //  return re.test(String(email).toLowerCase());
 //}
+export const loginWithDiscord = () => {
+    window.location.replace(`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_DISCORD_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fdiscord%2Fcb&response_type=token&scope=identify%20email`);
+};
 
 const Login: React.FC = () => {
     const [
@@ -49,10 +49,6 @@ const Login: React.FC = () => {
         message,
         setMessage
     ] = useState<string>('');
-
-    const loginWithDiscord = () => {
-        window.location.replace(`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_DISCORD_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fdiscord%2Fcb&response_type=token&scope=identify%20email`);
-    };
 
     const handleLogin = () => {
 
@@ -82,7 +78,7 @@ const Login: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
+                <IonToolbar className="ion-padding ion-text-center">
                     <IonTitle>Login</IonTitle>
                 </IonToolbar>
             </IonHeader>
@@ -144,7 +140,11 @@ const Login: React.FC = () => {
                     </IonRow>
                     <IonRow>
                         <IonCol>
-                            <IonButton expand="block" fill="solid" color="discord" onClick={loginWithDiscord}>Login With Discord<IonIcon icon={logoDiscord} size="large"></IonIcon></IonButton>
+                            <IonGrid class='login-grid'>
+                                <IonRow class='login-with-row'>
+                                    <IonButton class='login-with-button' expand='block' fill='solid' onClick={loginWithDiscord} color='discord'>Login With Discord<IonIcon class='button-icon' icon={logoDiscord} size='large' /></IonButton>
+                                </IonRow>
+                            </IonGrid>
                         </IonCol>
                     </IonRow>
                 </IonGrid>

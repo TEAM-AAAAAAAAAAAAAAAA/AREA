@@ -1,5 +1,6 @@
 .env/
 node_modules/
+custom-modules/
 prisma/docs
 prisma/joi
 prisma/dbml

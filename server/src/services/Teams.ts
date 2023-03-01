@@ -1,7 +1,8 @@
 import { nstring, ustring } from "../types/string";
 import { area } from "../area/.area";
 import { IService } from "./IService";
-import { Description } from "../area/mappings";
+import * as AreaCards from '../utils/AreaCards';
+import { Action, Description } from "../area/mappings";
 
 @area.Service
 export class Teams implements IService {
@@ -11,6 +12,8 @@ export class Teams implements IService {
         this._authorId = data?.from?.id;
         this._authorName = data?.from?.name
         this._message = data?.text?.substring(data?.text?.indexOf('</at>') + 5).replace("&nbsp;", " ");
+        this._title = this._message;
+        this._datetime = new Date(data?.timestamp);
         
         if (this._message)
         {
@@ -34,7 +37,7 @@ export class Teams implements IService {
         this._outgoing = data;
     }
     
-    @area.Action
+    @Action
     @Description("Post a message to Teams")
     postMessage(): void
     {
@@ -48,7 +51,7 @@ export class Teams implements IService {
         
     }
 
-    @area.Action
+    @Action
     @Description("Post a meeting to Teams")
     postMeeting(): void
     {
@@ -66,6 +69,33 @@ export class Teams implements IService {
         }).catch(e => console.error(e));
     }
 
+    @Action
+    @Description("A cool way to post an issue to Teams using adaptive cards")
+    postIssue(): void
+    {
+        if (!this._outgoing) return;
+
+        fetch(this._outgoing, {
+            method: 'POST',
+            body: JSON.stringify(AreaCards.issueFormat(this._authorName, this._authorImage, this._repository, this._repositoryLink, this._issueId, this._issue, this._issueLink, this._message, this._datetime)),
+            headers: {'Content-Type': 'application/json'} 
+        }).then();
+    }
+
+    // @area.Action
+    // postTask(): void
+    // {
+    //     if (!this._outgoing) return;
+
+    //     fetch(this._outgoing, {
+    //         method: 'POST',
+    //         body: JSON.stringify(
+    //             {}
+    //         ),
+    //         headers: {'Content-Type': 'application/json'} 
+    //     })
+    // }
+
     _hour: number | undefined;
     _minute: number | undefined;
     _day: number | undefined;
@@ -73,7 +103,15 @@ export class Teams implements IService {
     _year: number | undefined;
     _authorId: ustring;
     _authorName: ustring;
+    _authorImage: ustring;
+    _title: ustring;
+    _datetime: Date | undefined = new Date(Date.now());
     _message: ustring;
     _subject: ustring;
+    _repository: ustring;
+    _repositoryLink: ustring;
+    _issue: ustring;
+    _issueId: number | undefined;
+    _issueLink: ustring;
     _outgoing: nstring;
 }
