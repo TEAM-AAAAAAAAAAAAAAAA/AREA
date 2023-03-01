@@ -56,17 +56,50 @@ export class transcoders
                 discord._message += param;
             }
         }
+        function weatherColor(weather: string) : number {
+            switch (weather)
+            {
+                case "Clear": return 16776960;
+                case "Clouds": return 12370112;
+                case "Rain": return 3447003;
+                case "Snow": return 16777215;
+                case "Thunderstorm": return 7419530;
+                case "Drizzle": return 10070709;
+                default: return 9936031;
+            }
+        }
 
         var discord: services.Discord = new services.Discord();
         let when: string = "";
-        if (openWeatherMap._weatherType == WeatherType.Now)
-            when = "now";
 
-        discord._message = "Weather " + when + ": ";
-            
-        addWeatherParam(openWeatherMap._weather);
-        addWeatherParam(openWeatherMap._temp);
+        if (openWeatherMap._weatherType != WeatherType.Now)
+        {
+            discord._message = "Weather forecast for " + openWeatherMap._targetCity + ":\n";
+            for (let item of openWeatherMap._forecast.forecast)
+            {
+                discord._list.list.push({
+                    title: "<t:" + Math.floor(Date.parse(String(item.dt)) / 1000) + ":f>",
+                    description: item.temp + "°C",
+                    color: weatherColor(item.weather),
+                    author: {
+                        name: item.weather
+                    },
+                    footer: {
+                        text: openWeatherMap._targetCity || ""
+                    }
+                });
 
+                discord._message += "<t:" + Math.floor(Date.parse(String(item.dt)) / 1000) + ":f>" + ": " + item.temp + "°C, " + item.weather + "\n";
+            }
+        } else {
+            if (openWeatherMap._weatherType == WeatherType.Now)
+                when = "now";
+
+            discord._message = "Weather " + when + ": ";
+                
+            addWeatherParam(openWeatherMap._weather);
+            addWeatherParam(openWeatherMap._temp);
+        }
         return discord;
     }
     
