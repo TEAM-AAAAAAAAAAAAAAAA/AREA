@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     IonCard,
     IonCardContent,
@@ -16,7 +16,7 @@ import {
     TypedDocumentNode
 } from '@apollo/client';
 
-const GET_ROCKET_INVENTORY = gql`
+const GET_SERVICES = gql`
   query Query {
     allServices {
       serviceName
@@ -28,35 +28,30 @@ interface ContainerProps {
     name: string;
 }
 
-client
-    .query({
-        query: gql`
-      query Query {
-        allServices {
-          serviceName
-        }
-      }
-    `,
-    });
 
 const ServicesContainer: React.FC<ContainerProps> = () => {
-    const { loading, data } = useQuery(
-        GET_ROCKET_INVENTORY
-    );
+    const [data, setData] = useState<any>([]);
+
+    useEffect(() => {
+        client.query({ query: GET_SERVICES }).then((result) => {
+            setData(result.data);
+        });
+    });
+
     return (
-        { data && data.rocketInventory.map(inventory => (
-            <IonContent>
-                <IonCard>
+        <IonContent>
+            {data.allServices?.map((service: any) => (
+                <IonCard key={service}>
                     <IonCardHeader>
-                        <IonCardTitle>{inventory.serviceName}</IonCardTitle>
+                        <IonCardTitle>{service.serviceName}</IonCardTitle>
                         <IonCardSubtitle>Service Type</IonCardSubtitle>
                     </IonCardHeader>
                     <IonCardContent>
                         Service Description
                     </IonCardContent>
                 </IonCard>
-            </IonContent>
-        ))}
+            ))}
+        </IonContent>
 
     );
 };
