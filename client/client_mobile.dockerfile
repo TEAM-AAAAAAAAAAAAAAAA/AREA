@@ -1,31 +1,35 @@
 FROM androidsdk/android-31
 
-RUN <<EOF
-apt update
-apt upgrade -y
-EOF
+USER root
+
+RUN ls
+
+RUN apt update
+
+RUN apt upgrade -y
 
 # ENV NVM_DIR /root/.nvm
 
-RUN <<EOF
-curl -o - https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-. /root/.nvm/nvm.sh
-nvm install 17
-EOF
+RUN curl -o - https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+
+RUN . /root/.nvm/nvm.sh && nvm install 17
 
 WORKDIR /app
 
 COPY . .
 
-RUN <<EOF
-. /root/.nvm/nvm.sh
-nvm use 17
-npm i
-npm i -g @ionic/cli
-ionic build
-ionic capacitor add android
-ionic capacitor sync
-cd android
-./gradlew assembleDebug
-cd ..
-EOF
+RUN . /root/.nvm/nvm.sh && nvm use 17
+
+RUN . /root/.nvm/nvm.sh && npm i
+
+RUN . /root/.nvm/nvm.sh && npm i -g @ionic/cli
+
+RUN . /root/.nvm/nvm.sh && ionic build
+
+RUN . /root/.nvm/nvm.sh && ionic capacitor add android
+
+RUN . /root/.nvm/nvm.sh && ionic capacitor sync
+
+RUN . /root/.nvm/nvm.sh && cd ./android && ./gradlew init
+
+RUN . /root/.nvm/nvm.sh && cd ./android && ./gradlew assembleRelease --debug
