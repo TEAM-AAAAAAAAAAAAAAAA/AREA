@@ -1,4 +1,6 @@
-export function issueFormat(authorName: string, authorImage: string, repositoryName: string, repositoryUrl: string, issueId: number, issueTitle: string, issueContent: string, issueUrl: string, datetime: Date | undefined)
+import { ustring } from "../types/string";
+
+export function issueFormat(authorName: ustring, authorImage: ustring, repositoryName: ustring, repositoryUrl: ustring, issueId: number | undefined, issueTitle: ustring, issueContent: ustring, issueUrl: ustring, datetime: Date | undefined)
 {
     var card = {
         "@type": "MessageCard",

@@ -2,6 +2,7 @@ import { nstring, ustring } from "../types/string";
 import { area } from "../area/.area";
 import { IService } from "./IService";
 import * as AreaCards from '../utils/AreaCards';
+import { Action, Description } from "../area/mappings";
 
 @area.Service
 export class Teams implements IService {
@@ -10,7 +11,10 @@ export class Teams implements IService {
     read(data: any): void {
         this._authorId = data?.from?.id;
         this._authorName = data?.from?.name
+        this._authorImage = data?.from?.avatar;
         this._message = data?.text?.substring(data?.text?.indexOf('</at>') + 5).replace("&nbsp;", " ");
+        this._title = this._message;
+        this._datetime = new Date(data?.timestamp);
         
         if (this._message)
         {
@@ -34,8 +38,8 @@ export class Teams implements IService {
         this._outgoing = data;
     }
     
-    @area.Action
-    @area.Description("Post a message to Teams")
+    @Action
+    @Description("Post a message to Teams")
     postMessage(): void
     {
         if (!this._outgoing) return;
@@ -48,8 +52,8 @@ export class Teams implements IService {
         
     }
 
-    @area.Action
-    @area.Description("Post a meeting to Teams")
+    @Action
+    @Description("Post a meeting to Teams")
     postMeeting(): void
     {
         if (!this._outgoing) return;
@@ -66,14 +70,15 @@ export class Teams implements IService {
         }).then();
     }
 
-    @area.Action
+    @Action
+    @Description("A cool way to post an issue to Teams using adaptive cards")
     postIssue(): void
     {
         if (!this._outgoing) return;
 
         fetch(this._outgoing, {
             method: 'POST',
-            body: JSON.stringify(AreaCards.issueFormat("bill gates", "https://cdn.futura-sciences.com/cdn-cgi/image/width=1024,quality=60,format=auto/sources/images/scientist/persov6/Gates-1000.jpg", "Team", "https://google.com", 42, "Wow", "Very good code and project", "http://test", this._datetime)),
+            body: JSON.stringify(AreaCards.issueFormat(this._authorName, this._authorImage, this._repository, this._repositoryLink, this._issueId, this._issue, this._issueLink, this._message, this._datetime)),
             headers: {'Content-Type': 'application/json'} 
         }).then();
     }
@@ -104,5 +109,10 @@ export class Teams implements IService {
     _datetime: Date | undefined = new Date(Date.now());
     _message: ustring;
     _subject: ustring;
+    _repository: ustring;
+    _repositoryLink: ustring;
+    _issue: ustring;
+    _issueId: number | undefined;
+    _issueLink: ustring;
     _outgoing: nstring;
 }
