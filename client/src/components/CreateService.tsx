@@ -1,8 +1,22 @@
 import React, { useRef } from 'react';
 import { client } from '../utils/ApolloClient';
 import { gql } from '@apollo/client';
-import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonModal, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
-import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
+import {
+    IonButton,
+    IonButtons,
+    IonContent,
+    IonHeader,
+    IonInput,
+    IonItem,
+    IonLabel,
+    IonModal,
+    IonTitle,
+    IonToolbar,
+    useIonToast
+} from '@ionic/react';
+import {
+    OverlayEventDetail
+} from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 
 const CreateService: React.FC = () => {
     const [present] = useIonToast();
@@ -29,14 +43,14 @@ const CreateService: React.FC = () => {
                             duration: 1500,
                             position: 'top',
                             color: 'success'
-                        })
+                        });
                     } else {
                         present({
                             message: 'Service creation failed',
                             duration: 1500,
                             position: 'top',
                             color: 'danger'
-                        })
+                        });
                     }
                 });
             } else {
@@ -45,7 +59,7 @@ const CreateService: React.FC = () => {
                     duration: 1500,
                     position: 'top',
                     color: 'danger'
-                })
+                });
             }
         }
     }
@@ -66,6 +80,6 @@ const CreateService: React.FC = () => {
             </IonContent>
         </IonModal>
     );
-}
+};
 
 export default CreateService;

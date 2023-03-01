@@ -42,7 +42,7 @@ export const loginWithSoundcloud = () => {
 };
 
 export const loginWithHtb = () => {
-    window.location.replace(`https://app.hackthebox.com`);
+    window.location.replace('https://app.hackthebox.com');
 };
 
 const Login: React.FC = () => {

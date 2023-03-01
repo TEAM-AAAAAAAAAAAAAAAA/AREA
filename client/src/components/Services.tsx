@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    IonButton,
     IonCard,
     IonCardContent,
     IonCardHeader,
@@ -8,24 +7,24 @@ import {
     IonCardTitle,
     IonContent
 } from '@ionic/react';
-import { client } from '../utils/ApolloClient';
-import { gql } from '@apollo/client';
+// import { client } from '../utils/ApolloClient';
+// import { gql } from '@apollo/client';
 
 interface ContainerProps {
     name: string;
 }
 
-client
-    .query({
-        query: gql`
-      query Query {
-        allServices {
-          serviceName
-        }
-      }
-    `,
-    })
-    .then((result) => console.log(result));
+// client
+//     .query({
+//         query: gql`
+//       query Query {
+//         allServices {
+//           serviceName
+//         }
+//       }
+//     `,
+//     })
+//     .then((result) => console.log(result));
 
 const ServicesContainer: React.FC<ContainerProps> = () => {
     return (

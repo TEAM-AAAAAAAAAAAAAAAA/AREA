@@ -1,14 +1,35 @@
 import React from 'react';
-import { IonButton, IonContent, IonGrid, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import { cubeOutline, logoDiscord, logoGithub, logoMicrosoft, logoSoundcloud } from 'ionicons/icons';
-import { loginWithDiscord, loginWithGithub, loginWithHtb, loginWithSoundcloud, loginWithTeams } from './Login';
+import {
+    IonButton,
+    IonContent,
+    IonGrid,
+    IonHeader,
+    IonIcon,
+    IonPage,
+    IonTitle,
+    IonToolbar
+} from '@ionic/react';
+import {
+    cubeOutline,
+    logoDiscord,
+    logoGithub,
+    logoMicrosoft,
+    logoSoundcloud
+} from 'ionicons/icons';
+import {
+    loginWithDiscord,
+    loginWithGithub,
+    loginWithHtb,
+    loginWithSoundcloud,
+    loginWithTeams
+} from './Login';
 
 const Setup: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar className="ion-padding ion-text-center">
-                    <IonTitle>AREA - setup</IonTitle>
+                    <IonTitle>Setup</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
