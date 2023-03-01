@@ -3,6 +3,28 @@ import { area } from "../area/.area";
 import { IService } from "./IService";
 import { Description } from "../area/mappings";
 
+interface DiscordListEmbed {
+    "content": "Weather forecast",
+    "embeds": [DiscordListItem?],
+    "attachments": []
+}
+
+export interface DiscordListItem {
+    title: string;
+    description: string;
+    color: number;
+    author: {
+        name: string;
+    }
+    footer: {
+        text: string;
+    }
+}
+
+export interface DiscordList {
+    list: DiscordListItem[];
+}
+
 @area.Service
 export class Discord implements IService {
     constructor() { this._outgoing = null; }
@@ -69,6 +91,37 @@ export class Discord implements IService {
         }).catch(e => console.error(e));
     }
 
+    @area.Action
+    @Description("Post a list to Discord")
+    postList(): void {
+        console.debug("Posting list to Discord: " + this._message);
+        console.log(this._outgoing);
+        if (!this._outgoing) return;
+
+        let embedList : DiscordListEmbed = { content: "Weather forecast", embeds: [], attachments: [] };
+
+        for (let item of this._list.list) {
+            embedList.embeds.push({
+                title: item.title,
+                description: item.description,
+                color: item.color,
+                author: item.author,
+                footer: item.footer
+            });
+            if (embedList.embeds.length >= 10)
+                break;
+        }
+
+        console.log(JSON.stringify(embedList));
+
+        fetch(this._outgoing, {
+            method: 'POST',
+            body: JSON.stringify(embedList),
+            headers: {'Content-Type': 'application/json'}
+        }).catch(e => console.error(e));
+    }
+
+    _list: DiscordList = { list: [] };
     _city: ustring;
     _hour: number | undefined;
     _minute: number | undefined;
