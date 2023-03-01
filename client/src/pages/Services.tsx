@@ -7,6 +7,7 @@ import {
     IonTitle,
     IonToolbar
 } from '@ionic/react';
+import { useState } from 'react';
 import CreateService from '../components/CreateService';
 
 import ServicesContainer from '../components/Services';
@@ -19,19 +20,14 @@ const Services: React.FC = () => {
                     <IonTitle>Services</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent fullscreen>
+            <IonContent>
                 <IonGrid class='create-grid'>
                     <IonButton id='create-service'>
                         Create Service
                     </IonButton>
                 </IonGrid>
                 <CreateService />
-                <IonHeader collapse='condense'>
-                    <IonToolbar>
-                        <IonTitle size='large'>Services</IonTitle>
-                    </IonToolbar>
-                </IonHeader>
-                <ServicesContainer name='Services page' />
+                <ServicesContainer />
             </IonContent>
         </IonPage>
     );
