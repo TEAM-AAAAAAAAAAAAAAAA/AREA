@@ -1,8 +1,9 @@
 import { prisma } from '../config/db';
-import { PrismaServices, PrismaActions, Description, Descriptions } from "../area/mappings";
+import { PrismaServices, PrismaActions, Descriptions } from "../area/mappings";
 
 export * from "./Discord";
 export * from "./Teams";
+export * from "./OpenWeatherMap";
 
 export class DB {
     static async sync() : Promise<boolean>
