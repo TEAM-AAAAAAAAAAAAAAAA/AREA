@@ -349,3 +349,17 @@ http://ionicframework.com/docs/theming/ */
 .login-with-row {
   width: fit-content;
 }
+
+.create-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-label {
+  margin: 1rem 0;
+}
+
+.modal-create-grid {
+  max-width: 90%;
+}

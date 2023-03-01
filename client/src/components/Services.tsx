@@ -8,21 +8,12 @@ import {
     IonCardTitle,
     IonContent
 } from '@ionic/react';
-
-import {
-    ApolloClient,
-    InMemoryCache,
-    gql
-} from '@apollo/client';
+import { client } from '../utils/ApolloClient';
+import { gql } from '@apollo/client';
 
 interface ContainerProps {
     name: string;
 }
-
-const client = new ApolloClient({
-    uri: 'http://localhost:4000/',
-    cache: new InMemoryCache(),
-});
 
 client
     .query({
