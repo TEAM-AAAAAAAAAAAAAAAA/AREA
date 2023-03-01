@@ -11,9 +11,7 @@ import {
     client
 } from '../utils/ApolloClient';
 import {
-    useQuery,
-    gql,
-    TypedDocumentNode
+    gql
 } from '@apollo/client';
 
 const GET_SERVICES = gql`
@@ -24,22 +22,18 @@ const GET_SERVICES = gql`
   }
 `;
 
-interface ContainerProps {
-    name: string;
-}
 
-
-const ServicesContainer: React.FC<ContainerProps> = () => {
+const ServicesContainer: React.FC = () => {
     const [data, setData] = useState<any>([]);
 
     useEffect(() => {
         client.query({ query: GET_SERVICES }).then((result) => {
             setData(result.data);
         });
-    });
+    }, []);
 
     return (
-        <IonContent>
+        <>
             {data.allServices?.map((service: any) => (
                 <IonCard key={service.serviceName}>
                     <IonCardHeader>
@@ -51,7 +45,7 @@ const ServicesContainer: React.FC<ContainerProps> = () => {
                     </IonCardContent>
                 </IonCard>
             ))}
-        </IonContent>
+        </>
 
     );
 };
