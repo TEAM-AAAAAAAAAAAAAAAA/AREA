@@ -8,6 +8,11 @@ export enum WeatherType {
     Now
 };
 
+/**
+ * OpenWeatherMap service
+ * 
+ * This one's a bit special, it is not intended to push data to any webhook or api but rather to be read by other services using chained reactions.
+ */
 @Service
 export class OpenWeatherMap implements IService {
     constructor() { this._outgoing = null; }
