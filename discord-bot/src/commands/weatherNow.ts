@@ -3,7 +3,6 @@ import { ApplicationCommandOptionType } from 'discord.js';
 import { Discord, Slash, SlashOption } from 'discordx';
 import { areaConfigCheck } from '../config/areaConfigCheck.js';
 import { env } from '../config/env.js';
-// import { services } from '../../../server/src/services/.services';
 
 @Discord()
 export class Meeting {
@@ -14,30 +13,28 @@ export class Meeting {
 
         interaction: CommandInteraction
     ): Promise<void> {
-        // var thisId = prisma.oAuthUserData.findUnique({
 
-        // })
+        try {
+            let webhook = await areaConfigCheck(interaction, "weather_now");
+            if (!webhook)
+                return;
+        
+            let res = await fetch(env.API_URL + '/hook/' + webhook.userId + '/' + webhook.webhookWebhookId, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({bot: {
+                    city: city
+                }})
+            });
+            if (!res || !res.ok)
+            {
+                interaction.reply("Unknown error");
+                return;
+            }
 
-        let webhook = await areaConfigCheck(interaction, "weather_now");
-        if (!webhook)
-            return;
-    
-        // console.log(webhook)
-        let res = await fetch(env.API_URL + '/hook/' + webhook.userId + '/' + webhook.webhookWebhookId, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({bot: {
-                city: city
-            }})
-        });
-        if (!res || !res.ok)
-        {
-            interaction.reply("Unknown error");
-            return;
-        }
-
-        console.log(city);
-        console.log(res);
-        interaction.reply("Weather sent to configured webhook");
+            console.log(city);
+            console.log(res);
+            interaction.reply("Weather sent to configured webhook");
+        } catch {}
     }
 }
