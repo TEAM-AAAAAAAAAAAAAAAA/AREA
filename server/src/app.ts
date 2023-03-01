@@ -2,10 +2,13 @@ import { Express } from 'express'
 import express from 'express'
 import { routes } from './routes';
 import { env } from './config/env';
-import bodyParser from 'body-parser';import { sendMail } from './utils/mailer';
+import bodyParser from 'body-parser';
+import { sendMail } from './utils/mailer';
 import csrf from 'csurf';
 import passport from 'passport';
 import { services } from './services/.services';
+import { Request, Response } from 'express';
+import { prisma } from './config/db';
 
 const app = express();
 
