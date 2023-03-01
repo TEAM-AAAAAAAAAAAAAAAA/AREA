@@ -23,8 +23,9 @@ export class Meeting {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({bot: {
-                    city: city
-                }})
+                    city: city,
+                    when: "now"
+            }})
             });
             if (!res || !res.ok)
             {
@@ -32,8 +33,6 @@ export class Meeting {
                 return;
             }
 
-            console.log(city);
-            console.log(res);
             interaction.reply("Weather sent to configured webhook");
         } catch {}
     }
