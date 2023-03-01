@@ -29,3 +29,4 @@ routes.post('/auth/login', auth.login.POST);
 routes.get('/auth/logout', auth.logout.GET);
 routes.get('/auth/validate/:input_token', auth.validate_email.GET);
 routes.post('/auth/discord_oauth', auth.discord_oauth.POST);
+routes.post('/auth/hackthebox_config', auth.htb_config.POST);
