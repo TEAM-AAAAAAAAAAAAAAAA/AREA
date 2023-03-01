@@ -25,7 +25,7 @@ export class Meeting {
                 body: JSON.stringify({bot: {
                     city: city,
                     when: "now"
-            }})
+                }})
             });
             if (!res || !res.ok)
             {
