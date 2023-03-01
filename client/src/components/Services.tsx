@@ -41,7 +41,7 @@ const ServicesContainer: React.FC<ContainerProps> = () => {
     return (
         <IonContent>
             {data.allServices?.map((service: any) => (
-                <IonCard key={service}>
+                <IonCard key={service.serviceName}>
                     <IonCardHeader>
                         <IonCardTitle>{service.serviceName}</IonCardTitle>
                         <IonCardSubtitle>Service Type</IonCardSubtitle>
