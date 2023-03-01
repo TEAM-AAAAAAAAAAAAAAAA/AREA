@@ -4,6 +4,7 @@ import Joi from 'joi';
 import _ from 'lodash';
 import jwt from 'jsonwebtoken';
 import { jwtSecret } from '../../../config/env';
+import * as argon2id from 'argon2';
 
 export const discord_oauth = {
     POST: [
@@ -17,6 +18,7 @@ async (req: Request, res: Response) => {
             id : Joi.string().required()
         }).required().unknown(true)
     });
+    console.log(req.body);
     req.body = oauthUserDataSchema.validate(req.body).value;
     if (_.isEmpty(req.body)) {
         res.status(400).json({ error: 'Bad request' });
@@ -26,22 +28,30 @@ async (req: Request, res: Response) => {
     let user_data = await prisma.oAuthUserData.upsert({
         where: {
             providerUserId_oAuthProviderName: {
-                providerUserId: req.body.userData.id,
+                providerUserId: req.body?.userData?.id,
                 oAuthProviderName: 'discord'
             }
         },
         create: {
             accessToken: req.body.accessToken,
             refreshToken: req.body.refreshToken,
-            providerUserId: req.body.userData.id,
+            providerUserId: req.body?.userData?.id,
             oAuthProvider: {
                 connect: {
                     oAuthProviderName: 'discord'
                 }
             },
             user: {
-                connect: {
-                    email: req.body.email
+                connectOrCreate: {
+                    where: {
+                        email: req.body.email
+                    },
+                    create: {
+                        email: req.body.email,
+                        password: await argon2id.hash(req.body.password),
+                        name: req.body.userData.username,
+                        emailVerified: true,
+                    }
                 }
             },
             data: req.body.userData
