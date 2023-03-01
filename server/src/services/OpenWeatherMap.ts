@@ -26,7 +26,7 @@ export class OpenWeatherMap implements IService {
     @Action
     @Description("Fill current weather")
     async fillCurrentWeather(): Promise<void> {
-        let thisWeather = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this._targetCity}&appid=${env.WEATHER_API_KEY}&units=metric`).then(res => res.json());
+        let thisWeather = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this._targetCity}&appid=${env.WEATHER_API_KEY}&units=metric`).then(res => res.json()).catch(e => console.error(e));
         this._temp = await thisWeather?.main?.temp  + '°C';
         this._weather = await thisWeather?.weather?.[0]?.main;
         this._weatherType = WeatherType.Now;

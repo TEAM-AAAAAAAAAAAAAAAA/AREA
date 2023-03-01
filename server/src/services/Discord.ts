@@ -34,7 +34,7 @@ export class Discord implements IService {
             method: 'POST',
             body: JSON.stringify({content: this._message}),
             headers: {'Content-Type': 'application/json'}
-        }).then();
+        }).catch(e => console.error(e));
     }
 
     @area.Action
@@ -66,7 +66,7 @@ export class Discord implements IService {
                 "attachments": []
               }),
             headers: {'Content-Type': 'application/json'} 
-        }).then();
+        }).catch(e => console.error(e));
     }
 
     @area.Action

@@ -44,7 +44,7 @@ export class Teams implements IService {
             method: 'POST',
             body: JSON.stringify({text: this._message}),
             headers: {'Content-Type': 'application/json'} 
-        }).then();
+        }).catch(e => console.error(e));
         
     }
 
@@ -63,7 +63,7 @@ export class Teams implements IService {
             method: 'POST',
             body: JSON.stringify({text: "New meeting created: " + this._subject + " at " + targetDate.toLocaleString() + " by " + this._authorName}),
             headers: {'Content-Type': 'application/json'} 
-        }).then();
+        }).catch(e => console.error(e));
     }
 
     _hour: number | undefined;
