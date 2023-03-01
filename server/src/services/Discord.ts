@@ -69,10 +69,6 @@ export class Discord implements IService {
         }).catch(e => console.error(e));
     }
 
-    @area.Action
-    @Description("Data collector")
-    dataCollector(): void {}
-
     _city: ustring;
     _hour: number | undefined;
     _minute: number | undefined;
