@@ -5,8 +5,19 @@ import { IService } from "./IService";
 
 export enum WeatherType {
     Default,
-    Now
+    Now,
+    Hourly
 };
+
+export interface WeatherForecast {
+    forecast: Weather[];
+}
+
+export interface Weather {
+    temp: number;
+    weather: string;
+    dt: Date;
+}
 
 /**
  * OpenWeatherMap service
@@ -32,14 +43,27 @@ export class OpenWeatherMap implements IService {
     @Description("Fill current weather")
     async fillCurrentWeather(): Promise<void> {
         let thisWeather = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this._targetCity}&appid=${env.WEATHER_API_KEY}&units=metric`).then(res => res.json()).catch(e => console.error(e));
-        this._temp = await thisWeather?.main?.temp  + '°C';
+        this._temp = await thisWeather?.main?.temp + '°C';
         this._weather = await thisWeather?.weather?.[0]?.main;
         this._weatherType = WeatherType.Now;
-
-        console.log(this._targetCity, this._temp, this._weather);
     }
 
-    // _buffer: any = {};
+    @Action
+    @Description("Fill hourly weather")
+    async fillHourlyWeather(): Promise<void> {
+        let thisWeather = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${this._targetCity}&appid=${env.WEATHER_API_KEY}&units=metric`).then(res => res.json()).catch(e => console.error(e));
+        for (let item of (await thisWeather.list))
+        {
+            this._forecast.forecast.push({
+                temp: item.main.temp,
+                weather: item.weather[0].main,
+                dt: item.dt_txt
+            })
+        }
+        this._weatherType = WeatherType.Hourly;
+    }
+
+    _forecast: WeatherForecast = { forecast: [] };
     _weather: ustring;
     _temp: ustring;
     _weatherType: WeatherType = WeatherType.Default;
