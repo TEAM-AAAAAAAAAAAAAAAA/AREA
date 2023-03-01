@@ -1,5 +1,4 @@
-import { area } from "../area/.area";
-import { Description } from "../area/mappings";
+import { Action, Description, Service } from "../area/mappings";
 import { env } from "../config/env";
 import { nstring, ustring } from "../types/string";
 import { IService } from "./IService";
@@ -9,7 +8,7 @@ export enum WeatherType {
     Now
 };
 
-@area.Service
+@Service
 export class OpenWeatherMap implements IService {
     constructor() { this._outgoing = null; }
     static readonly WeatherType = WeatherType;
@@ -24,7 +23,7 @@ export class OpenWeatherMap implements IService {
         this._outgoing = data;
     }
 
-    @area.Action
+    @Action
     @Description("Fill current weather")
     async fillCurrentWeather(): Promise<void> {
         let thisWeather = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this._targetCity}&appid=${env.WEATHER_API_KEY}&units=metric`).then(res => res.json());
