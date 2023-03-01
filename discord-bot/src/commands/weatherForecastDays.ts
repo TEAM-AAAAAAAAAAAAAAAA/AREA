@@ -3,22 +3,17 @@ import { ApplicationCommandOptionType } from 'discord.js';
 import { Discord, Slash, SlashOption } from 'discordx';
 import { areaConfigCheck } from '../config/areaConfigCheck.js';
 import { env } from '../config/env.js';
-// import { services } from '../../../server/src/services/.services';
 
 @Discord()
 export class Meeting {
-    @Slash({ description: "Weather, NOW" })
-    async weather_now(
+    @Slash({ description: "Weather forecast for the next days" })
+    async weather_forecast_days(
         @SlashOption({name: "city", description: "where should we get the weather from?", required: true, type: ApplicationCommandOptionType.String})
         city: string,
 
         interaction: CommandInteraction
     ): Promise<void> {
-        // var thisId = prisma.oAuthUserData.findUnique({
-
-        // })
-
-        let webhook = await areaConfigCheck(interaction, "weather_now");
+        let webhook = await areaConfigCheck(interaction, "weather_forecast_days");
         if (!webhook)
             return;
     
@@ -28,7 +23,7 @@ export class Meeting {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({bot: {
                 city: city,
-                when: "now"
+                when: "hours"
             }})
         });
         if (!res || !res.ok)
