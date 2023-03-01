@@ -55,11 +55,12 @@ model Token {
 
 model Service {
   serviceName       String         @id @unique
-  Action            Action[]
+  React             React[]
   Webhook           Webhook[]
   oAuthProviderName String?        @unique
   oAuthProvider     oAuthProvider?
   Reaction          Reaction[]
+  Action            Action[]
 }
 
 model Webhook {
@@ -75,23 +76,31 @@ model Webhook {
 
 model Action {
   actionName  String
-  description String
   serviceName String
-  service     Service    @relation(fields: [serviceName], references: [serviceName])
-  Reaction    Reaction[]
+  service     Service @relation(fields: [serviceName], references: [serviceName])
+  description String
 
-  @@id([serviceName, actionName])
-  @@unique([serviceName, actionName])
+  @@id([actionName, serviceName])
+  @@unique([actionName, serviceName])
+}
+
+model React {
+  reactionName String
+  description  String
+  serviceName  String
+  service      Service    @relation(fields: [serviceName], references: [serviceName])
+  Reaction     Reaction[]
+
+  @@id([serviceName, reactionName])
+  @@unique([serviceName, reactionName])
 }
 
 model Reaction {
   reactionId      Int              @id @unique @default(autoincrement())
-  name            String
-  description     String
   serviceName     String
   service         Service          @relation(fields: [serviceName], references: [serviceName])
-  actionName      String
-  action          Action           @relation(fields: [serviceName, actionName], references: [serviceName, actionName])
+  reactionName    String
+  react           React            @relation(fields: [serviceName, reactionName], references: [serviceName, reactionName])
   incomingWebhook Webhook?
   outgoingWebhook String?
   actions         ActionReaction[] @relation("action")
@@ -103,7 +112,7 @@ model Reaction {
 model ActionReaction {
   id         Int      @id @unique @default(autoincrement())
   actionId   Int
-  reactionId Int
+  reactionId Int      @unique
   action     Reaction @relation(name: "action", map: "action", fields: [actionId], references: [reactionId])
   reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [reactionId])
 

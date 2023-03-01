@@ -1,5 +1,6 @@
-import { Router } from "express";
-import { index } from "./routes/index";
+import { Router } from 'express';
+import { index } from './routes/index';
+import { aboutJson } from './routes/aboutJson';
 import { hook } from "./routes/hook";
 import { auth } from "./routes/auth";
 import _ from "lodash";
@@ -21,6 +22,7 @@ if (process.env.APOLLO_PORT != undefined)
 else
     app.use('/apollo', apolloRateLimit, proxy('apollo_server:4000'));
 routes.get('/', index.GET);
+routes.get('/about.json', aboutJson.GET);
 routes.get('/hook/', hook.GET);
 routes.post('/hook/:hook(*)', ...hook.POST);
 routes.post('/auth/login', auth.login.POST);
