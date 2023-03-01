@@ -142,11 +142,6 @@ const Login: React.FC = () => {
                             </p>
                         </IonCol>
                     </IonRow>
-                    <IonRow>
-                        <IonCol>
-                            <IonButton expand="block" fill="solid" color="discord" onClick={loginWithDiscord}>Login With Discord<IonIcon icon={logoDiscord} size="large"></IonIcon></IonButton>
-                        </IonCol>
-                    </IonRow>
                 </IonGrid>
             </IonContent>
         </IonPage>
