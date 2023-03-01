@@ -78,8 +78,8 @@ export class transcoders
             for (let item of openWeatherMap._forecast.forecast)
             {
                 discord._list.list.push({
-                    title: "<t:" + Math.floor(Date.parse(String(item.dt)) / 1000) + ":f>",
-                    description: item.temp + "°C",
+                    title: item.temp + "°C",
+                    description: "<t:" + Math.floor(Date.parse(String(item.dt)) / 1000) + ":f>",
                     color: weatherColor(item.weather),
                     author: {
                         name: item.weather
