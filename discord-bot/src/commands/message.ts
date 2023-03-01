@@ -6,25 +6,25 @@ import { env } from '../config/env.js';
 
 @Discord()
 export class Meeting {
-    @Slash({ description: "Weather, NOW" })
-    async weather_now(
-        @SlashOption({name: "city", description: "where should we get the weather from?", required: true, type: ApplicationCommandOptionType.String})
-        city: string,
+    @Slash({ description: "Message" })
+    async message(
+        @SlashOption({name: "message", description: "the message to send (no way)", required: true, type: ApplicationCommandOptionType.String})
+        message: string,
 
         interaction: CommandInteraction
     ): Promise<void> {
-
         try {
-            let webhook = await areaConfigCheck(interaction, "weather_now");
+            let webhook = await areaConfigCheck(interaction, "message");
             if (!webhook)
                 return;
         
+            console.log(webhook)
             let res = await fetch(env.API_URL + '/hook/' + webhook.userId + '/' + webhook.webhookWebhookId, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({bot: {
-                    city: city,
-                    when: "now"
+                    content: message,
+                    subject: message
                 }})
             });
             if (!res || !res.ok)
@@ -33,7 +33,7 @@ export class Meeting {
                 return;
             }
 
-            interaction.reply("Weather sent to chained reaction");
+            interaction.reply("Message created");
         } catch {}
     }
 }
