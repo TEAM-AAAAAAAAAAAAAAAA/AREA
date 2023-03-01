@@ -45,7 +45,8 @@ export class Meeting {
                     day: day,
                     month: month,
                     year: year,
-                    author: webhook.userId
+                    author: webhook.userId,
+                    message: subject
                 }})
             });
             if (!res || !res.ok)

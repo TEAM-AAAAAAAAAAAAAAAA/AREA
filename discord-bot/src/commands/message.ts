@@ -24,6 +24,7 @@ export class Meeting {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({bot: {
                     content: message,
+                    subject: message
                 }})
             });
             if (!res || !res.ok)
