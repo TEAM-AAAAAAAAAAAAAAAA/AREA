@@ -32,9 +32,10 @@ export async function areaConfigCheck(interaction: any, command: string): Promis
 
     let webhook = await prisma.discordBotWebhook.findUnique({
         where: {
-            command_userId: {
+            command_userId_serverId: {
                 command: command,
-                userId: thisUser.userId
+                userId: thisUser.userId,
+                serverId: interaction.guild.id
             }
         }
     });

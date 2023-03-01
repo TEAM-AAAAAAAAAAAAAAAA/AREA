@@ -121,13 +121,14 @@ model ActionReaction {
 
 model DiscordBotWebhook {
   command          String
+  serverId         String
   userId           String
   user             User?   @relation(fields: [userId], references: [id])
   webhookWebhookId String
   webhook          Webhook @relation(fields: [webhookWebhookId], references: [webhookId])
 
-  @@id([command, userId])
-  @@unique([command, userId])
+  @@id([command, userId, serverId])
+  @@unique([command, userId, serverId])
 }
 
 model DiscordMessageQueue {
