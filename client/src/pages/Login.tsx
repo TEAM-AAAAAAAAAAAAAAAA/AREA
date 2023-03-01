@@ -154,21 +154,6 @@ const Login: React.FC = () => {
                             </p>
                         </IonCol>
                     </IonRow>
-                    <IonRow>
-                        <IonCol>
-                            <IonGrid class='login-grid'>
-                                <IonRow class='login-with-row'>
-                                    <IonButton class='login-with-button' expand='block' fill='solid' onClick={loginWithDiscord} color='discord'>Login With Discord<IonIcon class='button-icon' icon={logoDiscord} size='large' /></IonButton>
-                                    <IonButton class='login-with-button' expand='block' fill='solid' onClick={loginWithGithub} color='github'>Login With Github<IonIcon class='button-icon' icon={logoGithub} size='large' /></IonButton>
-                                    <IonButton class='login-with-button' expand='block' fill='solid' onClick={loginWithTeams} color='teams'>Login With Teams<IonIcon class='button-icon' icon={logoMicrosoft} size='large' /></IonButton>
-                                </IonRow>
-                                <IonRow class='login-with-row'>
-                                    <IonButton class='login-with-button' expand='block' fill='solid' onClick={loginWithSoundcloud} color='soundcloud'>Login With Soundcloud<IonIcon class='button-icon' icon={logoSoundcloud} size='large' /></IonButton>
-                                    <IonButton class='login-with-button' expand='block' fill='solid' onClick={loginWithHtb} color='htb'>Login With HackTheBox<IonIcon class='button-icon' icon={cubeOutline} size='large' /></IonButton>
-                                </IonRow>
-                            </IonGrid>
-                        </IonCol>
-                    </IonRow>
                 </IonGrid>
             </IonContent>
         </IonPage>
