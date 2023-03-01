@@ -36,8 +36,6 @@ export class Meeting {
             return;
         }
 
-        console.log(city);
-        console.log(res);
-        interaction.reply("Weather sent to configured webhook");
+        interaction.reply("Weather sent to chained reaction");
     }
 }

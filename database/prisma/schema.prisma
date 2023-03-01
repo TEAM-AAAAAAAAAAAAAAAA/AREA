@@ -130,6 +130,13 @@ model DiscordBotWebhook {
   @@unique([command, userId])
 }
 
+model DiscordMessageQueue {
+  id        Int     @id @unique @default(autoincrement())
+  message   String
+  channelId String
+  embed     Boolean
+}
+
 enum TokenType {
   EMAIL_VERIFICATION
   API
