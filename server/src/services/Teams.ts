@@ -11,7 +11,6 @@ export class Teams implements IService {
     read(data: any): void {
         this._authorId = data?.from?.id;
         this._authorName = data?.from?.name
-        this._authorImage = data?.from?.avatar;
         this._message = data?.text?.substring(data?.text?.indexOf('</at>') + 5).replace("&nbsp;", " ");
         this._title = this._message;
         this._datetime = new Date(data?.timestamp);
