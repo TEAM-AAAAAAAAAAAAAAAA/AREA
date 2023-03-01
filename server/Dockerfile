@@ -1,11 +1,11 @@
-FROM node:14-alpine
+FROM node:18-alpine
 
 #Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 #Install dependencies (could be modified/extend)
-COPY package.json ./
+COPY package.json yarn.lock ./
 
 RUN yarn install
 

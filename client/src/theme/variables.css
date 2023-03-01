@@ -74,6 +74,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  /** Discord **/
+  --ion-color-discord: 	#7289da;
+	--ion-color-discord-rgb: 114,137,218;
+	--ion-color-discord-contrast: #000000;
+	--ion-color-discord-contrast-rgb: 0,0,0;
+	--ion-color-discord-shade: #6479c0;
+	--ion-color-discord-tint: #8095de;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -233,4 +241,17 @@ http://ionicframework.com/docs/theming/ */
 
     --ion-card-background: #1e1e1e;
   }
+}
+
+.ion-color-discord {
+	--ion-color-base: var(--ion-color-discord);
+	--ion-color-base-rgb: var(--ion-color-discord-rgb);
+	--ion-color-contrast: var(--ion-color-discord-contrast);
+	--ion-color-contrast-rgb: var(--ion-color-discord-contrast-rgb);
+	--ion-color-shade: var(--ion-color-discord-shade);
+	--ion-color-tint: var(--ion-color-discord-tint);
+}
+
+.ion-discord-avatar {
+  margin:0 auto;
 }
