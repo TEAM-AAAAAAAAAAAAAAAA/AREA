@@ -11,9 +11,7 @@ import {
     client
 } from '../utils/ApolloClient';
 import {
-    useQuery,
-    gql,
-    TypedDocumentNode
+    gql
 } from '@apollo/client';
 
 const GET_SERVICES = gql`
