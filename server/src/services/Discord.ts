@@ -3,6 +3,7 @@ import { area } from "../area/.area";
 import { IService } from "./IService";
 import { Description } from "../area/mappings";
 import { prisma } from "../config/db";
+import moment, { Moment } from "moment";
 
 interface DiscordListEmbed {
     "content": "Weather forecast",
@@ -34,11 +35,14 @@ export class Discord implements IService {
         this._authorName = data.bot?.author;
         this._message = data.bot?.content;
         this._subject = data.bot?.subject;
-        this._hour = data.bot?.hour;
-        this._minute = data.bot?.minute;
-        this._day = data.bot?.day;
-        this._month = data.bot?.month;
-        this._year = data.bot?.year;
+        this._durationHours = data.bot?.duration_hours;
+        this._durationMinutes = data.bot?.duration_minutes;
+        this._startDateTime.year(data.bot?.year);
+        this._startDateTime.month(data.bot?.month);
+        this._startDateTime.subtract(1, 'month');
+        this._startDateTime.date(data.bot?.day);
+        this._startDateTime.hours(data.bot?.hour);
+        this._startDateTime.minutes(data.bot?.minute || 0);        
         this._city = data.bot?.city;
     }
 
@@ -66,7 +70,6 @@ export class Discord implements IService {
     @Description("Post a meeting to Discord")
     async postMeeting(): Promise<void> {
         const dateNow = new Date(Date.now());
-        const targetDate = new Date(this._year || dateNow.getFullYear(), this._month || dateNow.getMonth(), this._day || dateNow.getDate(), this._hour || dateNow.getHours(), this._minute || 0, 0, 0);
 
         console.debug("Posting meeting to Discord");
         if (!this._outgoing) return;
@@ -80,7 +83,7 @@ export class Discord implements IService {
                 "color": 5814783,
                 "fields": [
                     {
-                    "name": "<t:" + Math.floor(targetDate.getTime() / 1000) + ":f>",
+                    "name": "<t:" + Math.floor(this._startDateTime.unix()) + ":f>",
                     "value": "By " + this._authorName
                     }
                 ]
@@ -132,11 +135,9 @@ export class Discord implements IService {
 
     _list: DiscordList = { list: [] };
     _city: ustring;
-    _hour: number | undefined;
-    _minute: number | undefined;
-    _day: number | undefined;
-    _month: number | undefined;
-    _year: number | undefined;
+    _startDateTime: Moment = moment();
+    _durationHours: number = 0;
+    _durationMinutes: number = 0;
     _authorName: ustring;
     _subject: ustring;
     _message: ustring;
