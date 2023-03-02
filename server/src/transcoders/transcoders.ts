@@ -2,6 +2,7 @@ import { services } from "../services/.services";
 import { area } from "../area/.area";
 import { WeatherType } from "../services/OpenWeatherMap";
 import { ustring } from "../types/string";
+import { Transcoder } from "../area/mappings";
 
 export class transcoders
 {
@@ -101,6 +102,19 @@ export class transcoders
             addWeatherParam(openWeatherMap._temp);
         }
         return discord;
+    }
+
+    @Transcoder(services.Discord.name, services.Google.name)
+    static discordToGoogle(discord: services.Discord): services.Google {
+        let google: services.Google = new services.Google();
+        google._summary = discord._subject;
+        google._description = discord._message;
+        let today = new Date();
+        google._startDateTime = String(new Date(discord._year || today.getFullYear(), discord._month || today.getMonth(), discord._day || today.getDate(), discord._hour || today.getHours(), discord._minute || today.getMinutes()));
+        google._endDateTime = String(new Date(discord._year || today.getFullYear(), discord._month || today.getMonth(), discord._day || today.getDate(), (discord._hour || today.getHours()) + 1, discord._minute || today.getMinutes()));
+        google._userId = discord._authorName;
+        google._location = discord._city;
+        return google;
     }
     
 }

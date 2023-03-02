@@ -20,8 +20,6 @@ export class Google implements IService {
     @Description("Post an event to google calendar")
     async postCalendarEvent(): Promise<void>
     {
-        if (!this._outgoing) return;
-
         // const calendar = google.calendar({version: 'v3', auth: process.env.GOOGLE_API_KEY});
 
         const oauth2Client = new google.auth.OAuth2(
@@ -43,18 +41,40 @@ export class Google implements IService {
             }
         });
 
+        // console.log(prismaUserGoogle)
+
+        console.log(prismaUserGoogle)
+
         oauth2Client.setCredentials({
             access_token: prismaUserGoogle?.accessToken,
             refresh_token: prismaUserGoogle?.refreshToken,
             scope: 'https://www.googleapis.com/auth/calendar',
         });
 
+        console.log('setCredentials')
+
         const calendar = google.calendar({
             version: 'v3',
             auth: oauth2Client
         })
 
-        console.log(await calendar.events.list())
+        console.log('calendar')
+
+        // console.log(calendar)
+
+        // console.log('before calendar.events.list()')
+
+        // console.log(await calendar.events.list(
+        //     {
+        //         calendarId: 'primary',
+        //         singleEvents : true,
+        //         orderBy : "startTime",
+        //         timeMin:  this._startDateTime,
+        //         timeMax:  this._endDateTime
+        //     }
+        // ))
+
+        // console.log('after calendar.events.list()')
 
         calendar.events.insert({
             auth: oauth2Client,
