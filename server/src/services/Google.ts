@@ -4,6 +4,34 @@ import { IService } from "./IService";
 import { Action, Description } from "../area/mappings";
 import { google } from "googleapis";
 import { prisma } from "../config/db";
+import moment, { Moment } from "moment";
+import { OAuth2Client } from "google-auth-library";
+
+async function getOAuth2Client(userId: string) : Promise<OAuth2Client | undefined> {
+    const prismaUserGoogle = await prisma.oAuthUserData.findUnique({
+        where: {
+            userId_oAuthProviderName: {
+                userId: userId,
+                oAuthProviderName: "google"
+            }
+        }
+    });
+    if (!prismaUserGoogle) return undefined;
+
+    const oauth2Client = new google.auth.OAuth2(
+        {
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            redirectUri: process.env.GOOGLE_REDIRECT_URI
+        }
+    );
+
+    oauth2Client.setCredentials({
+        access_token: prismaUserGoogle?.accessToken
+    });
+
+    return oauth2Client;
+}
 
 @area.Service
 export class Google implements IService {
@@ -20,61 +48,19 @@ export class Google implements IService {
     @Description("Post an event to google calendar")
     async postCalendarEvent(): Promise<void>
     {
-        // const calendar = google.calendar({version: 'v3', auth: process.env.GOOGLE_API_KEY});
-
-        const oauth2Client = new google.auth.OAuth2(
-            {
-                clientId: process.env.GOOGLE_CLIENT_ID,
-                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-                redirectUri: process.env.GOOGLE_REDIRECT_URI
-            }
-        );
-
         if (!this._userId) return;
 
-        const prismaUserGoogle = await prisma.oAuthUserData.findUnique({
-            where: {
-                userId_oAuthProviderName: {
-                    userId: this._userId,
-                    oAuthProviderName: "google"
-                }
-            }
-        });
-
-        // console.log(prismaUserGoogle)
-
-        console.log(prismaUserGoogle)
-
-        oauth2Client.setCredentials({
-            access_token: prismaUserGoogle?.accessToken,
-            refresh_token: prismaUserGoogle?.refreshToken,
-            scope: 'https://www.googleapis.com/auth/calendar',
-        });
-
-        console.log('setCredentials')
+        let oauth2Client = await getOAuth2Client(this._userId);
+        if (!oauth2Client) return;
 
         const calendar = google.calendar({
             version: 'v3',
             auth: oauth2Client
         })
 
-        console.log('calendar')
-
-        // console.log(calendar)
-
-        // console.log('before calendar.events.list()')
-
-        // console.log(await calendar.events.list(
-        //     {
-        //         calendarId: 'primary',
-        //         singleEvents : true,
-        //         orderBy : "startTime",
-        //         timeMin:  this._startDateTime,
-        //         timeMax:  this._endDateTime
-        //     }
-        // ))
-
-        // console.log('after calendar.events.list()')
+        let endDate = moment(this._startDateTime);
+        endDate.add(this._durationHours, 'hours');
+        endDate.add(this._durationMinutes, 'minutes');
 
         calendar.events.insert({
             auth: oauth2Client,
@@ -85,12 +71,12 @@ export class Google implements IService {
                 location: this._location,
                 description: this._description,
                 start: {
-                    date: this._startDateTime,
-                    timeZone: 'UTC',
+                    dateTime: this._startDateTime.toISOString(),
+                    timeZone: 'Etc/UTC',
                 },
                 end: {
-                    date: this._endDateTime,
-                    timeZone: 'UTC',
+                    dateTime: endDate.toISOString(),
+                    timeZone: 'Etc/UTC',
                 },
             }
         }, function(err, event) {
@@ -100,38 +86,14 @@ export class Google implements IService {
             }
             console.log('Event created: %s', event?.data.htmlLink);
         });
-
-        // const request = calendar.events.insert({
-        //     'calendarId': 'primary',
-        //     'resource': event
-        // });
-        
-
-        // const { token } = await oauth2Client.getToken(code);
-
-        // const auth = new google.auth.GoogleAuth({
-        //     authClient: new google.auth.OAuth2(
-        //         {
-
-        //         }
-        //         process.env.GOOGLE_CLIENT_ID,
-        //         process.env.GOOGLE_CLIENT_SECRET,
-        //     )
-        // });
-
-        // fetch(this._outgoing, {
-        //     method: 'POST',
-        //     body: JSON.stringify({text: this._message}),
-        //     headers: {'Content-Type': 'application/json'} 
-        // }).catch(e => console.error(e));
-        
     }
 
     _summary: ustring;
     _location: ustring;
     _description: ustring;
-    _startDateTime: ustring;
-    _endDateTime: ustring;
+    _startDateTime: Moment = moment();
+    _durationHours: number = 0;
+    _durationMinutes: number = 0;
     _userId: ustring;
     _outgoing: nstring;
 }
