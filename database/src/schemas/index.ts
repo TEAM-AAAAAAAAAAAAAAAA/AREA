@@ -117,7 +117,7 @@ enum TokenType {
         createWebhook(userId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
         createUser(name: String!, email: String!, password: String!): Int!
         createService(name: String!): Int!
-        createChainedReaction(actionId: Int!, reactionName: String!, serviceName: String!, actionName: String!, outgoingWebhook: String): Int!
+        createChainedReaction(actionName: String!, actionService: String!, reactionName: String!, reactionService: String!, reactionOutgoingWebhook: String, actionOutgoingWebhook: String): Int!
         createOAuthUserData(userId: String!, refreshToken: String, accessToken: String, data: JSONObject, oAuthProviderName: String!, providerUserId: String!): Int!
         createDiscordBotWebhook(command: String!, userId: String!, serverId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
         createToken(userId: String!, type: TokenType!): Token!
@@ -345,15 +345,17 @@ export const resolvers = {
             await context.prisma.actionReaction.create({
                 data: {
                     action: {
-                        connect: {
-                            reactionId: args.actionId
+                        create: {
+                            reactionName: args.actionName,
+                            serviceName: args.actionService,
+                            outgoingWebhook: args.actionOutgoingWebhook,
                         }
                     },
                     reaction: {
                         create: {
                             reactionName: args.reactionName,
-                            serviceName: args.serviceName,
-                            outgoingWebhook: args.outgoingWebhook,
+                            serviceName: args.reactionService,
+                            outgoingWebhook: args.reactionOutgoingWebhook,
                         }
                     },
                 }
