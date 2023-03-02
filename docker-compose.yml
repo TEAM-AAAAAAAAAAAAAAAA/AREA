@@ -10,9 +10,24 @@ services:
     ports:
       - "8080:8080"
     environment:
-      POSTGRES_URL: ${POSTGRES_URL}
+      MAIL_FROM: MAIL_FROM
+      DISCORD_CLIENT_ID: DISCORD_CLIENT_ID
+      DISCORD_CLIENT_SECRET: DISCORD_CLIENT_SECRET
+      GOOGLE_CLIENT_ID: GOOGLE_CLIENT_ID
+      GOOGLE_CLIENT_SECRET: GOOGLE_CLIENT_SECRET
+      GOOGLE_REDIRECT_URI: GOOGLE_REDIRECT_URI
+      GOOGLE_OAUTH_URL: GOOGLE_OAUTH_URL
+      DISCORD_REDIRECT_URI: DISCORD_REDIRECT_URI
+      ENV_NAME: ENV_NAME
+      API_PORT: API_PORT
+      SEND_GRID_API_KEY: SEND_GRID_API_KEY
+      POSTGRES_URL: POSTGRES_URL
+      WEATHER_API_KEY: WEATHER_API_KEY
+      CLIENT_ID: CLIENT_ID
+      CLIENT_SECRET: CLIENT_SECRET
+      REDIRECT_URL: REDIRECT_URL
     env_file:
-      - ./server/.env/.env.dev
+      - .env
     networks:
       - server_network
     links:
@@ -23,6 +38,12 @@ services:
       dockerfile: client_web.dockerfile
     ports:
       - "8081:8081"
+    environment:
+      REACT_DISCORD_CLIENT_SECRET: REACT_DISCORD_CLIENT_SECRET
+      REACT_APP_DISCORD_CLIENT_ID: REACT_APP_DISCORD_CLIENT_ID
+      REACT_APP_DISCORD_REDIRECT_URI: REACT_APP_DISCORD_REDIRECT_URI
+      REACT_GITHUB_CLIENT_SECRET: REACT_GITHUB_CLIENT_SECRET
+      REACT_APP_GITHUB_CLIENT_ID: REACT_APP_GITHUB_CLIENT_ID
     depends_on:
       - client_mobile
       - server
@@ -42,7 +63,7 @@ services:
     ports:
       - "4000:4000"
     env_file:
-      - ./database/.env/.env.dev
+      - .env
     networks:
       - server_network
     depends_on:
@@ -53,15 +74,37 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_URL: POSTGRES_URL
+    env_file:
+      - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - server_network
     ports:
       - "5432:5432"
+  discord-bot:
+    build:
+      context: ./discord-bot
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      BOT_TOKEN: BOT_TOKEN
+      ENV_NAME: ENV_NAME
+      API_PORT: API_PORT
+      SEND_GRID_API_KEY: SEND_GRID_API_KEY
+      POSTGRES_URL: POSTGRES_URL
+      API_URL: API_URL
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/discord-bot/data
+    networks:
+      - server_network
+    depends_on:
+      - db
+      - server
+
 networks:
   server_network:
     driver: bridge
