@@ -17,12 +17,20 @@ import {
     logoSoundcloud
 } from 'ionicons/icons';
 import {
-    loginWithDiscord,
-    loginWithGithub,
-    loginWithHtb,
-    loginWithSoundcloud,
-    loginWithTeams
+    loginWithDiscord
 } from './Login';
+
+const loginWithGithub = () => {
+    window.location.replace('templink');
+};
+
+const loginWithTeams = () => {
+    window.location.replace('templink');
+};
+
+const loginWithGoogle = () => {
+    window.location.replace(process.env.REACT_APP_GOOGLE_LOGIN_URL || '/login');
+};
 
 const Setup: React.FC = () => {
     return (
@@ -42,8 +50,8 @@ const Setup: React.FC = () => {
                     <IonButton expand='block' fill='solid' onClick={loginWithDiscord} color='discord'>Login With Discord<IonIcon class='button-icon' icon={logoDiscord} size='large' /></IonButton>
                     <IonButton expand='block' fill='solid' onClick={loginWithGithub} color='github'>Login With Github<IonIcon class='button-icon' icon={logoGithub} size='large' /></IonButton>
                     <IonButton expand='block' fill='solid' onClick={loginWithTeams} color='teams'>Login With Teams<IonIcon class='button-icon' icon={logoMicrosoft} size='large' /></IonButton>
-                    <IonButton expand='block' fill='solid' onClick={loginWithSoundcloud} color='soundcloud'>Login With Soundcloud<IonIcon class='button-icon' icon={logoSoundcloud} size='large' /></IonButton>
-                    <IonButton expand='block' fill='solid' onClick={loginWithHtb} color='htb'>Login With HackTheBox<IonIcon class='button-icon' icon={cubeOutline} size='large' /></IonButton>
+                    {/* <IonButton expand='block' fill='solid' onClick={loginWithSoundcloud} color='soundcloud'>Login With Soundcloud<IonIcon class='button-icon' icon={logoSoundcloud} size='large' /></IonButton> */}
+                    {/* <IonButton expand='block' fill='solid' onClick={loginWithHtb} color='htb'>Login With HackTheBox<IonIcon class='button-icon' icon={cubeOutline} size='large' /></IonButton> */}
                 </IonGrid>
             </IonContent>
         </IonPage>
