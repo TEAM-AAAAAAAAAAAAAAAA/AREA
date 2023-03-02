@@ -26,22 +26,17 @@ WORKDIR /app
 # Copy package.json from build-runner
 COPY --from=build-runner /tmp/app/package.json /app/package.json
 
+# Copy schema.prisma
 COPY prisma/schema.prisma .
 
 # Install dependencies
 RUN yarn install --omit=dev
 
+# Apply the prisma schema to the current db
 RUN npx prisma generate
 
 # Move build files
 COPY --from=build-runner /tmp/app/dist /app/dist
-
-ARG BOT_TOKEN
-ARG ENV_NAME
-ARG API_PORT
-ARG SEND_GRID_API_KEY
-ARG POSTGRES_URL
-ARG API_URL
 
 ENV BOT_TOKEN = ${BOT_TOKEN}
 ENV ENV_NAME = ${ENV_NAME}
