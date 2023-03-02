@@ -28,6 +28,7 @@ async function getOAuth2Client(userId: string) : Promise<OAuth2Client | undefine
 
     oauth2Client.setCredentials({
         access_token: prismaUserGoogle?.accessToken
+        refresh_token: prismaUserGoogle?.refreshToken
     });
 
     return oauth2Client;
