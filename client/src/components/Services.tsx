@@ -5,7 +5,7 @@ import {
     IonCardHeader,
     IonCardSubtitle,
     IonCardTitle,
-    IonContent
+    IonButton
 } from '@ionic/react';
 import {
     client
@@ -13,15 +13,19 @@ import {
 import {
     gql
 } from '@apollo/client';
+import ActionsContainer from './Actions';
 
 const GET_SERVICES = gql`
   query Query {
     allServices {
-      serviceName
+        serviceName
+    }
+    allReact {
+        reactionName
+        serviceName
     }
   }
 `;
-
 
 const ServicesContainer: React.FC = () => {
     const [data, setData] = useState<any>([]);
@@ -42,11 +46,12 @@ const ServicesContainer: React.FC = () => {
                     </IonCardHeader>
                     <IonCardContent>
                         Service Description
+                        <ActionsContainer serviceName={service.serviceName} allReact={data?.allReact} />
                     </IonCardContent>
+                    <IonButton>activate</IonButton>
                 </IonCard>
             ))}
         </>
-
     );
 };
 
