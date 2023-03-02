@@ -51,6 +51,7 @@ model Token {
   valid     Boolean   @default(true)
   user      User      @relation(fields: [userId], references: [id])
   type      TokenType
+  @@unique([userId, type])
 }
 
 model Service {
