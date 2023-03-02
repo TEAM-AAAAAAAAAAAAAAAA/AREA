@@ -112,12 +112,12 @@ enum TokenType {
     type Mutation {
         removeWebhooks: Int!
         createAction(actionName: String!, description: String!, serviceName: String!): Int!
-        createWebhook(userId: String!, reactionName: String!, actionId: String!, serviceId: String!, description: String!, outgoingWebhook: String): Int!
+        createWebhook(userId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
         createUser(name: String!, email: String!, password: String!): Int!
         createService(name: String!): Int!
-        createChainedReaction(actionId: Int!, reactionName: String!, description: String!, serviceName: String!, actionName: String!, outgoingWebhook: String): Int!
+        createChainedReaction(actionId: Int!, reactionName: String!, serviceName: String!, actionName: String!, outgoingWebhook: String): Int!
         createOAuthUserData(userId: String!, refreshToken: String, accessToken: String, data: JSONObject, oAuthProviderName: String!, providerUserId: String!): Int!
-        createDiscordBotWebhook(command: String!, userId: String!, serverId: String!, reactionName: String!, actionId: String!, serviceId: String!, description: String!, outgoingWebhook: String): Int!
+        createDiscordBotWebhook(command: String!, userId: String!, serverId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
         createToken(userId: String!, type: TokenType!): Token!
     }
 `;
