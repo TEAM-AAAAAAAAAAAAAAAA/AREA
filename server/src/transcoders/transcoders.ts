@@ -30,5 +30,12 @@ export class transcoders
         discord._subject = teams._subject;
         return discord;
     }
+
+    @area.Transcoder(services.Discord.name, services.Github.name)
+    static discordToGithub(discord: services.Discord): services.Github {
+        var github: services.Github = new services.Github();
+        github._owner = discord.owner;
+        return github;
+    }
     
 }
