@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model User {
+  id                String              @id @unique @default(uuid())
+  email             String              @unique
+  name              String
+  password          String
+  createdAt         DateTime            @default(now())
+  emailVerified     Boolean             @default(false)
+  tokens            Token[]
+  Webhook           Webhook[]
+  DiscordBotWebhook DiscordBotWebhook[]
+  oAuthUserData     oAuthUserData[]
+}
+
+model oAuthUserData {
+  oAuthUserDataId   String        @id @default(uuid())
+  userId            String
+  user              User          @relation(fields: [userId], references: [id])
+  providerUserId    String
+  data              Json
+  accessToken       String
+  refreshToken      String
+  oAuthProviderName String
+  oAuthProvider     oAuthProvider @relation(fields: [oAuthProviderName], references: [oAuthProviderName])
+
+  @@unique([userId, oAuthProviderName])
+  @@unique([providerUserId, oAuthProviderName])
+}
+
+model oAuthProvider {
+  oAuthProviderName String @id @unique
+
+  serviceName   String?         @unique
+  service       Service?        @relation(fields: [serviceName], references: [serviceName])
+  oAuthUserData oAuthUserData[]
+}
+
+model Token {
+  id        String    @id @unique @default(uuid())
+  userId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  valid     Boolean   @default(true)
+  user      User      @relation(fields: [userId], references: [id])
+  type      TokenType
+}
+
+model Service {
+  serviceName       String         @id @unique
+  React             React[]
+  Webhook           Webhook[]
+  oAuthProviderName String?        @unique
+  oAuthProvider     oAuthProvider?
+  Reaction          Reaction[]
+  Action            Action[]
+}
+
+model Webhook {
+  webhookId           String              @id @unique @default(uuid())
+  userId              String
+  user                User                @relation(fields: [userId], references: [id])
+  reactionId          Int                 @unique
+  reaction            Reaction            @relation(fields: [reactionId], references: [reactionId])
+  incomingServiceName String
+  incomingService     Service             @relation(fields: [incomingServiceName], references: [serviceName])
+  DiscordBotWebhook   DiscordBotWebhook[]
+}
+
+model Action {
+  actionName  String
+  serviceName String
+  service     Service @relation(fields: [serviceName], references: [serviceName])
+  description String
+
+  @@id([actionName, serviceName])
+  @@unique([actionName, serviceName])
+}
+
+model React {
+  reactionName String
+  description  String
+  serviceName  String
+  service      Service    @relation(fields: [serviceName], references: [serviceName])
+  Reaction     Reaction[]
+
+  @@id([serviceName, reactionName])
+  @@unique([serviceName, reactionName])
+}
+
+model Reaction {
+  reactionId      Int              @id @unique @default(autoincrement())
+  serviceName     String
+  service         Service          @relation(fields: [serviceName], references: [serviceName])
+  reactionName    String
+  react           React            @relation(fields: [serviceName, reactionName], references: [serviceName, reactionName])
+  incomingWebhook Webhook?
+  outgoingWebhook String?
+  actions         ActionReaction[] @relation("action")
+  reactions       ActionReaction[] @relation("reaction")
+  enabled         Boolean          @default(true)
+  enabledChain    Boolean          @default(true)
+}
+
+model ActionReaction {
+  id         Int      @id @unique @default(autoincrement())
+  actionId   Int
+  reactionId Int      @unique
+  action     Reaction @relation(name: "action", map: "action", fields: [actionId], references: [reactionId])
+  reaction   Reaction @relation(name: "reaction", map: "reaction", fields: [reactionId], references: [reactionId])
+
+  @@unique([actionId, reactionId])
+}
+
+model DiscordBotWebhook {
+  command          String
+  userId           String
+  user             User?   @relation(fields: [userId], references: [id])
+  webhookWebhookId String
+  webhook          Webhook @relation(fields: [webhookWebhookId], references: [webhookId])
+
+  @@id([command, userId])
+  @@unique([command, userId])
+}
+
+enum TokenType {
+  EMAIL_VERIFICATION
+  API
+  PASSWORD_RESET
+}
