@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { index } from './routes/index';
 import { aboutJson } from './routes/aboutJson';
-import { hook } from "./routes/hook";
-import { auth } from "./routes/auth";
-import _ from "lodash";
-import { rateLimit } from "express-rate-limit";
+import { hook } from './routes/hook';
+import { auth } from './routes/auth';
+import _ from 'lodash';
+import { rateLimit } from 'express-rate-limit';
 
 export const routes = Router();
 var proxy = require('express-http-proxy');
