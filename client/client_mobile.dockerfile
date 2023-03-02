@@ -5,7 +5,7 @@ RUN mkdir /app/
 WORKDIR /app/
 
 #Install dependencies (could be modified/extend)
-COPY package.json yarn.lock ./
+COPY package.json ./
 RUN yarn install
 
 #Bundle app source

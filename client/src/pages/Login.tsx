@@ -29,22 +29,6 @@ export const loginWithDiscord = () => {
     window.location.replace(`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_DISCORD_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fdiscord%2Fcb&response_type=token&scope=identify%20email`);
 };
 
-export const loginWithGithub = () => {
-    window.location.replace(`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fgithub%2Fcb&response_type=token&scope=user%20email`);
-};
-
-export const loginWithTeams = () => {
-    window.location.replace(`https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${process.env.REACT_APP_TEAMS_CLIENT_ID}&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fteams%2Fcb&response_mode=query&scope=openid%20profile%20offline_access%20User.Read&state=12345`);
-};
-
-export const loginWithSoundcloud = () => {
-    window.location.replace(`https://soundcloud.com/connect?client_id=${process.env.REACT_APP_SOUNDCLOUD_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fsoundcloud%2Fcb&response_type=token&scope=non-expiring`);
-};
-
-export const loginWithHtb = () => {
-    window.location.replace('https://app.hackthebox.com');
-};
-
 const Login: React.FC = () => {
     const [
         email,

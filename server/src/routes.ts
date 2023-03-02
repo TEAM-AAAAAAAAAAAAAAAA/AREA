@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { index } from './routes/index';
 import { aboutJson } from './routes/aboutJson';
-import { hook } from "./routes/hook";
-import { auth } from "./routes/auth";
-import _ from "lodash";
-import { rateLimit } from "express-rate-limit";
+import { hook } from './routes/hook';
+import { auth } from './routes/auth';
+import _ from 'lodash';
+import { rateLimit } from 'express-rate-limit';
 
 export const routes = Router();
 var proxy = require('express-http-proxy');
@@ -28,12 +28,5 @@ routes.post('/hook/:hook(*)', ...hook.POST);
 routes.post('/auth/login', auth.login.POST);
 routes.get('/auth/logout', auth.logout.GET);
 routes.get('/auth/validate/:input_token', auth.validate_email.GET);
-
-import { getUserOAuthDataFromToken } from "./routes/auth/oauth_providers/utils";
-
-routes.get('/test_oauth_data/:user_token', (req, res) => {
-    console.log(req.params.user_token);
-    getUserOAuthDataFromToken(req.params.user_token, 'discord').then((data) => {
-        res.json(data);
-    });
-});
+routes.post('/auth/discord_oauth', auth.discord_oauth.POST);
+routes.post('/auth/hackthebox_config', auth.htb_config.POST);
