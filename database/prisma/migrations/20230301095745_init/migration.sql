@@ -67,19 +67,26 @@ CREATE TABLE "Webhook" (
 -- CreateTable
 CREATE TABLE "Action" (
     "actionName" TEXT NOT NULL,
+    "serviceName" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+
+    CONSTRAINT "Action_pkey" PRIMARY KEY ("actionName","serviceName")
+);
+
+-- CreateTable
+CREATE TABLE "React" (
+    "reactionName" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "serviceName" TEXT NOT NULL,
 
-    CONSTRAINT "Action_pkey" PRIMARY KEY ("serviceName","actionName")
+    CONSTRAINT "React_pkey" PRIMARY KEY ("serviceName","reactionName")
 );
 
 -- CreateTable
 CREATE TABLE "Reaction" (
     "reactionId" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
     "serviceName" TEXT NOT NULL,
-    "actionName" TEXT NOT NULL,
+    "reactionName" TEXT NOT NULL,
     "outgoingWebhook" TEXT,
     "enabled" BOOLEAN NOT NULL DEFAULT true,
     "enabledChain" BOOLEAN NOT NULL DEFAULT true,
@@ -127,6 +134,9 @@ CREATE UNIQUE INDEX "oAuthProvider_serviceName_key" ON "oAuthProvider"("serviceN
 CREATE UNIQUE INDEX "Token_id_key" ON "Token"("id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Token_userId_type_key" ON "Token"("userId", "type");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Service_serviceName_key" ON "Service"("serviceName");
 
 -- CreateIndex
@@ -139,10 +149,19 @@ CREATE UNIQUE INDEX "Webhook_webhookId_key" ON "Webhook"("webhookId");
 CREATE UNIQUE INDEX "Webhook_reactionId_key" ON "Webhook"("reactionId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Action_serviceName_actionName_key" ON "Action"("serviceName", "actionName");
+CREATE UNIQUE INDEX "Action_actionName_serviceName_key" ON "Action"("actionName", "serviceName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "React_serviceName_reactionName_key" ON "React"("serviceName", "reactionName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Reaction_reactionId_key" ON "Reaction"("reactionId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ActionReaction_id_key" ON "ActionReaction"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ActionReaction_reactionId_key" ON "ActionReaction"("reactionId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ActionReaction_actionId_reactionId_key" ON "ActionReaction"("actionId", "reactionId");
@@ -175,10 +194,13 @@ ALTER TABLE "Webhook" ADD CONSTRAINT "Webhook_incomingServiceName_fkey" FOREIGN 
 ALTER TABLE "Action" ADD CONSTRAINT "Action_serviceName_fkey" FOREIGN KEY ("serviceName") REFERENCES "Service"("serviceName") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "React" ADD CONSTRAINT "React_serviceName_fkey" FOREIGN KEY ("serviceName") REFERENCES "Service"("serviceName") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_serviceName_fkey" FOREIGN KEY ("serviceName") REFERENCES "Service"("serviceName") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_serviceName_actionName_fkey" FOREIGN KEY ("serviceName", "actionName") REFERENCES "Action"("serviceName", "actionName") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_serviceName_reactionName_fkey" FOREIGN KEY ("serviceName", "reactionName") REFERENCES "React"("serviceName", "reactionName") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ActionReaction" ADD CONSTRAINT "action" FOREIGN KEY ("actionId") REFERENCES "Reaction"("reactionId") ON DELETE RESTRICT ON UPDATE CASCADE;

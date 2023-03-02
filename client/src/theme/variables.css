@@ -82,6 +82,38 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-discord-contrast-rgb: 0,0,0;
 	--ion-color-discord-shade: #6479c0;
 	--ion-color-discord-tint: #8095de;
+
+  /** Github **/
+  --ion-color-github: #4078c0;
+  --ion-color-github-rgb: 64,120,192;
+  --ion-color-github-contrast: #000000;
+  --ion-color-github-contrast-rgb: 255,255,255;
+  --ion-color-github-shade: #366aa0;
+  --ion-color-github-tint: #4c7eb0;
+
+  /** Teams **/
+  --ion-color-teams: #6264a7;
+  --ion-color-teams-rgb: 98,100,167;
+  --ion-color-teams-contrast: #000000;
+  --ion-color-teams-contrast-rgb: 255,255,255;
+  --ion-color-teams-shade: #55578d;
+  --ion-color-teams-tint: #6d6ebf;
+
+  /** Soundcloud **/
+  --ion-color-soundcloud: #ff8800;
+  --ion-color-soundcloud-rgb: 255,136,0;
+  --ion-color-soundcloud-contrast: #000000;
+  --ion-color-soundcloud-contrast-rgb: 255,255,255;
+  --ion-color-soundcloud-shade: #e27b00;
+  --ion-color-soundcloud-tint: #ff9900;
+
+  /** Hack The Box **/
+  --ion-color-htb: #9fef00;
+  --ion-color-htb-rgb: 159,239,0;
+  --ion-color-htb-contrast: #000000;
+  --ion-color-htb-contrast-rgb: 255,255,255;
+  --ion-color-htb-shade: #8fe000;
+  --ion-color-htb-tint: #a8f000;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -252,6 +284,82 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-tint: var(--ion-color-discord-tint);
 }
 
+.ion-color-github {
+  --ion-color-base: var(--ion-color-github);
+  --ion-color-base-rgb: var(--ion-color-github-rgb);
+  --ion-color-contrast: var(--ion-color-github-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-github-contrast-rgb);
+  --ion-color-shade: var(--ion-color-github-shade);
+  --ion-color-tint: var(--ion-color-github-tint);
+}
+
+.ion-color-teams {
+  --ion-color-base: var(--ion-color-teams);
+  --ion-color-base-rgb: var(--ion-color-teams-rgb);
+  --ion-color-contrast: var(--ion-color-teams-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-teams-contrast-rgb);
+  --ion-color-shade: var(--ion-color-teams-shade);
+  --ion-color-tint: var(--ion-color-teams-tint);
+}
+
+.ion-color-soundcloud {
+  --ion-color-base: var(--ion-color-soundcloud);
+  --ion-color-base-rgb: var(--ion-color-soundcloud-rgb);
+  --ion-color-contrast: var(--ion-color-soundcloud-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-soundcloud-contrast-rgb);
+  --ion-color-shade: var(--ion-color-soundcloud-shade);
+  --ion-color-tint: var(--ion-color-soundcloud-tint);
+}
+
+.ion-color-htb {
+  --ion-color-base: var(--ion-color-htb);
+  --ion-color-base-rgb: var(--ion-color-htb-rgb);
+  --ion-color-contrast: var(--ion-color-htb-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-htb-contrast-rgb);
+  --ion-color-shade: var(--ion-color-htb-shade);
+  --ion-color-tint: var(--ion-color-htb-tint);
+}
+
 .ion-discord-avatar {
   margin:0 auto;
+}
+
+.setup-grid {
+  height: 100%;
+  padding: 12.5% 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.button-icon {
+  margin: 0 0.5rem;
+}
+
+.login-with-button {
+  margin: 20px 2;
+}
+
+.login-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-with-row {
+  width: fit-content;
+}
+
+.create-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-label {
+  margin: 1rem 0;
+}
+
+.modal-create-grid {
+  max-width: 90%;
 }

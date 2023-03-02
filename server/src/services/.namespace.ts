@@ -1,8 +1,9 @@
 import { prisma } from '../config/db';
-import { PrismaServices, PrismaActions, Description, Descriptions } from "../area/mappings";
+import { PrismaServices, PrismaActions, Descriptions } from "../area/mappings";
 
 export * from "./Discord";
 export * from "./Teams";
+export * from "./OpenWeatherMap";
 
 export class DB {
     static async sync() : Promise<boolean>
@@ -29,33 +30,33 @@ export class DB {
 
             await PrismaActions.forEach(async (value, key) => {
                 let thisServiceName = key.substring(0, key.indexOf('.'));
-                let actionName = key.substring(key.indexOf('.') + 1);
+                let reactionName = key.substring(key.indexOf('.') + 1);
                 let description = Descriptions.get(key);
                 if (!description) {
                     console.error("No description found for " + key);
                 } else {
                     if (thisServiceName == serviceName) {
-                        await prisma.action.upsert({
+                        await prisma.react.upsert({
                             where: {
-                                serviceName_actionName: {
+                                serviceName_reactionName: {
                                     serviceName: serviceName,
-                                    actionName: actionName
+                                    reactionName: reactionName
                                 }
                             },
                             update: {
-                                actionName: actionName,
+                                reactionName: reactionName,
                                 description: description,
                                 serviceName: serviceName
                             },
                             create: {
-                                actionName: actionName,
+                                reactionName: reactionName,
                                 description: description,
                                 serviceName: serviceName
                             }
                         }).then((res) => {
-                            console.debug("Upserted Action: " + res.serviceName + '.' + res.actionName + ' - ' + res.description);
+                            console.debug("Upserted Action: " + res.serviceName + '.' + res.reactionName + ' - ' + res.description);
                         }).catch((err) => {
-                            console.error("Failed to upsert Action: " + serviceName + '.' + description + '.' + actionName + " - " + err);
+                            console.error("Failed to upsert Action: " + serviceName + '.' + description + '.' + reactionName + " - " + err);
                             isSynced = false;
                         });
                     }
