@@ -46,6 +46,8 @@ const ServicesContainer: React.FC = () => {
                     </IonCardHeader>
                     <IonCardContent>
                         Service Description
+                    </IonCardContent>
+                    <IonCardContent>
                         <ActionsContainer serviceName={service.serviceName} allReact={data?.allReact} />
                     </IonCardContent>
                     <IonButton>activate</IonButton>

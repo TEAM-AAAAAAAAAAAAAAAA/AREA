@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { client } from '../utils/ApolloClient';
 import { gql } from '@apollo/client';
 import {
-    IonContent,
-    IonCardHeader,
-    IonCardTitle,
-    IonButton
+    IonSelect,
+    IonSelectOption
 } from '@ionic/react';
 
 interface ContainerProps {
@@ -14,26 +12,19 @@ interface ContainerProps {
 }
 
 const ActionsContainer: React.FC<ContainerProps> = ({ allReact, serviceName }) => {
-    let actions: string[] = [];
+    const [actions, setActions] = useState<any>([]);
 
     useEffect(() => {
-        if (serviceName == undefined)
-            return;
-        actions = []
-        for (let i = 0; i < allReact?.length; i++) {
-            if (allReact[i]?.serviceName === serviceName) {
-                actions.push(allReact[i].reactionName)
-            }
-        }
-        console.log(actions)
-    }, [allReact]);
+        setActions(allReact.filter((react: any) => react.serviceName === serviceName));
+    }, [allReact, serviceName]);
     return (
         <>
-            {actions.map((action: any) => {
-                <IonButton>
-                    {action}
-                </IonButton>
-            })
+            {actions.length > 1 &&
+                <IonSelect placeholder='Select reaction' interface='popover'>
+                    {actions.map((action: any) => (
+                        <IonSelectOption key={action.reactionName}>{action.reactionName}</IonSelectOption>
+                    ))}
+                </IonSelect>
             }
         </>
     )
