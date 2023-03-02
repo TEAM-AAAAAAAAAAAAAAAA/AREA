@@ -3,6 +3,7 @@ import { PrismaServices, PrismaActions, Description, Descriptions } from "../are
 
 export * from "./Discord";
 export * from "./Teams";
+export * from "./Github";
 
 export class DB {
     static async sync() : Promise<boolean>
