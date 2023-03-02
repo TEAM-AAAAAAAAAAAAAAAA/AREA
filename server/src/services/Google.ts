@@ -89,6 +89,30 @@ export class Google implements IService {
         });
     }
 
+    @Action
+    @Description("Create a task in google tasks")
+    async createTask(): Promise<void>
+    {
+        if (!this._userId) return;
+
+        let oauth2Client = await getOAuth2Client(this._userId);
+        if (!oauth2Client) return;
+
+        const tasks = google.tasks({
+            version: 'v1',
+            auth: oauth2Client
+        })
+
+        tasks.tasks.insert({
+            auth: oauth2Client,
+            requestBody: {
+                title: this._summary,
+                notes: this._description,
+                due: this._startDateTime.toISOString()
+            },
+        });
+    }
+
     _summary: ustring;
     _location: ustring;
     _description: ustring;
