@@ -1,7 +1,8 @@
 import { dirname, importx } from '@discordx/importer';
-import type { Interaction, Message } from 'discord.js';
+import { ChannelType, Interaction, Message } from 'discord.js';
 import { IntentsBitField } from 'discord.js';
 import { Client } from 'discordx';
+import { prisma } from './config/db.js';
 
 export const bot = new Client({
     // To use only guild command
@@ -52,6 +53,35 @@ bot.on("messageCreate", (message: Message) => {
     bot.executeCommand(message);
 });
 
+async function fetchMessageQueue()
+{
+    let messageQueue = await prisma.discordMessageQueue.findMany();
+
+    messageQueue.forEach(async (message) => {
+        let channel = await bot.channels.cache.get(message.channelId);
+        if (channel && channel.type == ChannelType.GuildText)
+        {
+            if (message.embed)
+                message.message = JSON.parse(message.message);
+            channel.send(message.message);
+        }
+
+        await prisma.discordMessageQueue.delete({
+            where: {
+                id: message.id
+            }
+        });
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    await fetchMessageQueue();
+}
+
+// prisma.$on('query', (e: any) => {
+//     console.log('Query: ' + e.query)
+// });
+
 async function run() {
     // The following syntax should be used in the commonjs environment
     //
@@ -67,6 +97,8 @@ async function run() {
 
     // Log in with your bot token
     await bot.login(process.env.BOT_TOKEN);
+    
+    fetchMessageQueue();
 }
 
 run();
