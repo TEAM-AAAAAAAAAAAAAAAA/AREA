@@ -33,7 +33,7 @@ export class Meeting {
                 return;
             }
 
-            interaction.reply("Weather sent to configured webhook");
+            interaction.reply("Weather sent to chained reaction");
         } catch {}
     }
 }

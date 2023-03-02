@@ -2,6 +2,7 @@ import { nstring, ustring } from "../types/string";
 import { area } from "../area/.area";
 import { IService } from "./IService";
 import { Description } from "../area/mappings";
+import { prisma } from "../config/db";
 
 interface DiscordListEmbed {
     "content": "Weather forecast",
@@ -47,53 +48,59 @@ export class Discord implements IService {
 
     @area.Action
     @Description("Post a message to Discord")
-    postMessage(): void {
+    async postMessage(): Promise<void> {
         console.debug("Posting message to Discord: " + this._message);
         console.log(this._outgoing);
         if (!this._outgoing) return;
 
-        fetch(this._outgoing, {
-            method: 'POST',
-            body: JSON.stringify({content: this._message}),
-            headers: {'Content-Type': 'application/json'}
-        }).catch(e => console.error(e));
+        await prisma.discordMessageQueue.create({
+            data: {
+                message: this._message || "",
+                channelId: this._outgoing,
+                embed: false
+            }
+        });
     }
 
     @area.Action
     @Description("Post a meeting to Discord")
-    postMeeting(): void {
+    async postMeeting(): Promise<void> {
         const dateNow = new Date(Date.now());
         const targetDate = new Date(this._year || dateNow.getFullYear(), this._month || dateNow.getMonth(), this._day || dateNow.getDate(), this._hour || dateNow.getHours(), this._minute || 0, 0, 0);
 
         console.debug("Posting meeting to Discord");
         if (!this._outgoing) return;
 
-        fetch(this._outgoing, {
-            method: 'POST',
-            body: JSON.stringify({
-                "content": null,
-                "embeds": [
-                  {
-                    "title": "New meeting",
-                    "description": this._subject,
-                    "color": 5814783,
-                    "fields": [
-                      {
-                        "name": "<t:" + Math.floor(targetDate.getTime() / 1000) + ":f>",
-                        "value": "By " + this._authorName
-                      }
-                    ]
-                  }
-                ],
-                "attachments": []
-              }),
-            headers: {'Content-Type': 'application/json'} 
-        }).catch(e => console.error(e));
+        let body = JSON.stringify({
+            "content": null,
+            "embeds": [
+                {
+                "title": "New meeting",
+                "description": this._subject,
+                "color": 5814783,
+                "fields": [
+                    {
+                    "name": "<t:" + Math.floor(targetDate.getTime() / 1000) + ":f>",
+                    "value": "By " + this._authorName
+                    }
+                ]
+                }
+            ],
+            "attachments": []
+        });
+
+        await prisma.discordMessageQueue.create({
+            data: {
+                message: body,
+                channelId: this._outgoing,
+                embed: true
+            }
+        });
     }
 
     @area.Action
     @Description("Post a list to Discord")
-    postList(): void {
+    async postList(): Promise<void> {
         console.debug("Posting list to Discord: " + this._message);
         console.log(this._outgoing);
         if (!this._outgoing) return;
@@ -114,11 +121,13 @@ export class Discord implements IService {
 
         console.log(JSON.stringify(embedList));
 
-        fetch(this._outgoing, {
-            method: 'POST',
-            body: JSON.stringify(embedList),
-            headers: {'Content-Type': 'application/json'}
-        }).catch(e => console.error(e));
+        await prisma.discordMessageQueue.create({
+            data: {
+                message: JSON.stringify(embedList),
+                channelId: this._outgoing,
+                embed: true
+            }
+        });
     }
 
     _list: DiscordList = { list: [] };
