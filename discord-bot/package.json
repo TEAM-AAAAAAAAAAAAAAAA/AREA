@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc",
     "build:changelog": "npx @discordx/changelog --src src",
-    "dev": "dotenv -e .env/.env.dev -- npx nodemon -r dotenv/config --exec ts-node-esm src/main.ts",
+    "dev": "dotenv -e .env.dev -- npx nodemon -r dotenv/config --exec ts-node-esm src/main.ts",
     "test": "dotenv -e .env/.env.test -- node -r dotenv/config dist/main.js",
     "prod": "node dist/main.js"
   },
@@ -19,6 +19,7 @@
     "discord.js": "^14.7.1",
     "discordx": "^11.7.0",
     "dotenv": "^16.0.3",
+    "dotenv-cli": "^7.0.0",
     "prisma": "4.9"
   },
   "devDependencies": {
