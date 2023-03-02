@@ -11,5 +11,3 @@ ionic capacitor add android
 ionic capacitor sync
 cd android
 ./gradlew assembleRelease
-find . |grep apk
-#cp  /app/client
