@@ -79,7 +79,7 @@ if (user) {
         });
         (user as any).verification_token = jwt.sign({ token: prismaToken.id }, mailSecret);
         sendMail(user.email, {token_id: (user as any).verification_token, type_of_action: 'an account verification'});
-        res.status(200).json(user);
+        res.status(200).json({"status": "ok", "user": _.omit(user, ['password', 'verification_token'])});
     } catch (error) {
         res.status(500).json(error);
     }
