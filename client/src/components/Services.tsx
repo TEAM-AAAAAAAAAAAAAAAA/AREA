@@ -7,36 +7,13 @@ import {
     IonCardTitle,
     IonButton
 } from '@ionic/react';
-import {
-    client
-} from '../utils/ApolloClient';
-import {
-    gql
-} from '@apollo/client';
 import ActionsContainer from './Actions';
 
-const GET_SERVICES = gql`
-  query Query {
-    allServices {
-        serviceName
-    }
-    allReact {
-        reactionName
-        serviceName
-        description
-    }
-  }
-`;
+interface ContainerProps {
+    data: any;
+};
 
-const ServicesContainer: React.FC = () => {
-    const [data, setData] = useState<any>([]);
-
-    useEffect(() => {
-        client.query({ query: GET_SERVICES }).then((result) => {
-            setData(result.data);
-        });
-    }, []);
-
+const ServicesContainer: React.FC<ContainerProps> = ({data}) => {
     return (
         <>
             {data.allServices?.map((service: any) => (
