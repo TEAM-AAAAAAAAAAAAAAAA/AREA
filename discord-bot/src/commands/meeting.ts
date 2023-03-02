@@ -28,36 +28,37 @@ export class Meeting {
 
         interaction: CommandInteraction
     ): Promise<void> {
-        // var thisId = prisma.oAuthUserData.findUnique({
+        try {
 
-        // })
+            let webhook = await areaConfigCheck(interaction, "meeting");
+            if (!webhook)
+                return;
+        
+            console.log(webhook)
+            let res = await fetch(env.API_URL + '/hook/' + webhook.userId + '/' + webhook.webhookWebhookId, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({bot: {
+                    subject: subject,
+                    hour: hour,
+                    minute: minute,
+                    day: day,
+                    month: month,
+                    year: year,
+                    author: webhook.userId,
+                    message: subject
+                }})
+            });
+            if (!res || !res.ok)
+            {
+                interaction.reply("Unknown error");
+                return;
+            }
 
-        let webhook = await areaConfigCheck(interaction, "meeting");
-        if (!webhook)
-            return;
-    
-        console.log(webhook)
-        let res = await fetch(env.API_URL + '/hook/' + webhook.userId + '/' + webhook.webhookWebhookId, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({bot: {
-                subject: subject,
-                hour: hour,
-                minute: minute,
-                day: day,
-                month: month,
-                year: year,
-                author: webhook.userId
-            }})
-        });
-        if (!res || !res.ok)
-        {
-            interaction.reply("Unknown error");
-            return;
-        }
+            console.log(Math.floor(new Date(year, month, day, hour, minute, 0, 0).getTime() / 1000));
+            console.log(res);
+            interaction.reply("Meeting created");
 
-        console.log(Math.floor(new Date(year, month, day, hour, minute, 0, 0).getTime() / 1000));
-        console.log(res);
-        interaction.reply("Meeting created");
+        } catch {}
     }
 }
