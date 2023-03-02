@@ -7,6 +7,13 @@ import { Context } from '../context';
 export const typeDefs = gql`
 scalar JSON
 scalar JSONObject
+scalar DateTime
+
+enum TokenType {
+    EMAIL_VERIFICATION
+    API
+    PASSWORD_RESET
+  }
 
     type User {
         id: ID!
@@ -67,6 +74,24 @@ scalar JSONObject
         refreshToken: String
     }
 
+    type DiscordBotWebhook {
+        command: String!
+        webhookWebhookId: String!
+        webhook: Webhook!
+        userId: String!
+        user: User!
+    }
+
+    type Token {
+        id: String!
+        userId: String!
+        createdAt: DateTime!
+        updatedAt: DateTime!
+        valid: Boolean!
+        user: User!
+        type: TokenType!
+    }
+
     type Query {
         user(id: ID!): User
         allUsers: [User!]!
@@ -79,6 +104,8 @@ scalar JSONObject
         allOAuthUserData: [oAuthUserData!]!
         allOAuthProviders: [oAuthProvider!]!
         userInfo(id: ID!): [Webhook!]!
+        allDiscordBotWebhooks: [DiscordBotWebhook!]!
+        allTokens: [Token!]!
     }
 
     type Mutation {
@@ -89,14 +116,28 @@ scalar JSONObject
         createService(name: String!): Int!
         createChainedReaction(actionId: Int!, reactionName: String!, description: String!, serviceName: String!, actionName: String!, outgoingWebhook: String): Int!
         createOAuthUserData(userId: String!, refreshToken: String, accessToken: String, data: JSONObject, oAuthProviderName: String!, providerUserId: String!): Int!
+        createDiscordBotWebhook(command: String!, webhookWebhookId: String!, userId: String!): Int!
+        createToken(userId: String!, type: TokenType!): Token!
     }
-
-    scalar DateTime
 `;
 
 export const resolvers = {
     JSON: GraphQLJSON,
     JSONObject: GraphQLJSONObject,
+    DateTime: DateTimeResolver,
+    Token: {
+        user: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.token.findUnique({ where: { id: parent.id } }).user();
+        }
+    },
+    DiscordBotWebhook: {
+        webhook: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.discordBotWebhook.findUnique({ where: { command_userId: { command: parent.command, userId: parent.userId } } }).webhook();
+        },
+        user: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.discordBotWebhook.findUnique({ where: { command_userId: { command: parent.command, userId: parent.userId } } }).user();
+        }
+    },
     oAuthUserData: {
         user: async (parent: any, _: any, context: Context) => {
             return await context.prisma.oAuthUserData.findUnique({ where: { oAuthUserDataId: parent.oAuthUserDataId } }).user();
@@ -138,6 +179,12 @@ export const resolvers = {
         }
     },
     Query: {
+        allTokens: async (_: any, args: any, context: Context) => {
+            return await context.prisma.token.findMany();
+        },
+        allDiscordBotWebhooks: async (_: any, args: any, context: Context) => {
+            return await context.prisma.discordBotWebhook.findMany();
+        },
         userInfo: async (_: any, args: any, context: Context) => {
             return await context.prisma.webhook.findMany({
                 where: {
@@ -181,6 +228,40 @@ export const resolvers = {
         }
     },
     Mutation: {
+        createToken: async (_: any, args: any, context: Context) => {
+            if (args.type === undefined || args.type === '') {
+                return 400
+            }
+            if (args.userId === undefined || args.userId === '') {
+                return 400
+            }
+            await context.prisma.token.create({
+                data: {
+                    type: args.type,
+                    userId: args.userId
+                }
+            });
+            return 200
+        },
+        createDiscordBotWebhook: async (_: any, args: any, context: Context) => {
+            if (args.command === undefined || args.command === '') {
+                return 400
+            }
+            if (args.userId === undefined || args.userId === '') {
+                return 400
+            }
+            if (args.webhookWebhookId === undefined || args.webhookId === '') {
+                return 400
+            }
+            await context.prisma.discordBotWebhook.create({
+                data: {
+                    command: args.command,
+                    userId: args.userId,
+                    webhookWebhookId: args.webhookWebhookId
+                }
+            });
+            return 200
+        },
         createOAuthUserData: async (_: any, args: any, context: Context) => {
             if (args.userId === undefined || args.userId === '') {
                 return 400
