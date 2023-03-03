@@ -9,6 +9,7 @@ import passport from 'passport';
 import { services } from './services/.services';
 import { Request, Response } from 'express';
 import { prisma } from './config/db';
+import cors from 'cors';
 
 const app = express();
 
@@ -26,6 +27,8 @@ const appConfig = {
 services.DB.sync().then((res: boolean) => {
     console.log("Is DB synced?", res);
 });
+
+app.use(cors());
 
 app.use('/', routes);
 

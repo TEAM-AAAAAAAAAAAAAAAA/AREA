@@ -134,6 +134,9 @@ CREATE UNIQUE INDEX "oAuthProvider_serviceName_key" ON "oAuthProvider"("serviceN
 CREATE UNIQUE INDEX "Token_id_key" ON "Token"("id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Token_userId_type_key" ON "Token"("userId", "type");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Service_serviceName_key" ON "Service"("serviceName");
 
 -- CreateIndex
@@ -156,6 +159,9 @@ CREATE UNIQUE INDEX "Reaction_reactionId_key" ON "Reaction"("reactionId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ActionReaction_id_key" ON "ActionReaction"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ActionReaction_reactionId_key" ON "ActionReaction"("reactionId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ActionReaction_actionId_reactionId_key" ON "ActionReaction"("actionId", "reactionId");

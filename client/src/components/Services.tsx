@@ -1,33 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    IonButton,
     IonCard,
     IonCardContent,
     IonCardHeader,
     IonCardSubtitle,
     IonCardTitle,
-    IonContent
+    IonButton
 } from '@ionic/react';
+import ActionsContainer from './Actions';
 
 interface ContainerProps {
-    name: string;
-}
+    data: any;
+};
 
-const ServicesContainer: React.FC<ContainerProps> = () => {
+const ServicesContainer: React.FC<ContainerProps> = ({data}) => {
     return (
-        <IonContent>
-            <IonCard>
-                <IonCardHeader>
-                    <IonCardTitle>Service Name</IonCardTitle>
-                    <IonCardSubtitle>Service Type</IonCardSubtitle>
-                </IonCardHeader>
-                <IonCardContent>
-                    Service Description
-                </IonCardContent>
-                <IonButton fill="clear">Action 1</IonButton>
-                <IonButton fill="clear">Action 2</IonButton>
-            </IonCard>
-        </IonContent>
+        <>
+            {data.allServices?.map((service: any) => (
+                <IonCard key={service.serviceName}>
+                    <IonCardHeader>
+                        <IonCardTitle>{service.serviceName}</IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                        <ActionsContainer serviceName={service.serviceName} allReact={data?.allReact} />
+                    </IonCardContent>
+                    <IonButton>Activate</IonButton>
+                    <IonButton>Dismiss</IonButton>
+                </IonCard>
+            ))}
+        </>
     );
 };
 

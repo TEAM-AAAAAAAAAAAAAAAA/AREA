@@ -35,7 +35,24 @@ async function getService(action: React) : Promise<Service | null>
     });
 }
 
-async function runChained(reaction: Reaction, parentService: IService)
+function transcodeService(reaction: Reaction, parentService: IService) : IService | undefined
+{
+    if (parentService.constructor.name != reaction.serviceName) {
+        let transcoder = Transcoders.get(parentService.constructor.name + '.' + reaction.serviceName);
+        if (!transcoder) {
+            console.log("no transcoder found");
+            return undefined;
+        }
+        return (function(f: Function) {
+            return (f.apply(transcoders, [parentService]));
+        })(transcoder);
+    } else {
+        console.log("no transcoder needed (same service)");
+    }
+    return parentService;
+}
+
+async function runChained(reaction: Reaction, parentService: IService, incomingServiceName: string)
 {
     let areas: ActionReaction[] = await prisma.actionReaction.findMany({
         where: {
@@ -44,34 +61,33 @@ async function runChained(reaction: Reaction, parentService: IService)
     });
 
     areas.forEach(async next => {
-        await prisma.reaction.findUnique({
-            where: {
-                reactionId: next.reactionId,
-            }
-        }).then(elem => {
-            if (elem)
-                runReaction(elem, parentService);
+        let newReact = await prisma.reaction.findUnique({
+            where: { reactionId: next.reactionId }
         });
+        if (!newReact)
+            return;
+
+        runReaction(newReact, parentService, incomingServiceName);
     });
 }
 
-async function runReaction(reaction: Reaction, service: IService) : Promise<boolean>
+async function runReaction(reaction: Reaction, service: IService, incomingServiceName: string) : Promise<boolean>
 {
     let outgoingAction = await getReact(reaction);
     if (!outgoingAction)
         return false;
 
-    let outgoingService = await getService(outgoingAction);
-    if (!outgoingService)
+    let newService = transcodeService(reaction, service);
+    if (!newService)
         return false;
 
-    service.setOutgoing(reaction.outgoingWebhook);
+    newService.setOutgoing(reaction.outgoingWebhook);
     const action = PrismaActions.get(outgoingAction.serviceName + '.' + outgoingAction.reactionName);
     if (action) {
-        (function(f: Function) {
-            f.apply(service, []);
+        await (async function(f: Function) {
+            await f.apply(newService, []);
         })(action);
-        runChained(reaction, service);
+        runChained(reaction, newService, reaction.serviceName);
         return true;
     }
 
@@ -109,7 +125,7 @@ async function runWebhook(webhook: Webhook, requestBody: any) : Promise<boolean>
     let serviceInstance = new serviceReturn();
     serviceInstance.read(requestBody);
 
-    return await runReaction(outgoingReaction, serviceInstance);
+    return await runReaction(outgoingReaction, serviceInstance, webhook.incomingServiceName);
 }
 
 export const hook = {
@@ -120,28 +136,33 @@ export const hook = {
 
     POST: [
     async (req: any, res: Response) => {
-        let hook: string = req.params.hook;
-        if (hook.indexOf('/') != hook.lastIndexOf('/'))
-            return res.status(400).json();
+        try {
+            let hook: string = req.params.hook;
+            if (hook.indexOf('/') != hook.lastIndexOf('/'))
+                return res.status(400).json();
 
-        let hookUser: string = hook.substring(0, hook.indexOf('/'))
-        let hookId: string = hook.substring(hook.indexOf('/') + 1)
-        if (!(hookUser != null && hookUser != "" && hookId != null && hookId != ""))
-            return res.status(400).json();
-        
-        let webhook: Webhook | null = await prisma.webhook.findFirst({
-            where: {
-                webhookId: hookId,
-                userId: hookUser
-            }
-        });
+            let hookUser: string = hook.substring(0, hook.indexOf('/'))
+            let hookId: string = hook.substring(hook.indexOf('/') + 1)
+            if (!(hookUser != null && hookUser != "" && hookId != null && hookId != ""))
+                return res.status(400).json();
+            
+            let webhook: Webhook | null = await prisma.webhook.findFirst({
+                where: {
+                    webhookId: hookId,
+                    userId: hookUser
+                }
+            });
 
-        if (!webhook)
-            return res.status(404).json();
+            if (!webhook)
+                return res.status(404).json({text: "hook not found"});
 
-        if (await runWebhook(webhook, req.body) != true)
-            return res.status(500).json();
+            if (await runWebhook(webhook, req.body) != true)
+                return res.status(500).json({text: "failed to run hook"});
 
-        return res.status(200).json({});
+            return res.status(200).json({text: "ok"});
+        } catch (e: any) {
+            console.log(e.message);
+            return res.status(500).json({text: "ko"});
+        }
     }]
 };

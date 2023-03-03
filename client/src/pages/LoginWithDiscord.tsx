@@ -42,6 +42,16 @@ const LoginWithDiscord: React.FC = () => {
     ] = useState<string>('');
 
     const [
+        name,
+        setName
+    ] = useState<string>('');
+
+    let OAuthTokens = {
+        accessToken: '',
+        refreshToken: ''
+    };
+
+    const [
         iserror,
         setIserror
     ] = useState<boolean>(false);
@@ -56,35 +66,55 @@ const LoginWithDiscord: React.FC = () => {
         setUserAvatar
     ] = useState<string>('');
 
-    const handleLogin = () => {
-
+    const handleLogin = async () => {
+        let OAuthUserData: Object;
         if (!email) {
             setMessage('enter email');
             setIserror(true);
             return;
         }
-
-        //    if (validateEmail(email) === false) {
-        //      setMessage('invalid email');
-        //      setIserror(true);
-        //      return;
-        //    }
-
         if (!password || password.length < 6) {
             setMessage('enter pw');
             setIserror(true);
             return;
         }
+        let accessToken = OAuthTokens.accessToken;
+        let refreshToken = OAuthTokens.refreshToken;
 
-        //    const loginData = {
-        //      "email": email,
-        //      "password": password
-        //    }
+        fetch('https://discord.com/api/v10/users/@me', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            }
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                OAuthUserData = data;
+                return fetch('http://localhost:8080/auth/discord_oauth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ accessToken, refreshToken, email, password, name, userData: OAuthUserData })
+                })
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data?.error) {
+                    setMessage(data?.error);
+                    setIserror(true);
+                } else {
+                    console.log(data?.token);
+                    document.cookie = `token=${data?.token}`;
+                    window.location.href = '/services';
+                }
+            });
     };
 
     useEffect(() => {
         const access_token = window.location.hash.split('#')[1].split('&')[1].split('=')[1];
         function getUserInfos() {
+            OAuthTokens.accessToken = access_token;
             fetch('https://discord.com/api/v10/users/@me', {
                 method: 'GET',
                 headers: {
@@ -95,6 +125,7 @@ const LoginWithDiscord: React.FC = () => {
                 .then((data) => {
                     setUserAvatar(`https://cdn.discordapp.com/avatars/${data?.id}/${data?.avatar}.png`);
                     setEmail(data?.email);
+                    setName(data?.username);
                 });
         }
         if (access_token)
@@ -104,7 +135,7 @@ const LoginWithDiscord: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
+                <IonToolbar className="ion-padding ion-text-center">
                     <IonTitle>Finalize your profile</IonTitle>
                 </IonToolbar>
             </IonHeader>
@@ -125,6 +156,19 @@ const LoginWithDiscord: React.FC = () => {
                     <IonRow>
                         <IonCol>
                             <IonAvatar class="ion-discord-avatar" ><IonImg src={userAvatar} /></IonAvatar>
+                        </IonCol>
+                    </IonRow>
+                    <IonRow>
+                        <IonCol>
+                            <IonItem>
+                                <IonLabel position="floating"> Username</IonLabel>
+                                <IonInput
+                                    type="email"
+                                    value={name}
+                                    onIonChange={(e) => setName(e.detail.value!)}
+                                >
+                                </IonInput>
+                            </IonItem>
                         </IonCol>
                     </IonRow>
                     <IonRow>

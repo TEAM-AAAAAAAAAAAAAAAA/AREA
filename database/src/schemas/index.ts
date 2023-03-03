@@ -7,6 +7,13 @@ import { Context } from '../context';
 export const typeDefs = gql`
 scalar JSON
 scalar JSONObject
+scalar DateTime
+
+enum TokenType {
+    EMAIL_VERIFICATION
+    API
+    PASSWORD_RESET
+  }
 
     type User {
         id: ID!
@@ -57,6 +64,8 @@ scalar JSONObject
 
     type oAuthProvider {
         oAuthProviderName: String!
+        service: Service
+        serviceName: String
     }
 
     type oAuthUserData {
@@ -65,6 +74,25 @@ scalar JSONObject
         oAuthProvider: oAuthProvider!
         accessToken: String
         refreshToken: String
+    }
+
+    type DiscordBotWebhook {
+        command: String!
+        webhookWebhookId: String!
+        webhook: Webhook!
+        userId: String!
+        serverId: String!
+        user: User!
+    }
+
+    type Token {
+        id: String!
+        userId: String!
+        createdAt: DateTime!
+        updatedAt: DateTime!
+        valid: Boolean!
+        user: User!
+        type: TokenType!
     }
 
     type Query {
@@ -79,24 +107,46 @@ scalar JSONObject
         allOAuthUserData: [oAuthUserData!]!
         allOAuthProviders: [oAuthProvider!]!
         userInfo(id: ID!): [Webhook!]!
+        allDiscordBotWebhooks: [DiscordBotWebhook!]!
+        allTokens: [Token!]!
     }
 
     type Mutation {
         removeWebhooks: Int!
         createAction(actionName: String!, description: String!, serviceName: String!): Int!
-        createWebhook(userId: String!, reactionName: String!, actionId: String!, serviceId: String!, description: String!, outgoingWebhook: String): Int!
+        createWebhook(userId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
         createUser(name: String!, email: String!, password: String!): Int!
         createService(name: String!): Int!
-        createChainedReaction(actionId: Int!, reactionName: String!, description: String!, serviceName: String!, actionName: String!, outgoingWebhook: String): Int!
+        createChainedReaction(actionName: String!, actionService: String!, reactionName: String!, reactionService: String!, reactionOutgoingWebhook: String, actionOutgoingWebhook: String): Int!
         createOAuthUserData(userId: String!, refreshToken: String, accessToken: String, data: JSONObject, oAuthProviderName: String!, providerUserId: String!): Int!
+        createDiscordBotWebhook(command: String!, userId: String!, serverId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
+        createToken(userId: String!, type: TokenType!): Token!
+        deleteService(name: String!): Int!
     }
-
-    scalar DateTime
 `;
 
 export const resolvers = {
     JSON: GraphQLJSON,
     JSONObject: GraphQLJSONObject,
+    DateTime: DateTimeResolver,
+    oAuthProvider: {
+        service: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.oAuthProvider.findUnique({ where: { oAuthProviderName: parent.oAuthProviderName } }).service();
+        }
+    },
+    Token: {
+        user: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.token.findUnique({ where: { id: parent.id } }).user();
+        }
+    },
+    DiscordBotWebhook: {
+        webhook: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.discordBotWebhook.findUnique({ where: { command_userId_serverId: { serverId: parent.serverId, command: parent.command, userId: parent.userId } } }).webhook();
+        },
+        user: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.discordBotWebhook.findUnique({ where: { command_userId_serverId: { serverId: parent.serverId, command: parent.command, userId: parent.userId } } }).user();
+        }
+    },
     oAuthUserData: {
         user: async (parent: any, _: any, context: Context) => {
             return await context.prisma.oAuthUserData.findUnique({ where: { oAuthUserDataId: parent.oAuthUserDataId } }).user();
@@ -138,6 +188,12 @@ export const resolvers = {
         }
     },
     Query: {
+        allTokens: async (_: any, args: any, context: Context) => {
+            return await context.prisma.token.findMany();
+        },
+        allDiscordBotWebhooks: async (_: any, args: any, context: Context) => {
+            return await context.prisma.discordBotWebhook.findMany();
+        },
         userInfo: async (_: any, args: any, context: Context) => {
             return await context.prisma.webhook.findMany({
                 where: {
@@ -181,16 +237,95 @@ export const resolvers = {
         }
     },
     Mutation: {
+        deleteService: async (_: any, args: any, context: Context) => {
+            const webhooks = await context.prisma.webhook.findMany({
+                where: {
+                    incomingServiceName: args.name
+                }
+            });
+            for (const webhook of webhooks)
+                await context.prisma.discordBotWebhook.deleteMany({
+                    where: {
+                        webhook: webhook
+                    }
+                });
+            await context.prisma.webhook.deleteMany({
+                where: {
+                    incomingServiceName: args.name
+                }
+            });
+            await context.prisma.reaction.deleteMany({
+                where: {
+                    serviceName: args.name
+                }
+            });
+            await context.prisma.action.deleteMany({
+                where: {
+                    serviceName: args.name
+                }
+            });
+            await context.prisma.react.deleteMany({
+                where: {
+                    serviceName: args.name
+                }
+            });
+            await context.prisma.oAuthProvider.deleteMany({
+                where: {
+                    serviceName: args.name
+                }
+            });
+            await context.prisma.service.delete({
+                where: {
+                    serviceName: args.name
+                }
+            });
+            return 200
+        },
+        createToken: async (_: any, args: any, context: Context) => {
+            await context.prisma.token.create({
+                data: {
+                    type: args.type,
+                    userId: args.userId
+                }
+            });
+            return 200
+        },
+        createDiscordBotWebhook: async (_: any, args: any, context: Context) => {
+            await context.prisma.discordBotWebhook.create({
+                data: {
+                    command: args.command,
+                    serverId: args.serverId,
+                    user: {
+                        connect: {
+                            id: args.userId
+                        },
+                    },
+                    webhook: {
+                        create: {
+                            user: {
+                                connect: {
+                                    id: args.userId,
+                                }
+                            },
+                            reaction: {
+                                create: {
+                                    serviceName: args.serviceId,
+                                    reactionName: args.reactionName,
+                                    outgoingWebhook: args.outgoingWebhook,
+                                }
+                            },
+                            incomingService: {
+                                connect: {
+                                    serviceName: args.serviceId,
+                                }
+                            },
+                        }
+                    }
+                }
+            });
+            return 200
+        },
         createOAuthUserData: async (_: any, args: any, context: Context) => {
-            if (args.userId === undefined || args.userId === '') {
-                return 400
-            }
-            if (args.oAuthProviderName === undefined || args.oAuthProviderName === '') {
-                return 400
-            }
-            if (args.providerUserId === undefined || args.providerUserId === '') {
-                return 400
-            }
             const accToken = args.accessToken === undefined ? '' : args.accessToken
             const refToken = args.refreshToken === undefined ? '' : args.refreshToken
             const myData = args.data === undefined ? {} : args.data
@@ -207,29 +342,22 @@ export const resolvers = {
             return 200
         },
         createChainedReaction: async (_: any, args: any, context: Context) => {
-            if (args.actionId === undefined || args.actionId === '') {
-                return 400
-            }
-            if (args.actionName === undefined || args.actionName === '') {
-                return 400
-            }
-            if (args.serviceName === undefined || args.serviceName === '') {
-                return 400
-            }
-            if (args.description === undefined || args.description === '') {
-                return 400
-            }
-            const myHonest = await context.prisma.reaction.create({
-                data: {
-                    reactionName: args.reactionName,
-                    serviceName: args.serviceName,
-                    outgoingWebhook: args.outgoingWebhook,
-                }
-            });
             await context.prisma.actionReaction.create({
                 data: {
-                    actionId: args.actionId,
-                    reactionId: myHonest.reactionId,
+                    action: {
+                        create: {
+                            reactionName: args.actionName,
+                            serviceName: args.actionService,
+                            outgoingWebhook: args.actionOutgoingWebhook,
+                        }
+                    },
+                    reaction: {
+                        create: {
+                            reactionName: args.reactionName,
+                            serviceName: args.reactionService,
+                            outgoingWebhook: args.reactionOutgoingWebhook,
+                        }
+                    },
                 }
             });
             return 200
@@ -239,15 +367,6 @@ export const resolvers = {
             return 200;
         },
         createAction: async (_: any, args: any, context: Context) => {
-            if (args.actionName === undefined || args.actionName === '') {
-                return 400
-            }
-            if (args.serviceName === undefined || args.serviceName === '') {
-                return 400
-            }
-            if (args.description === undefined || args.description === '') {
-                return 400
-            }
             await context.prisma.action.create({
                 data: {
                     actionName: args.actionName,
@@ -258,38 +377,30 @@ export const resolvers = {
             return 200
         },
         createWebhook: async (_: any, args: any, context: Context) => {
-            if (args.userId === undefined || args.userId === '') {
-                return 400
-            }
-            if (args.actionId === undefined || args.actionId === '') {
-                return 400
-            }
-            if (args.serviceId === undefined || args.serviceId === '') {
-                return 400
-            }
-            if (args.description === undefined || args.description === '') {
-                return 400
-            }
-            const myHonest = await context.prisma.reaction.create({
-                data: {
-                    serviceName: args.serviceId,
-                    reactionName: args.reactionName,
-                    outgoingWebhook: args.outgoingWebhook,
-                }
-            });
             await context.prisma.webhook.create({
                 data: {
-                    userId: args.userId,
-                    reactionId: myHonest.reactionId,
-                    incomingServiceName: args.serviceId,
+                    user: {
+                        connect: {
+                            id: args.userId,
+                        }
+                    },
+                    reaction: {
+                        create: {
+                            serviceName: args.serviceId,
+                            reactionName: args.reactionName,
+                            outgoingWebhook: args.outgoingWebhook,
+                        }
+                    },
+                    incomingService: {
+                        connect: {
+                            serviceName: args.serviceId,
+                        }
+                    },
                 },
             });
             return 200
         },
         createService: async (_: any, args: any, context: Context) => {
-            if (args.name === undefined || args.name === '') {
-                return 400
-            }
             await context.prisma.service.create({
                 data: {
                     serviceName: args.name
@@ -298,15 +409,6 @@ export const resolvers = {
             return 200
         },
         createUser: async (_: any, args: any, context: Context) => {
-            if (args.name === undefined || args.name === '') {
-                return 400
-            }
-            if (args.email === undefined || args.email === '') {
-                return 400
-            }
-            if (args.password === undefined || args.password === '') {
-                return 400
-            }
             await context.prisma.user.create({
                 data: {
                     name: args.name,

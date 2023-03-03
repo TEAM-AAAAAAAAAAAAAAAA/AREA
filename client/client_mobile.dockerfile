@@ -1,17 +1,19 @@
-FROM node:14-alpine
+FROM androidsdk/android-31
 
-#Create app directory
-RUN mkdir /app/
-WORKDIR /app/
+USER root
 
-#Install dependencies (could be modified/extend)
-COPY package.json yarn.lock ./
-RUN yarn install
+SHELL [ "/bin/bash", "-c" ]
 
-#Bundle app source
+RUN apt update
+
+RUN apt upgrade -y
+
+RUN curl -o - https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+
+RUN . /root/.nvm/nvm.sh && nvm install 17
+
+WORKDIR /app
+
 COPY . .
 
-#Build the app
-RUN npx ionic capacitor add android
-
-CMD [ "yarn", "build" ]
+CMD [ "./build-apk.sh" ]
