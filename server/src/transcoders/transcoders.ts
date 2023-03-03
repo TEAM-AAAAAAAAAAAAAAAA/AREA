@@ -114,5 +114,21 @@ export class transcoders
         google._location = discord._city;
         return google;
     }
+
+    @Transcoder(services.Discord.name, services.HackTheBox.name)
+    static discordToHackTheBox(discord: services.Discord): services.HackTheBox {
+        let hackTheBox: services.HackTheBox = new services.HackTheBox();
+        hackTheBox._userId = discord._authorName;
+        hackTheBox._message = discord._message;
+        return hackTheBox;
+    }
+
+    @Transcoder(services.HackTheBox.name, services.Discord.name)
+    static hackTheBoxToDiscord(hackTheBox: services.HackTheBox): services.Discord {
+        let discord: services.Discord = new services.Discord();
+        discord._authorName = hackTheBox._userId;
+        discord._message = hackTheBox._message;
+        return discord;
+    }
     
 }
