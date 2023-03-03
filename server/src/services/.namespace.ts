@@ -5,6 +5,7 @@ export * from "./Discord";
 export * from "./Teams";
 export * from "./OpenWeatherMap";
 export * from "./Google";
+export * from "./Formatting"
 
 export class DB {
     static async sync() : Promise<boolean>
