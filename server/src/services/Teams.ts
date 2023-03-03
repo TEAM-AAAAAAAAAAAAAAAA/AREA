@@ -6,7 +6,6 @@ import { Action, AuthProvider, Description } from "../area/mappings";
 import moment, { Moment } from "moment";
 
 @area.Service
-@AuthProvider("teams")
 export class Teams implements IService {
     constructor() { this._outgoing = null; }
 
