@@ -5,9 +5,11 @@ const prisma = new PrismaClient();
 const dummyOAuthProviderData : Prisma.oAuthProviderCreateInput[] = [
     {
         oAuthProviderName: 'discord',
+        data: {}
     },
     {
         oAuthProviderName: 'teams',
+        data: {}
     }
 ]
 
