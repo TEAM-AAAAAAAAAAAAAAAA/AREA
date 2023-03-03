@@ -18,7 +18,6 @@ async (req: Request, res: Response) => {
             id : Joi.string().required()
         }).required().unknown(true)
     });
-    console.log(req.body);
     req.body = oauthUserDataSchema.validate(req.body).value;
     if (_.isEmpty(req.body)) {
         res.status(400).json({ error: 'Bad request' });
