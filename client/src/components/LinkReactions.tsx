@@ -42,7 +42,7 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
 
     function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
         if (ev.detail.role === 'confirm') {
-            if (ev.detail.data) {
+            if (ev.detail.data?.first && ev.detail.data?.second && firstReact && secondReact && firstService && secondService) {
                 client.mutate({
                     mutation: gql`
                     mutation Mutation($actionName: String!, $actionService: String!, $reactionName: String!, $reactionService: String!, $reactionOutgoingWebhook: String, $actionOutgoingWebhook: String) {
