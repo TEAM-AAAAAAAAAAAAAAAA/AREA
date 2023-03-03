@@ -108,10 +108,6 @@ const Login: React.FC = () => {
             }
         });
     };
-    // if (cookies.token)
-    //     return (
-    //         <IonRedirect to="/services" />
-    //     );
     return (
         <IonPage>
             <IonHeader>
