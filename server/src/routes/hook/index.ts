@@ -161,7 +161,8 @@ export const hook = {
 
             return res.status(200).json({text: "ok"});
         } catch (e: any) {
-            return res.status(500).json({text: e.message});
+            console.log(e.message);
+            return res.status(500).json({text: "ko"});
         }
     }]
 };
