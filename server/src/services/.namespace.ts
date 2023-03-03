@@ -1,5 +1,5 @@
 import { prisma } from '../config/db';
-import { PrismaServices, PrismaActions, Descriptions } from "../area/mappings";
+import { PrismaServices, PrismaActions, Descriptions, ServiceAuthProviders } from "../area/mappings";
 
 export * from "./Discord";
 export * from "./Teams";
@@ -11,7 +11,8 @@ export class DB {
     {
         let isSynced: boolean = true;
 
-        await PrismaServices.forEach(async (value, serviceName) => {
+        for (let [serviceName, service] of PrismaServices) {
+        // await PrismaServices.forEach(async (value, serviceName) => {
             await prisma.service.upsert({
                 where: {
                     serviceName: serviceName
@@ -29,7 +30,8 @@ export class DB {
                 isSynced = false;
             });
 
-            await PrismaActions.forEach(async (value, key) => {
+            for (let [key, action] of PrismaActions) {
+            // await PrismaActions.forEach(async (value, key) => {
                 let thisServiceName = key.substring(0, key.indexOf('.'));
                 let reactionName = key.substring(key.indexOf('.') + 1);
                 let description = Descriptions.get(key);
@@ -62,8 +64,32 @@ export class DB {
                         });
                     }
                 }
+            };
+        };
+
+        for (let [key, value] of ServiceAuthProviders) {
+        // await ServiceAuthProviders.forEach(async (value, key) => {
+            await prisma.oAuthProvider.upsert({
+                where: {
+                    serviceName: key
+                },
+                update: {
+                    serviceName: key,
+                    oAuthProviderName: value,
+                    data: {}
+                },
+                create: {
+                    serviceName: key,
+                    oAuthProviderName: value,
+                    data: {}
+                }
+            }).then((res) => {
+                console.debug("Upserted OAuth Provider: " + res.serviceName + ' - ' + res.oAuthProviderName);
+            }).catch((err) => {
+                console.error("Failed to upsert OAuth Provider: " + key + ' - ' + err);
+                isSynced = false;
             });
-        });
+        };
 
         return isSynced;
     }
