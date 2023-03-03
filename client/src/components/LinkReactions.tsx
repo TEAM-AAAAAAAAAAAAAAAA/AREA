@@ -72,17 +72,17 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
                         ))}
                     </IonSelect>
                 </IonItem>
-                    {firstService !== '' &&  (
-                        <IonItem>
-                            <IonLabel class='modal-label'>Choose first service's reaction :</IonLabel>
-                            <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => setFirstReact(e.detail.value)}>
-                                {firstReacts?.map((react: any) => (
-                                    <IonSelectOption key={react.reactionName} value={react.reactionName}>{react.reactionName}</IonSelectOption>
-                                ))}
-                            </IonSelect>
-                        </IonItem>
-                    )
-                    }
+                {firstService !== '' && (
+                    <IonItem>
+                        <IonLabel class='modal-label'>Choose first service's reaction :</IonLabel>
+                        <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => setFirstReact(e.detail.value)}>
+                            {firstReacts?.map((react: any) => (
+                                <IonSelectOption key={react.reactionName} value={react.reactionName}>{react.reactionName}</IonSelectOption>
+                            ))}
+                        </IonSelect>
+                    </IonItem>
+                )
+                }
                 <IonItem>
                     <IonLabel class='modal-label'>Choose second service :</IonLabel>
                     <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => setSecondService(e.detail.value)}>
@@ -91,16 +91,16 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
                         ))}
                     </IonSelect>
                 </IonItem>
-                    {secondService !== '' &&  (
-                        <IonItem>
-                            <IonLabel class='modal-label'>Choose second service's reaction :</IonLabel>
-                            <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => setSecondReact(e.detail.value)}>
-                                {secondReacts?.map((react: any) => (
-                                    <IonSelectOption key={react.reactionName} value={react.reactionName}>{react.reactionName}</IonSelectOption>
-                                ))}
-                            </IonSelect>
-                        </IonItem>
-                    )}
+                {secondService !== '' && (
+                    <IonItem>
+                        <IonLabel class='modal-label'>Choose second service's reaction :</IonLabel>
+                        <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => setSecondReact(e.detail.value)}>
+                            {secondReacts?.map((react: any) => (
+                                <IonSelectOption key={react.reactionName} value={react.reactionName}>{react.reactionName}</IonSelectOption>
+                            ))}
+                        </IonSelect>
+                    </IonItem>
+                )}
             </IonContent>
         </IonModal>
     );
