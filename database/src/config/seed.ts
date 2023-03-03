@@ -8,6 +8,12 @@ const dummyOAuthProviderData : Prisma.oAuthProviderCreateInput[] = [
     },
     {
         oAuthProviderName: 'teams',
+    },
+    {
+        oAuthProviderName: 'hackthebox',
+    },
+    {
+        oAuthProviderName: 'google',
     }
 ]
 
