@@ -29,7 +29,6 @@ COPY --from=build-runner /tmp/app/yarn.lock /app/yarn.lock
 #Install dependencies (could be modified/extend)
 RUN yarn install --omit=dev
 
-
 COPY --from=build-runner /tmp/app/prisma /app/prisma
 COPY --from=build-runner /tmp/app/tsconfig.json /app/tsconfig.json
 
