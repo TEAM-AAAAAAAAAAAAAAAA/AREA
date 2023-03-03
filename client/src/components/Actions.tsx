@@ -10,9 +10,10 @@ import {
 interface ContainerProps {
     allReact: any;
     serviceName: string;
+    setReaction: React.Dispatch<any>;
 }
 
-const ActionsContainer: React.FC<ContainerProps> = ({ allReact, serviceName }) => {
+const ActionsContainer: React.FC<ContainerProps> = ({ allReact, serviceName, setReaction }) => {
     const [actions, setActions] = useState<any>([]);
     const [desc, setDesc] = useState<string>('');
 
@@ -21,9 +22,9 @@ const ActionsContainer: React.FC<ContainerProps> = ({ allReact, serviceName }) =
     }, [allReact, serviceName]);
     return (
         <>
-            <IonSelect placeholder='Select reaction' interface='popover' onIonChange={(e) => {setDesc(e.detail.value)}}>
+            <IonSelect placeholder='Select reaction' interface='popover' onIonChange={(e) => {setDesc(e.detail?.value.react.description); setReaction(e.detail?.value)}}>
                 {actions.map((action: any) => (
-                    <IonSelectOption key={action.reactionName} value={action.react.description}>{action.reactionName}</IonSelectOption>
+                    <IonSelectOption key={action.reactionName} value={action}>{action.reactionName}</IonSelectOption>
                 ))}
             </IonSelect>
             <IonCardContent>
