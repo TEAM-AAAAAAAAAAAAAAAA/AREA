@@ -106,7 +106,7 @@ dist
 # Webstorm files config
 .idea
 
-client_data
+postgres_data
 
 client_data
 note_pour_bosser_services
