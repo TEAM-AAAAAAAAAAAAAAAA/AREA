@@ -112,6 +112,8 @@ enum TokenType {
     }
 
     type Mutation {
+        enableReaction(reactionId: Int!): Int!
+        disableReaction(reactionId: Int!): Int!
         removeWebhooks: Int!
         createAction(actionName: String!, description: String!, serviceName: String!): Int!
         createWebhook(userId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
@@ -237,6 +239,28 @@ export const resolvers = {
         }
     },
     Mutation: {
+        disableReaction: async (_: any, args: any, context: Context) => {
+            await context.prisma.reaction.update({
+                where: {
+                    reactionId: args.reactionId
+                },
+                data: {
+                    enabled: false
+                }
+            });
+            return 200;
+        },
+        enableReaction: async (_: any, args: any, context: Context) => {
+            await context.prisma.reaction.update({
+                where: {
+                    reactionId: args.reactionId
+                },
+                data: {
+                    enabled: true
+                }
+            });
+            return 200;
+        },
         deleteService: async (_: any, args: any, context: Context) => {
             const webhooks = await context.prisma.webhook.findMany({
                 where: {
