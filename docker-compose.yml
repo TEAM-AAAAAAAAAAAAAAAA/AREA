@@ -21,12 +21,8 @@ services:
       dockerfile: client_web.dockerfile
     ports:
       - "8081:8081"
-    environment:
-      REACT_DISCORD_CLIENT_SECRET: REACT_DISCORD_CLIENT_SECRET
-      REACT_APP_DISCORD_CLIENT_ID: REACT_APP_DISCORD_CLIENT_ID
-      REACT_APP_DISCORD_REDIRECT_URI: REACT_APP_DISCORD_REDIRECT_URI
-      REACT_GITHUB_CLIENT_SECRET: REACT_GITHUB_CLIENT_SECRET
-      REACT_APP_GITHUB_CLIENT_ID: REACT_APP_GITHUB_CLIENT_ID
+    env_file:
+      - .env
     depends_on:
       - client_mobile
       - server
@@ -36,6 +32,8 @@ services:
     build:
       context: ./client/
       dockerfile: client_mobile.dockerfile
+    env_file:
+      - .env
     volumes:
       - ./client_data:/app/client
   apollo:
