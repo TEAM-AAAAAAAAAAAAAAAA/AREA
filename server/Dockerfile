@@ -3,7 +3,7 @@ FROM node:18-alpine as build-runner
 WORKDIR /tmp/app
 
 #Install dependencies (could be modified/extend)
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 RUN yarn install
 

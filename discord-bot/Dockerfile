@@ -31,7 +31,7 @@ SHELL ["/bin/bash", "-c"]
 WORKDIR /tmp/app
 
 # Move package.json
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 # Install dependencies
 RUN yarn install
@@ -51,7 +51,6 @@ FROM node:18 as prod-runner
 WORKDIR /app
 
 COPY --from=build-runner /tmp/app/package.json /app/package.json
-COPY --from=build-runner /tmp/app/yarn.lock /app/yarn.lock
 
 RUN yarn install --omit=dev
 
