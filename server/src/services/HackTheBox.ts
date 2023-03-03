@@ -49,7 +49,8 @@ export class HackTheBox implements IService {
     @Description("Get my profile.")
     async getProfile(): Promise<void>
     {
-        const htbUser = await getHTBUser(this._userId);
+        console.log(this._userId, this._targetUser)
+        const htbUser = await getHTBUser(this._targetUser || this._userId);
         if (!htbUser) return;
 
         const response = await htbRequest("profile/" + htbUser.providerUserId);
@@ -61,5 +62,6 @@ export class HackTheBox implements IService {
 
     _userId: ustring;
     _message: ustring;
+    _targetUser: ustring;
     _outgoing: nstring;
 }

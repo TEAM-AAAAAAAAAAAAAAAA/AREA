@@ -120,6 +120,7 @@ export class transcoders
         let hackTheBox: services.HackTheBox = new services.HackTheBox();
         hackTheBox._userId = discord._authorName;
         hackTheBox._message = discord._message;
+        hackTheBox._targetUser = discord._targetUser;
         return hackTheBox;
     }
 
@@ -128,6 +129,7 @@ export class transcoders
         let discord: services.Discord = new services.Discord();
         discord._authorName = hackTheBox._userId;
         discord._message = hackTheBox._message;
+        discord._targetUser = hackTheBox._targetUser;
         return discord;
     }
     
