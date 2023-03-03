@@ -114,5 +114,18 @@ export class transcoders
         google._location = discord._city;
         return google;
     }
+
+    @Transcoder(services.Google.name, services.Discord.name)
+    static googleToDiscord(google: services.Google): services.Discord {
+        let discord: services.Discord = new services.Discord();
+        discord._subject = google._summary;
+        discord._message = google._description;
+        discord._startDateTime = moment(google._startDateTime);
+        discord._durationHours = google._durationHours;
+        discord._durationMinutes = google._durationMinutes;
+        discord._authorName = google._userId;
+        discord._city = google._location;
+        return discord;
+    }
     
 }
