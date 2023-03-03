@@ -11,6 +11,12 @@ export class Meeting {
         @SlashOption({name: "subject", description: "subject of the meeting", required: true, type: ApplicationCommandOptionType.String})
         subject: string,
 
+        @SlashOption({name: "duration_hours", description: "duration hours", required: true, type: ApplicationCommandOptionType.Integer})
+        duration_hours: number,
+
+        @SlashOption({name: "duration_minutes", description: "duration minutes", required: true, type: ApplicationCommandOptionType.Integer})
+        duration_minutes: number,
+
         @SlashOption({name: "year", description: "year of the meeting", required: true, type: ApplicationCommandOptionType.Integer})
         year: number,
 
@@ -23,7 +29,7 @@ export class Meeting {
         @SlashOption({name: "hour", description: "hour of the meeting", required: true, type: ApplicationCommandOptionType.Integer})
         hour: number,
 
-        @SlashOption({ name: "minute", description: "minute of the meeting", required: false, type: ApplicationCommandOptionType.Integer})
+        @SlashOption({name: "minute", description: "minute of the meeting", required: false, type: ApplicationCommandOptionType.Integer})
         minute: number,
 
         interaction: CommandInteraction
@@ -40,6 +46,8 @@ export class Meeting {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({bot: {
                     subject: subject,
+                    duration_hours: duration_hours,
+                    duration_minutes: duration_minutes,
                     hour: hour,
                     minute: minute,
                     day: day,
@@ -55,8 +63,6 @@ export class Meeting {
                 return;
             }
 
-            console.log(Math.floor(new Date(year, month, day, hour, minute, 0, 0).getTime() / 1000));
-            console.log(res);
             interaction.reply("Meeting created");
 
         } catch {}

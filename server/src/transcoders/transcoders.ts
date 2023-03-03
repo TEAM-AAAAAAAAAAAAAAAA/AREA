@@ -2,6 +2,8 @@ import { services } from "../services/.services";
 import { area } from "../area/.area";
 import { WeatherType } from "../services/OpenWeatherMap";
 import { ustring } from "../types/string";
+import { Transcoder } from "../area/mappings";
+import moment, { Moment } from "moment";
 
 export class transcoders
 {
@@ -10,11 +12,9 @@ export class transcoders
         var teams: services.Teams = new services.Teams();
         teams._authorName = discord._authorName;
         teams._message = discord._message;
-        teams._year = discord._year;
-        teams._month = discord._month;
-        teams._day = discord._day;
-        teams._hour = discord._hour;
-        teams._minute = discord._minute;
+        teams._durationHours = discord._durationHours;
+        teams._durationMinutes = discord._durationMinutes;
+        teams._startDateTime = moment(discord._startDateTime);
         teams._subject = discord._subject;
         return teams;
     }
@@ -24,11 +24,9 @@ export class transcoders
         var discord: services.Discord = new services.Discord();
         discord._authorName = teams._authorName;
         discord._message = teams._message;
-        discord._year = teams._year;
-        discord._month = teams._month;
-        discord._day = teams._day;
-        discord._hour = teams._hour;
-        discord._minute = teams._minute;
+        discord._durationHours = teams._durationHours;
+        discord._durationMinutes = teams._durationMinutes;
+        discord._startDateTime = moment(teams._startDateTime);
         discord._subject = teams._subject;
         return discord;
     }
@@ -102,11 +100,25 @@ export class transcoders
                 when = "now";
 
             discord._message = "Weather " + when + ": ";
-
+                
             addWeatherParam(openWeatherMap._weather);
             addWeatherParam(openWeatherMap._temp);
         }
         return discord;
+    }
+
+    @Transcoder(services.Discord.name, services.Google.name)
+    static discordToGoogle(discord: services.Discord): services.Google {
+        let google: services.Google = new services.Google();
+        google._summary = discord._subject;
+        google._description = discord._message;
+        google._startDateTime = moment(discord._startDateTime);
+        google._startDateTime.format("YYYY-MM-DDTHH:mm:ss");
+        google._durationHours = discord._durationHours;
+        google._durationMinutes = discord._durationMinutes;
+        google._userId = discord._authorName;
+        google._location = discord._city;
+        return google;
     }
 
 }
