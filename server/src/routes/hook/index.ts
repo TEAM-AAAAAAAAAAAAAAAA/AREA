@@ -154,14 +154,14 @@ export const hook = {
             });
 
             if (!webhook)
-                return res.status(404).json();
+                return res.status(404).json({text: "hook not found"});
 
             if (await runWebhook(webhook, req.body) != true)
-                return res.status(500).json();
+                return res.status(500).json({text: "failed to run hook"});
 
-            return res.status(200).json({});
+            return res.status(200).json({text: "ok"});
         } catch (e: any) {
-            return res.status(500).json({});
+            return res.status(500).json({text: e.message});
         }
     }]
 };
