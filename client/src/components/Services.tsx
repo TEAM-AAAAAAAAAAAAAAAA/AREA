@@ -22,7 +22,7 @@ const ServicesContainer: React.FC<ContainerProps> = ({data}) => {
                         <IonCardTitle>{service.serviceName}</IonCardTitle>
                     </IonCardHeader>
                     <IonCardContent>
-                        <ActionsContainer serviceName={service.serviceName} allReact={data?.allReact} />
+                        <ActionsContainer serviceName={service.serviceName} allReact={data?.allReactions} />
                     </IonCardContent>
                     <IonButton>Activate</IonButton>
                     <IonButton>Dismiss</IonButton>

@@ -27,6 +27,16 @@ const GET_SERVICES = gql`
         serviceName
         description
     }
+    allReactions {
+        reactionName
+        serviceName
+        reactionId
+        react {
+            reactionName
+            description
+        }
+        enabled
+    }
   }
 `;
 
