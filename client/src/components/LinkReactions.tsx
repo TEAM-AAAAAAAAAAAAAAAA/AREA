@@ -48,10 +48,25 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
 
     useEffect(() => {
         setFirstReacts(data?.allReact?.filter((react: any) => react.serviceName === firstService));
+        if (firstService === secondService) {
+            setFirstReacts(data?.allReact?.filter((react: any) => react.serviceName === firstService && react.reactionName != secondReact));
+        }
     }, [firstService]);
 
     useEffect(() => {
+        if (firstService === secondService)
+            setSecondReacts(data?.allReact?.filter((react: any) => react.serviceName === secondService && react.reactionName != firstReact));
+    }, [firstReact]);
+
+    useEffect(() => {
+        if (firstService === secondService)
+            setFirstReacts(data?.allReact?.filter((react: any) => react.serviceName === firstService && react.reactionName != secondReact));
+    }, [secondReact]);
+
+    useEffect(() => {
         setSecondReacts(data?.allReact?.filter((react: any) => react.serviceName === secondService));
+        if (firstService === secondService)
+            setSecondReacts(data?.allReact?.filter((react: any) => react.serviceName === secondService && react.reactionName != firstReact));
     }, [secondService]);
 
     return (
