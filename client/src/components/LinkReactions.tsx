@@ -4,6 +4,7 @@ import { gql } from '@apollo/client';
 import {
     IonButton,
     IonButtons,
+    IonCardContent,
     IonContent,
     IonHeader,
     IonInput,
@@ -38,6 +39,14 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
 
     function confirm() {
         modal.current?.dismiss({ first: firstWebhook.current?.value, second: secondWebhook.current?.value }, 'confirm');
+    }
+
+    function getDesc(list: any, name: string) {
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].reactionName === name) {
+                return list[i].description;
+            }
+        }
     }
 
     function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
@@ -99,7 +108,7 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
     }, [secondService]);
 
     return (
-        <IonModal ref={modal} onWillDismiss={(ev) => onWillDismiss(ev)} onWillPresent={() => {setFirstService(''); setFirstReacts([]); setFirstReact(''); setSecondService('');  setSecondReacts([]); setSecondReact('')}} trigger='link-reactions'>
+        <IonModal ref={modal} onWillDismiss={(ev) => onWillDismiss(ev)} onWillPresent={() => { setFirstService(''); setFirstReacts([]); setFirstReact(''); setSecondService(''); setSecondReacts([]); setSecondReact('') }} trigger='link-reactions'>
             <IonHeader>
                 <IonToolbar className='ion-padding ion-text-center'>
                     <IonButtons slot='start'><IonButton onClick={() => modal.current?.dismiss()}>Cancel</IonButton></IonButtons>
@@ -128,10 +137,15 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
                 )
                 }
                 {firstReact !== '' && firstService !== '' && (
-                    <IonItem>
-                        <IonLabel class='modal-label'>Input first reaction's webhook :</IonLabel>
-                        <IonInput ref={firstWebhook} placeholder='Input webhook' />
-                    </IonItem>
+                    <>
+                        <IonItem>
+                            Reaction Description : {getDesc(firstReacts, firstReact)}
+                        </IonItem>
+                        <IonItem>
+                            <IonLabel class='modal-label'>Input first reaction's webhook :</IonLabel>
+                            <IonInput ref={firstWebhook} placeholder='Input webhook' />
+                        </IonItem>
+                    </>
                 )}
                 <IonItem>
                     <IonLabel class='modal-label'>Choose second service :</IonLabel>
@@ -152,10 +166,15 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
                     </IonItem>
                 )}
                 {secondReact !== '' && secondService !== '' && (
-                    <IonItem>
-                        <IonLabel class='modal-label'>Input second reaction's webhook :</IonLabel>
-                        <IonInput ref={secondWebhook} placeholder='Input webhook' />
-                    </IonItem>
+                    <>
+                        <IonItem>
+                            Reaction Description : {getDesc(secondReacts, secondReact)}
+                        </IonItem>
+                        <IonItem>
+                            <IonLabel class='modal-label'>Input second reaction's webhook :</IonLabel>
+                            <IonInput ref={secondWebhook} placeholder='Input webhook' />
+                        </IonItem>
+                    </>
                 )}
             </IonContent>
         </IonModal>
