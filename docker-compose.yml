@@ -62,6 +62,8 @@ services:
     restart: always
     ports:
       - "4000:4000"
+    environment:
+      POSTGRES_URL: POSTGRES_URL
     env_file:
       - .env
     networks:
@@ -73,10 +75,6 @@ services:
   db:
     image: postgres
     restart: always
-    environment:
-      POSTGRES_URL: POSTGRES_URL
-    env_file:
-      - .env
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     networks:
