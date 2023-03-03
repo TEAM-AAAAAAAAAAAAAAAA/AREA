@@ -20,12 +20,12 @@ const ServicesContainer: React.FC<ContainerProps> = ({data}) => {
                 <IonCard key={service.serviceName}>
                     <IonCardHeader>
                         <IonCardTitle>{service.serviceName}</IonCardTitle>
-                        <IonCardSubtitle>Service Type</IonCardSubtitle>
                     </IonCardHeader>
                     <IonCardContent>
                         <ActionsContainer serviceName={service.serviceName} allReact={data?.allReact} />
                     </IonCardContent>
-                    <IonButton>activate</IonButton>
+                    <IonButton>Activate</IonButton>
+                    <IonButton>Dismiss</IonButton>
                 </IonCard>
             ))}
         </>
