@@ -64,6 +64,8 @@ enum TokenType {
 
     type oAuthProvider {
         oAuthProviderName: String!
+        service: Service
+        serviceName: String
     }
 
     type oAuthUserData {
@@ -115,10 +117,11 @@ enum TokenType {
         createWebhook(userId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
         createUser(name: String!, email: String!, password: String!): Int!
         createService(name: String!): Int!
-        createChainedReaction(actionId: Int!, reactionName: String!, serviceName: String!, actionName: String!, outgoingWebhook: String): Int!
+        createChainedReaction(actionName: String!, actionService: String!, reactionName: String!, reactionService: String!, reactionOutgoingWebhook: String, actionOutgoingWebhook: String): Int!
         createOAuthUserData(userId: String!, refreshToken: String, accessToken: String, data: JSONObject, oAuthProviderName: String!, providerUserId: String!): Int!
         createDiscordBotWebhook(command: String!, userId: String!, serverId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
         createToken(userId: String!, type: TokenType!): Token!
+        deleteService(name: String!): Int!
     }
 `;
 
@@ -126,6 +129,11 @@ export const resolvers = {
     JSON: GraphQLJSON,
     JSONObject: GraphQLJSONObject,
     DateTime: DateTimeResolver,
+    oAuthProvider: {
+        service: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.oAuthProvider.findUnique({ where: { oAuthProviderName: parent.oAuthProviderName } }).service();
+        }
+    },
     Token: {
         user: async (parent: any, _: any, context: Context) => {
             return await context.prisma.token.findUnique({ where: { id: parent.id } }).user();
@@ -229,6 +237,50 @@ export const resolvers = {
         }
     },
     Mutation: {
+        deleteService: async (_: any, args: any, context: Context) => {
+            const webhooks = await context.prisma.webhook.findMany({
+                where: {
+                    incomingServiceName: args.name
+                }
+            });
+            for (const webhook of webhooks)
+                await context.prisma.discordBotWebhook.deleteMany({
+                    where: {
+                        webhook: webhook
+                    }
+                });
+            await context.prisma.webhook.deleteMany({
+                where: {
+                    incomingServiceName: args.name
+                }
+            });
+            await context.prisma.reaction.deleteMany({
+                where: {
+                    serviceName: args.name
+                }
+            });
+            await context.prisma.action.deleteMany({
+                where: {
+                    serviceName: args.name
+                }
+            });
+            await context.prisma.react.deleteMany({
+                where: {
+                    serviceName: args.name
+                }
+            });
+            await context.prisma.oAuthProvider.deleteMany({
+                where: {
+                    serviceName: args.name
+                }
+            });
+            await context.prisma.service.delete({
+                where: {
+                    serviceName: args.name
+                }
+            });
+            return 200
+        },
         createToken: async (_: any, args: any, context: Context) => {
             await context.prisma.token.create({
                 data: {
@@ -293,15 +345,17 @@ export const resolvers = {
             await context.prisma.actionReaction.create({
                 data: {
                     action: {
-                        connect: {
-                            reactionId: args.actionId
+                        create: {
+                            reactionName: args.actionName,
+                            serviceName: args.actionService,
+                            outgoingWebhook: args.actionOutgoingWebhook,
                         }
                     },
                     reaction: {
                         create: {
                             reactionName: args.reactionName,
-                            serviceName: args.serviceName,
-                            outgoingWebhook: args.outgoingWebhook,
+                            serviceName: args.reactionService,
+                            outgoingWebhook: args.reactionOutgoingWebhook,
                         }
                     },
                 }
