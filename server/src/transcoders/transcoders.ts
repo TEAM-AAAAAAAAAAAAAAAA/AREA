@@ -7,9 +7,9 @@ import moment, { Moment } from "moment";
 
 export class transcoders
 {
-    @area.Transcoder(services.Discord.name, services.Teams.name)
-    static discordToTeams(discord: services.Discord): services.Teams {
-        var teams: services.Teams = new services.Teams();
+    @area.Transcoder(services.Discord.name, services.TeamScript.name)
+    static discordToTeams(discord: services.Discord): services.TeamScript {
+        var teams: services.TeamScript = new services.TeamScript();
         teams._authorName = discord._authorName;
         teams._message = discord._message;
         teams._durationHours = discord._durationHours;
@@ -19,8 +19,8 @@ export class transcoders
         return teams;
     }
     
-    @area.Transcoder(services.Teams.name, services.Discord.name)
-    static teamsToDiscord(teams: services.Teams): services.Discord {
+    @area.Transcoder(services.TeamScript.name, services.Discord.name)
+    static teamsToDiscord(teams: services.TeamScript): services.Discord {
         var discord: services.Discord = new services.Discord();
         discord._authorName = teams._authorName;
         discord._message = teams._message;
