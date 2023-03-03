@@ -4,8 +4,7 @@
   "main": "app.js",
   "scripts": {
     "build": "npx tsc",
-    "prod": "node dist/app.js",
-    "preprod": "dotenv -e .env/.env.preprod -- node -r dotenv/config dist/app.js",
+    "prod": "node dist/src/app.js",
     "dev": "dotenv -e .env/.env.dev -- npx nodemon --delay 2 -r dotenv/config src/app.ts",
     "db:migrate:dev": "dotenv -e .env/.env.dev -- prisma migrate dev --name init --preview-feature",
     "db:migrate:prod": "dotenv -e .env/.env.prod -- prisma migrate deploy",
