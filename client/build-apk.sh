@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ex
+set -e
 
 . /root/.nvm/nvm.sh
 nvm use 17
