@@ -26,6 +26,7 @@ const appConfig = {
 
 services.DB.sync().then((res: boolean) => {
     console.log("Is DB synced?", res);
+    seedActions().then(() => console.log("Actions seeded"));
 });
 
 app.use(cors());
@@ -78,5 +79,4 @@ async function seedActions()
 
 app.listen(appConfig.port, appConfig.host, () => {
     console.log('[' + appConfig.envName + '] Server is running at ' + appConfig.host + ':' + appConfig.port)
-    seedActions().then(() => console.log("Actions seeded"));
 });
