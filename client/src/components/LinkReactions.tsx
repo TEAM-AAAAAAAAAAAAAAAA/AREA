@@ -99,7 +99,7 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
     }, [secondService]);
 
     return (
-        <IonModal ref={modal} onWillDismiss={(ev) => onWillDismiss(ev)} trigger='link-reactions'>
+        <IonModal ref={modal} onWillDismiss={(ev) => onWillDismiss(ev)} onWillPresent={() => {setFirstService(''); setFirstReacts([]); setFirstReact(''); setSecondService('');  setSecondReacts([]); setSecondReact('')}} trigger='link-reactions'>
             <IonHeader>
                 <IonToolbar className='ion-padding ion-text-center'>
                     <IonButtons slot='start'><IonButton onClick={() => modal.current?.dismiss()}>Cancel</IonButton></IonButtons>
