@@ -37,17 +37,44 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
     const secondWebhook = useRef<HTMLIonInputElement>(null);
 
     function confirm() {
-        modal.current?.dismiss({first: firstWebhook.current?.value, second: secondWebhook.current?.value}, 'confirm');
+        modal.current?.dismiss({ first: firstWebhook.current?.value, second: secondWebhook.current?.value }, 'confirm');
     }
 
     function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
         if (ev.detail.role === 'confirm') {
             if (ev.detail.data) {
-                console.log(ev.detail.data);
+                client.mutate({
+                    mutation: gql`
+                    mutation Mutation($actionName: String!, $actionService: String!, $reactionName: String!, $reactionService: String!, $reactionOutgoingWebhook: String, $actionOutgoingWebhook: String) {
+                        createChainedReaction(actionName: $actionName, actionService: $actionService, reactionName: $reactionName, reactionService: $reactionService, reactionOutgoingWebhook: $reactionOutgoingWebhook, actionOutgoingWebhook: $actionOutgoingWebhook)
+                    }`, variables: { actionName: firstReact, actionService: firstService, reactionName: secondReact, reactionService: secondService, reactionOutgoingWebhook: ev.detail.data.second, actionOutgoingWebhook: ev.detail.data.first }
+                }).then((result) => {
+                    if (result.data?.createChainedReaction === 200) {
+                        present({
+                            message: 'Link created successfully',
+                            duration: 1500,
+                            position: 'top',
+                            color: 'success'
+                        });
+                    } else {
+                        present({
+                            message: 'Link creation failed',
+                            duration: 1500,
+                            position: 'top',
+                            color: 'danger'
+                        });
+                    }
+                });
+            } else {
+                present({
+                    message: 'Link creation failed',
+                    duration: 1500,
+                    position: 'top',
+                    color: 'danger'
+                });
             }
         }
     }
-
     useEffect(() => {
         setFirstReacts(data?.allReact?.filter((react: any) => react.serviceName === firstService));
         if (firstService === secondService) {
@@ -83,7 +110,7 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
             <IonContent class='ion-padding'>
                 <IonItem>
                     <IonLabel class='modal-label'>Choose first service :</IonLabel>
-                    <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => {setFirstService(e.detail.value); setFirstReact('')}}>
+                    <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => { setFirstService(e.detail.value); setFirstReact('') }}>
                         {data.allServices?.map((service: any) => (
                             <IonSelectOption key={service.serviceName} value={service.serviceName}>{service.serviceName}</IonSelectOption>
                         ))}
@@ -108,7 +135,7 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
                 )}
                 <IonItem>
                     <IonLabel class='modal-label'>Choose second service :</IonLabel>
-                    <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => {setSecondService(e.detail.value); setSecondReact('')}}>
+                    <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => { setSecondService(e.detail.value); setSecondReact('') }}>
                         {data.allServices?.map((service: any) => (
                             <IonSelectOption key={service.serviceName} value={service.serviceName}>{service.serviceName}</IonSelectOption>
                         ))}
@@ -117,7 +144,7 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
                 {secondService !== '' && (
                     <IonItem>
                         <IonLabel class='modal-label'>Choose second service's reaction :</IonLabel>
-                        <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => {setSecondReact(e.detail.value)}}>
+                        <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => { setSecondReact(e.detail.value) }}>
                             {secondReacts?.map((react: any) => (
                                 <IonSelectOption key={react.reactionName} value={react.reactionName}>{react.reactionName}</IonSelectOption>
                             ))}
