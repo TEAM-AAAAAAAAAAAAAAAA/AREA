@@ -3,7 +3,7 @@ import { prisma } from '../../../config/db';
 import Joi, { date } from 'joi';
 import _ from 'lodash';
 import passport from 'passport';
-import { getUserOAuthDataFromToken } from './utils';
+import { getUserFromToken, getUserOAuthDataFromToken } from './utils';
 
 export const htb_config = {
     POST: [
@@ -35,13 +35,9 @@ async (req: Request, res: Response) => {
 
     if (_.isEmpty(req.body))
         return res.status(400).json('Missing parameters');
-    console.dir(req?.user);
-    const user = await prisma.user.findUnique({
-        where: {
-            id: (req?.user as any).profile
-        }
-    });
-    if (!user)
+    const user = await getUserFromToken((req.user as any)?.id);
+
+    if (_.isEmpty(user))
         return res.status(404).json('User not found');
     await prisma.oAuthUserData.upsert({
         where: {
@@ -51,13 +47,13 @@ async (req: Request, res: Response) => {
             }
         },
         update: {
-            accessToken: req.body.htbAppToken
+            providerUserId: req.body.htbAppToken,
         },
         create: {
             accessToken: req.body.htbAppToken,
             refreshToken: '',
             oAuthProviderName: 'hackthebox',
-            providerUserId: user.id,
+            providerUserId: req.body.htbAppToken,
             userId: user.id,
             data: {}
         }
