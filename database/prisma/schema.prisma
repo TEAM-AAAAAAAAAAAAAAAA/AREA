@@ -57,13 +57,14 @@ model Token {
 }
 
 model Service {
-  serviceName       String         @id @unique
+  serviceName       String          @id @unique
   React             React[]
   Webhook           Webhook[]
-  oAuthProviderName String?        @unique
+  oAuthProviderName String?         @unique
   oAuthProvider     oAuthProvider?
   Reaction          Reaction[]
   Action            Action[]
+  ActionWebhook     ActionWebhook[]
 }
 
 model Webhook {
@@ -75,16 +76,28 @@ model Webhook {
   incomingServiceName String
   incomingService     Service             @relation(fields: [incomingServiceName], references: [serviceName])
   DiscordBotWebhook   DiscordBotWebhook[]
+  ActionWebhook       ActionWebhook[]
 }
 
 model Action {
-  actionName  String
-  serviceName String
-  service     Service @relation(fields: [serviceName], references: [serviceName])
-  description String
+  actionName    String
+  serviceName   String
+  service       Service         @relation(fields: [serviceName], references: [serviceName])
+  description   String
+  ActionWebhook ActionWebhook[]
 
   @@id([actionName, serviceName])
   @@unique([actionName, serviceName])
+}
+
+model ActionWebhook {
+  actionWebhookId Int     @id @unique @default(autoincrement())
+  serviceName     String
+  service         Service @relation(fields: [serviceName], references: [serviceName])
+  actionName      String
+  action          Action  @relation(fields: [actionName, serviceName], references: [actionName, serviceName])
+  webhookId       String
+  webhook         Webhook @relation(fields: [webhookId], references: [webhookId])
 }
 
 model React {
