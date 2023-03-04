@@ -10,6 +10,7 @@ import { validate_email } from './validate_email';
 import { discord_oauth } from './oauth_providers/discord';
 import { htb_config } from './oauth_providers/hackthebox';
 import { get_oauth_tokens, google_oauth, get_oauth_url } from './oauth_providers/google';
+import { github_config } from './oauth_providers/github';
 
 let opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -33,6 +34,7 @@ passport.use(new JWTStrategy(opts, async (jwt_payload, done) => {
 export const auth = {
     discord_oauth,
     htb_config,
+    github_config,
     get_oauth_tokens,
     google_oauth,
     get_oauth_url,

@@ -33,3 +33,4 @@ routes.post('/auth/hackthebox_config', auth.htb_config.POST);
 routes.post('/auth/google/get_oauth_tokens', auth.get_oauth_tokens.POST);
 routes.get('/auth/google/get_oauth_url', auth.get_oauth_url.GET);
 routes.post('/auth/google/google_oauth', auth.google_oauth.POST);
+routes.post('/auth/github_config', auth.github_config.POST);
