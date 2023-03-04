@@ -1,11 +1,37 @@
-## build runner
-FROM node:lts-alpine as build-runner
+#FROM node:18
+#
+#SHELL ["/bin/bash", "-c"]
+#
+## Set temp directory
+#WORKDIR /app
+#
+## Move package.json
+#COPY package.json yarn.lock ./
+#
+## Install dependencies
+#RUN yarn install
+#
+## Move source files
+#COPY src ./src
+#COPY tsconfig.json   .
+#COPY ./prisma ./prisma
+#
+## Apply the prisma schema to the current db
+#RUN npx prisma generate --schema=./prisma/schema.prisma
+#
+#RUN npx tsc
+#
+#CMD ["yarn", "run", "prod"]
+
+FROM node:18 as build-runner
+
+SHELL ["/bin/bash", "-c"]
 
 # Set temp directory
 WORKDIR /tmp/app
 
 # Move package.json
-COPY package.json .
+COPY package.json ./
 
 # Install dependencies
 RUN yarn install
@@ -13,24 +39,27 @@ RUN yarn install
 # Move source files
 COPY src ./src
 COPY tsconfig.json   .
+COPY ./prisma ./prisma
 
-# Build project
+# Apply the prisma schema to the current db
+RUN npx prisma generate --schema=./prisma/schema.prisma
+
 RUN yarn run build
 
-## production runner
-FROM node:lts-alpine as prod-runner
+FROM node:18 as prod-runner
 
-# Set work directory
 WORKDIR /app
 
-# Copy package.json from build-runner
 COPY --from=build-runner /tmp/app/package.json /app/package.json
 
-# Install dependencies
 RUN yarn install --omit=dev
 
-# Move build files
+COPY --from=build-runner /tmp/app/prisma /app/prisma
+
+RUN npx prisma generate --schema=./prisma/schema.prisma
+
+COPY --from=build-runner /tmp/app/tsconfig.json /app/tsconfig.json
 COPY --from=build-runner /tmp/app/dist /app/dist
 
-# Start bot
-CMD [ "yarn", "run", "prod" ]
+CMD ["yarn", "run", "prod"]
+

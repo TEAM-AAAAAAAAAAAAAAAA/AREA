@@ -4,11 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dbinit:prod": "dotenv -e .env/.env.prod -- prisma migrate deploy --name init",
-    "dbinit:preprod": "dotenv -e .env/.env.preprod -- prisma migrate dev --name init",
-    "dbinit:dev": "dotenv -e .env/.env.dev -- prisma migrate dev --name init",
     "build": "npx tsc",
-    "prod": "dotenv -e .env/.env.prod -- node -r dotenv/config dist/app.js",
+    "prod": "node dist/app.js",
     "preprod": "dotenv -e .env/.env.preprod -- node -r dotenv/config dist/app.js",
     "dev": "dotenv -e .env/.env.dev -- npx nodemon -r dotenv/config src/app.ts",
     "test": "echo \\\"Error: no .env specified\\\" && exit 1"
@@ -41,7 +38,7 @@
     "typescript": "^4.9.4"
   },
   "prisma": {
-    "seed": "ts-node --transpile-only src/config/seed.ts"
+    "seed": "node dist/config/seed.js"
   },
   "devDependencies": {
     "@types/graphql": "^14.5.0",
