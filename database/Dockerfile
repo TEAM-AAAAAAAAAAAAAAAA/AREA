@@ -4,7 +4,7 @@ FROM node:14-alpine as build-runner
 WORKDIR /tmp/app
 
 # copy source files
-COPY package.json ./
+COPY package.json yarn.lock ./
 
 #Install dependencies (could be modified/extend)
 RUN yarn install

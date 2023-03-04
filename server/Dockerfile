@@ -10,7 +10,7 @@ RUN yarn install
 #Bundle app source
 COPY ./src ./src
 COPY ./prisma ./prisma
-COPY ./tsconfig.json ./
+COPY ./tsconfig.json yarn.lock ./
 
 #Generate Prisma Client
 RUN npx prisma generate --schema=./prisma/schema.prisma
