@@ -38,7 +38,7 @@
     "typescript": "^4.9.4"
   },
   "prisma": {
-    "seed": "ts-node --transpile-only dist/config/seed.js"
+    "seed": "node dist/config/seed.js"
   },
   "devDependencies": {
     "@types/graphql": "^14.5.0",
