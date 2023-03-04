@@ -8,7 +8,6 @@ import {
     IonToolbar
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
-import CreateService from '../components/CreateService';
 import LinkReactions from '../components/LinkReactions';
 
 import ServicesContainer from '../components/Services';
@@ -16,9 +15,12 @@ import { client } from '../utils/ApolloClient';
 import {
     gql
 } from '@apollo/client';
+import { useCookies } from 'react-cookie';
+import jwt_decode from "jwt-decode";
+import CreateReaction from '../components/CreateReaction';
 
 const GET_SERVICES = gql`
-  query Query {
+  query Query($token: String!) {
     allServices {
         serviceName
     }
@@ -37,14 +39,20 @@ const GET_SERVICES = gql`
         }
         enabled
     }
+    getUserFromToken(token: $token) {
+        id
+        name
+    }
   }
 `;
 
 const Services: React.FC = () => {
     const [data, setData] = useState<any>([]);
+    const [cookie] = useCookies(['token']);
 
     useEffect(() => {
-        client.query({ query: GET_SERVICES }).then((result) => {
+        let decoded: any = jwt_decode(cookie.token);
+        client.query({ query: GET_SERVICES, variables: { token: decoded?.token } }).then((result) => {
             setData(result.data);
         });
     }, []);
@@ -58,14 +66,14 @@ const Services: React.FC = () => {
             </IonHeader>
             <IonContent>
                 <IonGrid class='create-grid'>
-                    <IonButton id='create-service'>
-                        Create Service
+                    <IonButton id='create-reaction'>
+                        Create Reaction
                     </IonButton>
                     <IonButton id='link-reactions'>
                         Link Reactions
                     </IonButton>
                 </IonGrid>
-                <CreateService />
+                <CreateReaction data={data} />
                 <LinkReactions data={data} />
                 <ServicesContainer data={data} />
             </IonContent>
