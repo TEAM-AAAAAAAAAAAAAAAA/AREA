@@ -18,6 +18,13 @@ export function Description(description: string) {
     }
 }
 
+export function AuthProvider(provider: string) {
+    return function (target: Function) {
+        console.log("Mapped Auth provider: " + provider + ' to ' + target.name + ' service')
+        ServiceAuthProviders.set(target.name, provider);
+    }
+}
+
 export function Transcoder(incoming: string, outgoing: string) {
     console.log("Mapped Transcoder: " + incoming + ' to ' + outgoing)
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -29,3 +36,4 @@ export var PrismaServices: Map<string, new () => IService> = new Map<string, new
 export var PrismaActions: Map<string, new () => Function> = new Map<string, new () => Function>();
 export var Transcoders: Map<string, new () => Function> = new Map<string, new () => Function>();
 export var Descriptions: Map<string, string> = new Map<string, string>();
+export var ServiceAuthProviders: Map<string, string> = new Map<string, string>();
