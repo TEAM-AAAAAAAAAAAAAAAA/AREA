@@ -62,6 +62,7 @@
   },
   "devDependencies": {
     "@capacitor/cli": "4.6.2",
+    "native-run": "^1.7.2",
     "react-scripts": "5.0.1"
   }
 }
