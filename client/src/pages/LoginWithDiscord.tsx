@@ -95,16 +95,15 @@ const LoginWithDiscord: React.FC = () => {
                 'Authorization': 'Bearer ' + accessToken
             }
         })
-            .then((response) => response.json())
-            .then((data) => {
-                OAuthUserData = data;
-                return fetch('http://localhost:8080/auth/discord_oauth', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ accessToken, refreshToken, email, password, name, userData: OAuthUserData })
-                })
+        .then((response) => response.json())
+        .then((data) => {
+            OAuthUserData = data;
+            return fetch('http://localhost:8080/auth/discord_oauth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ accessToken, refreshToken, email, password, name, userData: OAuthUserData })
             })
         })
         .then((response) => response.json())
