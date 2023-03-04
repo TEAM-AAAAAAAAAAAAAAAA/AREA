@@ -39,37 +39,37 @@ async function seedActions()
         data: [
             {
                 actionName: 'message',
-                serviceName: 'Discord',
+                serviceName: services.Discord.name,
                 description: '/message command',
             },
             {
                 actionName: 'meeting',
-                serviceName: 'Discord',
+                serviceName: services.Discord.name,
                 description: '/meeting command',
             },
             {
                 actionName: 'message',
-                serviceName: 'Teams',
+                serviceName: services.TeamScript.name,
                 description: '@AREA Send Message command',
             },
             {
                 actionName: 'meeting',
-                serviceName: 'Teams',
+                serviceName: services.TeamScript.name,
                 description: '@AREA Create Meeting command',
             },
             {
                 actionName: 'weather_now',
-                serviceName: 'Discord',
+                serviceName: services.Discord.name,
                 description: '/weather_now command',
             },
             {
                 actionName: 'weather_forecast_hours',
-                serviceName: 'Discord',
+                serviceName: services.Discord.name,
                 description: '/weather_forecast_hours command',
             },
             {
                 actionName: 'rank',
-                serviceName: 'Discord',
+                serviceName: services.Discord.name,
                 description: '/rank command',
             },
         ],
