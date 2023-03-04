@@ -25,23 +25,7 @@ import GithubSetupContainer from '../components/GithubSetup';
 
 import { useCookies } from 'react-cookie';
 
-const loginWithGithub = () => {
-    window.location.replace('templink');
-};
-
-const loginWithTeams = () => {
-    window.location.replace('templink');
-};
-
-const loginWithGoogle = () => {
-    window.location.replace(process.env.REACT_APP_GOOGLE_LOGIN_URL || '/login');
-};
-
 const Setup: React.FC = () => {
-
-    const loginWithGithub = () => {
-        return;
-    };
 
     const loginWithTeams = () => {
         return;
@@ -89,7 +73,7 @@ const Setup: React.FC = () => {
                 </IonHeader>
                 <IonGrid class='setup-grid'>
                     <IonButton expand='block' fill='solid' onClick={loginWithDiscord} color='discord'>Login With Discord<IonIcon class='button-icon' icon={logoDiscord} size='large' /></IonButton>
-                    <IonButton expand='block' id='githubconfigtrigger' fill='solid' onClick={loginWithGithub} color='github'>Login With Github<IonIcon class='button-icon' icon={logoGithub} size='large' /></IonButton>
+                    <IonButton expand='block' id='githubconfigtrigger' fill='solid' color='github'>Login With Github<IonIcon class='button-icon' icon={logoGithub} size='large' /></IonButton>
                     <IonButton expand='block' fill='solid' onClick={loginWithTeams} color='teams'>Login With Teams<IonIcon class='button-icon' icon={logoMicrosoft} size='large' /></IonButton>
                     <IonButton expand='block' fill='solid' onClick={loginWithGoogle}>Login With Google<IonIcon class='button-icon' icon={logoGoogle} size='large' /></IonButton>
                     <IonButton expand='block' id='htbconfigtrigger' fill='solid' color='htb'>Configure HackTheBox<IonIcon class='button-icon' icon={cubeOutline} size='large' /></IonButton>
