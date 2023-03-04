@@ -2,7 +2,7 @@ import { prisma } from '../config/db';
 import { PrismaServices, PrismaActions, Descriptions, ServiceAuthProviders } from "../area/mappings";
 
 export * from "./Discord";
-export * from "./Teams";
+export * from "./TeamScript";
 export * from "./OpenWeatherMap";
 export * from "./Google";
 
