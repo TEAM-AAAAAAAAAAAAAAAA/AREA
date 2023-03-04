@@ -83,8 +83,8 @@ export default defineConfig({
   // outputDir: 'test-results/',
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'npm start',
-    port: 8081,
-  },
+  // webServer: {
+  //   command: 'npm start',
+  //   port: 8081,
+  // },
 });
