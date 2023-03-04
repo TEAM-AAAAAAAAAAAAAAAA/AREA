@@ -1,21 +1,5 @@
 import { PrismaClient, Prisma } from '@prisma/client';
-import { env } from 'process';
 const prisma = new PrismaClient();
-
-const dummyOAuthProviderData : Prisma.oAuthProviderCreateInput[] = [
-    {
-        oAuthProviderName: 'discord',
-    },
-    {
-        oAuthProviderName: 'teams',
-    },
-    {
-        oAuthProviderName: 'hackthebox',
-    },
-    {
-        oAuthProviderName: 'google',
-    }
-]
 
 const dummyUserData : Prisma.UserCreateInput[] = [
     {
