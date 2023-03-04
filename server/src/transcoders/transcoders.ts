@@ -121,6 +121,7 @@ export class transcoders
         hackTheBox._userId = discord._authorName;
         hackTheBox._message = discord._message;
         hackTheBox._targetUser = discord._targetUser;
+        hackTheBox._targetUserName = discord._targetUserName;
         return hackTheBox;
     }
 
@@ -130,6 +131,7 @@ export class transcoders
         discord._authorName = hackTheBox._userId;
         discord._message = hackTheBox._message;
         discord._targetUser = hackTheBox._targetUser;
+        discord._targetUserName = hackTheBox._targetUserName;
         return discord;
     }
     

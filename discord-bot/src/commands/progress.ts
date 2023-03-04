@@ -7,9 +7,9 @@ import { env } from '../config/env.js';
 import { bot } from '../main.js';
 
 @Discord()
-export class Rank {
-    @Slash({ description: "Get a user's rank" })
-    async rank(
+export class Progress {
+    @Slash({ description: "Get a user's progress" })
+    async progress(
         @SlashOption({name: "user", description: "User (or you if unspecified)", required: false, type: ApplicationCommandOptionType.Mentionable})
         user: any,
 
@@ -17,7 +17,7 @@ export class Rank {
     ): Promise<void> {
         try {
 
-            let webhook = await areaConfigCheck(interaction, "rank");
+            let webhook = await areaConfigCheck(interaction, "progress");
             if (!webhook) return;
 
             let targetUser = user?.id || interaction.user.id;
