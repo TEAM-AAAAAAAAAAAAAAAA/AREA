@@ -123,20 +123,20 @@ enum TokenType {
         allTokens: [Token!]!
         getUserFromToken(token: String!): User!
         allActionWebhooks: [ActionWebhook!]!
+        getWebhook(reactionId: Int!): Webhook!
     }
 
     type Mutation {
         createReaction(reactionName: String!, serviceName: String!, outgoingWebhook: String, userId: String!): Int!
         enableReaction(reactionId: Int!): Int!
         disableReaction(reactionId: Int!): Int!
-        removeWebhooks: Int!
         createAction(actionName: String!, description: String!, serviceName: String!): Int!
         createWebhook(userId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
         createUser(name: String!, email: String!, password: String!): Int!
         createService(name: String!): Int!
         createChainedReaction(actionName: String!, actionService: String!, reactionName: String!, reactionService: String!, reactionOutgoingWebhook: String, actionOutgoingWebhook: String): Int!
         createOAuthUserData(userId: String!, refreshToken: String, accessToken: String, data: JSONObject, oAuthProviderName: String!, providerUserId: String!): Int!
-        createDiscordBotWebhook(command: String!, userId: String!, serverId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
+        createDiscordBotWebhook(command: String!, userId: String!, serverId: String!, webhookId: String): Int!
         createToken(userId: String!, type: TokenType!): Token!
         deleteService(name: String!): Int!
         linkActionWebhook(reactionId: Int!, userId: String!, actionName: String!, serviceName: String!): Int!
@@ -224,6 +224,9 @@ export const resolvers = {
         }
     },
     Query: {
+        getWebhook: async (_: any, args: any, context: Context) => {
+            return await context.prisma.webhook.findUnique({ where: { reactionId: args.reactionId } });
+        },
         allActionWebhooks: async (_: any, args: any, context: Context) => {
             return await context.prisma.actionWebhook.findMany();
         },
@@ -410,28 +413,11 @@ export const resolvers = {
                         },
                     },
                     webhook: {
-                        create: {
-                            user: {
-                                connect: {
-                                    id: args.userId,
-                                }
-                            },
-                            reaction: {
-                                create: {
-                                    serviceName: args.serviceId,
-                                    reactionName: args.reactionName,
-                                    outgoingWebhook: args.outgoingWebhook,
-                                }
-                            },
-                            incomingService: {
-                                connect: {
-                                    serviceName: args.serviceId,
-                                }
-                            },
-                        }
+                        connect: {
+                            webhookId: args.webhookId
                     }
                 }
-            });
+            }});
             return 200
         },
         createOAuthUserData: async (_: any, args: any, context: Context) => {
@@ -470,10 +456,6 @@ export const resolvers = {
                 }
             });
             return 200
-        },
-        removeWebhooks: async (_: any, args: any, context: Context) => {
-            await context.prisma.webhook.deleteMany();
-            return 200;
         },
         createAction: async (_: any, args: any, context: Context) => {
             await context.prisma.action.create({

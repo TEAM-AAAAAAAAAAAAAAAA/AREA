@@ -60,7 +60,6 @@ const Services: React.FC = () => {
         let decoded: any = jwt_decode(cookie.token);
         client.query({ query: GET_SERVICES, variables: { token: decoded?.token } }).then((result) => {
             setData(result.data);
-            console.log(result.data)
         });
     }, []);
 

@@ -30,9 +30,21 @@ mutation LinkActionWebhook($reactionId: Int!, $userId: String!, $actionName: Str
     linkActionWebhook(reactionId: $reactionId, userId: $userId, actionName: $actionName, serviceName: $serviceName)
 }`;
 
+const GET_WEBHOOK = gql`
+query GetWebhook($reactionId: Int!) {
+    getWebhook(reactionId: $reactionId) {
+      webhookId
+    }
+}`;
+const SET_DISCORD_WEBHOOK = gql`
+mutation CreateDiscordBotWebhook($command: String!, $userId: String!, $serverId: String!, $webhookId: String) {
+    createDiscordBotWebhook(command: $command, userId: $userId, serverId: $serverId, webhookId: $webhookId)
+  }`;
+
 const LinkAction: React.FC<ContainerProps> = ({ data }) => {
     const [present] = useIonToast();
     const services = ['Discord', 'TeamScript'];
+    const serverId = useRef<HTMLIonInputElement>(null);
     const [actionService, setActionService] = useState<string>('');
     const [reactionService, setReactionService] = useState<string>('');
     const [action, setAction] = useState<any>();
@@ -42,7 +54,7 @@ const LinkAction: React.FC<ContainerProps> = ({ data }) => {
     const modal = useRef<HTMLIonModalElement>(null);
 
     function confirm() {
-        modal.current?.dismiss(null, 'confirm');
+        modal.current?.dismiss(serverId.current?.value, 'confirm');
     }
 
     function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
@@ -57,6 +69,14 @@ const LinkAction: React.FC<ContainerProps> = ({ data }) => {
                             duration: 1500,
                             position: 'top',
                             color: 'success'
+                        });
+                        client.query({ query: GET_WEBHOOK, variables: { reactionId: reaction.reactionId } }).then((result) => {
+                            client.mutate({ mutation: SET_DISCORD_WEBHOOK, variables: {
+                                command: action.actionName,
+                                userId: data?.getUserFromToken.id,
+                                serverId: ev.detail?.data,
+                                webhookId: result.data?.getWebhook.webhookId } })
+                                .then((result) => { console.log(result) })
                         });
                     } else {
                         present({
@@ -111,19 +131,27 @@ const LinkAction: React.FC<ContainerProps> = ({ data }) => {
                     </IonSelect>
                 </IonItem>
                 {actionService && actions && (
-                    <IonItem>
-                        <IonLabel position='floating'>Action</IonLabel>
-                        <IonSelect placeholder='Choose action' interface='popover' onIonChange={(e) => { setAction(e.detail.value!)}}>
-                            {actions.map((action: any) => (
-                                <IonSelectOption key={action.actionName} value={action}>{action.actionName}</IonSelectOption>
-                            ))}
-                        </IonSelect>
-                        {action && (
-                            <IonCardContent>
-                                {action.description}
-                            </IonCardContent>
+                    <>
+                        <IonItem>
+                            <IonLabel position='floating'>Action</IonLabel>
+                            <IonSelect placeholder='Choose action' interface='popover' onIonChange={(e) => { setAction(e.detail.value!) }}>
+                                {actions.map((action: any) => (
+                                    <IonSelectOption key={action.actionName} value={action}>{action.actionName}</IonSelectOption>
+                                ))}
+                            </IonSelect>
+                            {action && (
+                                <IonCardContent>
+                                    {action.description}
+                                </IonCardContent>
+                            )}
+                        </IonItem>
+                        {actionService === 'Discord' && (
+                            <IonItem>
+                                <IonLabel position='floating'>Server ID</IonLabel>
+                                <IonInput ref={serverId} placeholder='Server ID' />
+                            </IonItem>
                         )}
-                    </IonItem>
+                    </>
                 )
                 }
                 <IonItem>
@@ -137,7 +165,7 @@ const LinkAction: React.FC<ContainerProps> = ({ data }) => {
                 {reactionService && reactions && (
                     <IonItem>
                         <IonLabel position='floating'>Reaction</IonLabel>
-                        <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => { setReaction(e.detail.value!)}}>
+                        <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => { setReaction(e.detail.value!) }}>
                             {reactions.map((reaction: any) => (
                                 <IonSelectOption key={reaction.reactionName} value={reaction}>{reaction.reactionName}</IonSelectOption>
                             ))}
