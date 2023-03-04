@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ex
+set -e
 
 . /root/.nvm/nvm.sh
 nvm use 17
@@ -11,4 +11,4 @@ ionic capacitor add android
 ionic capacitor sync
 cd android
 ./gradlew assembleRelease
-ls app/build/outputs/apk/release/app-release-unsigned.apk
+cp app/build/outputs/apk/release/app-release-unsigned.apk /app/client

@@ -1,7 +1,7 @@
 import { nstring, ustring } from "../types/string";
 import { area } from "../area/.area";
 import { IService } from "./IService";
-import { Action, Description } from "../area/mappings";
+import { Action, AuthProvider, Description } from "../area/mappings";
 import { google } from "googleapis";
 import { prisma } from "../config/db";
 import moment, { Moment } from "moment";
@@ -35,6 +35,7 @@ async function getOAuth2Client(userId: string) : Promise<OAuth2Client | undefine
 }
 
 @area.Service
+@AuthProvider("google")
 export class Google implements IService {
     constructor() { this._outgoing = null; }
 

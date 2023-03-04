@@ -1,7 +1,7 @@
 import { nstring, ustring } from "../types/string";
 import { area } from "../area/.area";
 import { IService } from "./IService";
-import { Description } from "../area/mappings";
+import { AuthProvider, Description } from "../area/mappings";
 import { prisma } from "../config/db";
 import moment, { Moment } from "moment";
 
@@ -28,6 +28,7 @@ export interface DiscordList {
 }
 
 @area.Service
+@AuthProvider("discord")
 export class Discord implements IService {
     constructor() { this._outgoing = null; }
 
