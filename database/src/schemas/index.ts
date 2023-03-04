@@ -32,6 +32,7 @@ enum TokenType {
         service: Service!
         reactionName: String!
         react: React!
+        incomingWebhook: Webhook
         outgoingWebhook: String
         enabled: Boolean!
         enabledChain: Boolean!
@@ -112,6 +113,7 @@ enum TokenType {
     }
 
     type Mutation {
+        createReaction(reactionName: String!, serviceName: String!, outgoingWebhook: String, userId: String!): Int!
         enableReaction(reactionId: Int!): Int!
         disableReaction(reactionId: Int!): Int!
         removeWebhooks: Int!
@@ -131,6 +133,7 @@ export const resolvers = {
     JSON: GraphQLJSON,
     JSONObject: GraphQLJSONObject,
     DateTime: DateTimeResolver,
+
     oAuthProvider: {
         service: async (parent: any, _: any, context: Context) => {
             return await context.prisma.oAuthProvider.findUnique({ where: { oAuthProviderName: parent.oAuthProviderName } }).service();
@@ -182,6 +185,9 @@ export const resolvers = {
         }
     },
     Reaction: {
+        incomingWebhook: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.reaction.findUnique({ where: { reactionId: parent.reactionId } }).incomingWebhook();
+        },
         react: async (parent: any, _: any, context: Context) => {
             return await context.prisma.reaction.findUnique({ where: { reactionId: parent.reactionId } }).react();
         },
@@ -239,6 +245,36 @@ export const resolvers = {
         }
     },
     Mutation: {
+        createReaction: async (_: any, args: any, context: Context) => {
+            const reaction = await context.prisma.reaction.create({
+                data: {
+                    service: {
+                        connect: {
+                            serviceName: args.serviceName
+                        }
+                    },
+                    react: {
+                        connect: {
+                            serviceName_reactionName: {
+                                reactionName: args.reactionName,
+                                serviceName: args.serviceName
+                            }
+                        }
+                    },
+                    outgoingWebhook: args.outgoingWebhook,
+                }});
+            await context.prisma.reaction.update({ where: { reactionId: reaction.reactionId },
+                data: {
+                    incomingWebhook: {
+                        create: {
+                            userId: args.userId,
+                            incomingServiceName: args.serviceName
+                    }
+                }
+            }});
+
+            return 200;
+        },
         disableReaction: async (_: any, args: any, context: Context) => {
             await context.prisma.reaction.update({
                 where: {
