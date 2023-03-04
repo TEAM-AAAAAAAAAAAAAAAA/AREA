@@ -2,11 +2,11 @@ import { nstring, ustring } from "../types/string";
 import { area } from "../area/.area";
 import { IService } from "./IService";
 import * as AreaCards from '../utils/AreaCards';
-import { Action, Description } from "../area/mappings";
+import { Action, AuthProvider, Description } from "../area/mappings";
 import moment, { Moment } from "moment";
 
 @area.Service
-export class Teams implements IService {
+export class TeamScript implements IService {
     constructor() { this._outgoing = null; }
 
     read(data: any): void {

@@ -26,11 +26,56 @@ const appConfig = {
 
 services.DB.sync().then((res: boolean) => {
     console.log("Is DB synced?", res);
+    seedActions().then(() => console.log("Actions seeded"));
 });
 
 app.use(cors());
 
 app.use('/', routes);
+
+async function seedActions()
+{
+    await prisma.action.createMany({
+        data: [
+            {
+                actionName: 'message',
+                serviceName: 'Discord',
+                description: '/message command',
+            },
+            {
+                actionName: 'meeting',
+                serviceName: 'Discord',
+                description: '/meeting command',
+            },
+            {
+                actionName: 'message',
+                serviceName: 'Teams',
+                description: '@AREA Send Message command',
+            },
+            {
+                actionName: 'meeting',
+                serviceName: 'Teams',
+                description: '@AREA Create Meeting command',
+            },
+            {
+                actionName: 'weather_now',
+                serviceName: 'Discord',
+                description: '/weather_now command',
+            },
+            {
+                actionName: 'weather_forecast_hours',
+                serviceName: 'Discord',
+                description: '/weather_forecast_hours command',
+            },
+            {
+                actionName: 'rank',
+                serviceName: 'Discord',
+                description: '/rank command',
+            },
+        ],
+        skipDuplicates: true,
+    });
+}
 
 app.listen(appConfig.port, appConfig.host, () => {
     console.log('[' + appConfig.envName + '] Server is running at ' + appConfig.host + ':' + appConfig.port)
