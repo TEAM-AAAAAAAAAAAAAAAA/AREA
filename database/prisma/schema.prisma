@@ -18,6 +18,7 @@ model User {
   Webhook           Webhook[]
   DiscordBotWebhook DiscordBotWebhook[]
   oAuthUserData     oAuthUserData[]
+  ActionWebhook     ActionWebhook[]
 }
 
 model oAuthUserData {
@@ -96,8 +97,12 @@ model ActionWebhook {
   service         Service @relation(fields: [serviceName], references: [serviceName])
   actionName      String
   action          Action  @relation(fields: [actionName, serviceName], references: [actionName, serviceName])
-  webhookId       String
+  webhookId       String  @unique
   webhook         Webhook @relation(fields: [webhookId], references: [webhookId])
+  userId          String
+  user            User    @relation(fields: [userId], references: [id])
+
+  @@unique([serviceName, actionName, userId])
 }
 
 model React {
