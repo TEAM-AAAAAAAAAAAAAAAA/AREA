@@ -27,3 +27,6 @@ yarn-error.log*
 
 android
 ios
+/test-results/
+/playwright-report/
+/playwright/.cache/
