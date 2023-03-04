@@ -40,6 +40,7 @@ model oAuthProvider {
 
   serviceName   String?         @unique
   service       Service?        @relation(fields: [serviceName], references: [serviceName])
+  data          Json
   oAuthUserData oAuthUserData[]
 }
 
@@ -51,6 +52,7 @@ model Token {
   valid     Boolean   @default(true)
   user      User      @relation(fields: [userId], references: [id])
   type      TokenType
+
   @@unique([userId, type])
 }
 
@@ -122,13 +124,21 @@ model ActionReaction {
 
 model DiscordBotWebhook {
   command          String
+  serverId         String
   userId           String
   user             User?   @relation(fields: [userId], references: [id])
   webhookWebhookId String
   webhook          Webhook @relation(fields: [webhookWebhookId], references: [webhookId])
 
-  @@id([command, userId])
-  @@unique([command, userId])
+  @@id([command, userId, serverId])
+  @@unique([command, userId, serverId])
+}
+
+model DiscordMessageQueue {
+  id        Int     @id @unique @default(autoincrement())
+  message   String
+  channelId String
+  embed     Boolean
 }
 
 enum TokenType {

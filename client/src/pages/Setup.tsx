@@ -23,6 +23,18 @@ import {
 import HackTheBoxSetupContainer from '../components/HackTheBoxSetup';
 import { useCookies } from 'react-cookie';
 
+const loginWithGithub = () => {
+    window.location.replace('templink');
+};
+
+const loginWithTeams = () => {
+    window.location.replace('templink');
+};
+
+const loginWithGoogle = () => {
+    window.location.replace(process.env.REACT_APP_GOOGLE_LOGIN_URL || '/login');
+};
+
 const Setup: React.FC = () => {
 
     const loginWithGithub = () => {

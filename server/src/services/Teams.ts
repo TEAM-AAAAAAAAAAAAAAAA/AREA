@@ -2,7 +2,8 @@ import { nstring, ustring } from "../types/string";
 import { area } from "../area/.area";
 import { IService } from "./IService";
 import * as AreaCards from '../utils/AreaCards';
-import { Action, Description } from "../area/mappings";
+import { Action, AuthProvider, Description } from "../area/mappings";
+import moment, { Moment } from "moment";
 
 @area.Service
 export class Teams implements IService {
@@ -22,11 +23,11 @@ export class Teams implements IService {
 
             if (tryParseDate)
             {
-                this._year = parseInt(tryParseDate[1]);
-                this._month = parseInt(tryParseDate[2]) - 1;
-                this._day = parseInt(tryParseDate[3]);
-                this._hour = parseInt(tryParseDate[4]);
-                this._minute = parseInt(tryParseDate[5]);
+                this._startDateTime.year(parseInt(tryParseDate[1]));
+                this._startDateTime.month(parseInt(tryParseDate[2]) - 1);
+                this._startDateTime.date(parseInt(tryParseDate[3]));
+                this._startDateTime.hour(parseInt(tryParseDate[4]));
+                this._startDateTime.minute(parseInt(tryParseDate[5]));
                 this._subject = tryParseDate[6];
             }
         }
@@ -59,12 +60,10 @@ export class Teams implements IService {
 
         console.log(this._message);
         const dateNow = new Date(Date.now());
-        const targetDate = new Date(this._year || dateNow.getFullYear(), this._month || dateNow.getMonth(), this._day || dateNow.getDate(), this._hour || dateNow.getHours(), this._minute || 0, 0, 0);
-
 
         fetch(this._outgoing, {
             method: 'POST',
-            body: JSON.stringify({text: "New meeting created: " + this._subject + " at " + targetDate.toLocaleString() + " by " + this._authorName}),
+            body: JSON.stringify({text: "New meeting created: " + this._subject + " at " + this._startDateTime.format('MMMM Do YYYY, h:mm:ss a') + " by " + this._authorName}),
             headers: {'Content-Type': 'application/json'} 
         }).catch(e => console.error(e));
     }
@@ -96,11 +95,9 @@ export class Teams implements IService {
     //     })
     // }
 
-    _hour: number | undefined;
-    _minute: number | undefined;
-    _day: number | undefined;
-    _month: number | undefined;
-    _year: number | undefined;
+    _startDateTime: Moment = moment();
+    _durationHours: number = 0;
+    _durationMinutes: number = 0;
     _authorId: ustring;
     _authorName: ustring;
     _authorImage: ustring;
