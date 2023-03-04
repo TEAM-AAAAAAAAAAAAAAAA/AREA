@@ -96,6 +96,17 @@ enum TokenType {
         type: TokenType!
     }
 
+    type ActionWebhook {
+        action: Action!
+        actionName: String!
+        service: Service!
+        serviceName: String!
+        user: User!
+        userId: String!
+        webhook: Webhook!
+        webhookId: String!
+    }
+
     type Query {
         user(id: ID!): User
         allUsers: [User!]!
@@ -111,6 +122,7 @@ enum TokenType {
         allDiscordBotWebhooks: [DiscordBotWebhook!]!
         allTokens: [Token!]!
         getUserFromToken(token: String!): User!
+        allActionWebhooks: [ActionWebhook!]!
     }
 
     type Mutation {
@@ -127,6 +139,7 @@ enum TokenType {
         createDiscordBotWebhook(command: String!, userId: String!, serverId: String!, reactionName: String!, actionId: String!, serviceId: String!, outgoingWebhook: String): Int!
         createToken(userId: String!, type: TokenType!): Token!
         deleteService(name: String!): Int!
+        linkActionWebhook(reactionId: Int!, userId: String!, actionName: String!, serviceName: String!): Int!
     }
 `;
 
@@ -135,6 +148,20 @@ export const resolvers = {
     JSONObject: GraphQLJSONObject,
     DateTime: DateTimeResolver,
 
+    ActionWebhook: {
+        action: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.actionWebhook.findUnique({ where: { serviceName_actionName_userId: { actionName: parent.actionName, serviceName: parent.serviceName, userId: parent.userId } } }).action();
+        },
+        service: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.actionWebhook.findUnique({ where: { serviceName_actionName_userId: { actionName: parent.actionName, serviceName: parent.serviceName, userId: parent.userId } } }).service();
+        },
+        webhook: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.actionWebhook.findUnique({ where: { serviceName_actionName_userId: { actionName: parent.actionName, serviceName: parent.serviceName, userId: parent.userId } } }).webhook();
+        },
+        user: async (parent: any, _: any, context: Context) => {
+            return await context.prisma.actionWebhook.findUnique({ where: { serviceName_actionName_userId: { actionName: parent.actionName, serviceName: parent.serviceName, userId: parent.userId } } }).user();
+        }
+    },
     oAuthProvider: {
         service: async (parent: any, _: any, context: Context) => {
             return await context.prisma.oAuthProvider.findUnique({ where: { oAuthProviderName: parent.oAuthProviderName } }).service();
@@ -197,8 +224,11 @@ export const resolvers = {
         }
     },
     Query: {
+        allActionWebhooks: async (_: any, args: any, context: Context) => {
+            return await context.prisma.actionWebhook.findMany();
+        },
         getUserFromToken: async (_: any, args: any, context: Context) => {
-            return await context.prisma.token.findUnique({ where : {id : args.token}}).user();
+            return await context.prisma.token.findUnique({ where: { id: args.token } }).user();
         },
         allTokens: async (_: any, args: any, context: Context) => {
             return await context.prisma.token.findMany();
@@ -249,6 +279,30 @@ export const resolvers = {
         }
     },
     Mutation: {
+        linkActionWebhook: async (_: any, args: any, context: Context) => {
+            await context.prisma.actionWebhook.create({
+                data: {
+                    service: { connect: { serviceName: args.serviceName } },
+                    action: {
+                        connect: {
+                            actionName_serviceName: {
+                                actionName: args.actionName,
+                                serviceName: args.serviceName
+                            }
+                        }
+                    },
+                    webhook: {
+                        create: {
+                            userId: args.userId,
+                            reactionId: args.reactionId,
+                            incomingServiceName: args.serviceName,
+                        }
+                    },
+                    user: { connect: { id: args.userId } }
+                }
+            })
+            return 200;
+        },
         createReaction: async (_: any, args: any, context: Context) => {
             const reaction = await context.prisma.reaction.create({
                 data: {
@@ -266,17 +320,8 @@ export const resolvers = {
                         }
                     },
                     outgoingWebhook: args.outgoingWebhook,
-                }});
-            await context.prisma.reaction.update({ where: { reactionId: reaction.reactionId },
-                data: {
-                    incomingWebhook: {
-                        create: {
-                            userId: args.userId,
-                            incomingServiceName: args.serviceName
-                    }
                 }
-            }});
-
+            });
             return 200;
         },
         disableReaction: async (_: any, args: any, context: Context) => {
