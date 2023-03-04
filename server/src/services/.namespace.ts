@@ -3,9 +3,11 @@ import { PrismaServices, PrismaActions, Descriptions, ServiceAuthProviders } fro
 
 export * from "./Discord";
 export * from "./TeamScript";
+export * from "./Github";
 export * from "./OpenWeatherMap";
 export * from "./Google";
 export * from "./HackTheBox";
+
 
 async function insertActions(isSynced: boolean) : Promise<boolean> {
     for (let [key, action] of PrismaActions) {

@@ -31,6 +31,12 @@ export class transcoders
         return discord;
     }
 
+    @area.Transcoder(services.Discord.name, services.Github.name)
+    static discordToGithub(discord: services.Discord): services.Github {
+        var github: services.Github = new services.Github();
+        return github;
+    }
+
     @area.Transcoder(services.Discord.name, services.OpenWeatherMap.name)
     static discordToOpenWeatherMap(discord: services.Discord): services.OpenWeatherMap {
         var openWeatherMap: services.OpenWeatherMap = new services.OpenWeatherMap();
