@@ -110,6 +110,7 @@ enum TokenType {
         userInfo(id: ID!): [Webhook!]!
         allDiscordBotWebhooks: [DiscordBotWebhook!]!
         allTokens: [Token!]!
+        getUserFromToken(token: String!): User!
     }
 
     type Mutation {
@@ -196,6 +197,9 @@ export const resolvers = {
         }
     },
     Query: {
+        getUserFromToken: async (_: any, args: any, context: Context) => {
+            return await context.prisma.token.findUnique({ where : {id : args.token}}).user();
+        },
         allTokens: async (_: any, args: any, context: Context) => {
             return await context.prisma.token.findMany();
         },
