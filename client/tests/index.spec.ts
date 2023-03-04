@@ -41,11 +41,55 @@ test('test services creation', async ({ page }) => {
   await page.getByRole('button', { name: 'Create', exact: true }).click();
 });
 
-test('setup page has title', async ({ page }) => {
+test('setup page has title sync', async ({ page }) => {
   await page.goto('http://localhost:8081/setup');
 
   // Expect a title "to contain" a substring.
   await expect(page).toHaveTitle(/AREA/);
+});
+
+test('tests services discord', async ({ page }) => {
+  await page.goto('http://localhost:8081/services');
+  await page.locator('label').filter({ hasText: 'postMessage' }).click();
+  await page.getByText('Post a message to Discord').click();
+  await page.locator('ion-card').filter({ hasText: 'DiscordpostMessagepostMeetingpostListpostMessagepostMessagePost a message to Dis' }).getByRole('button', { name: 'Activate' }).click();
+  await page.locator('#ion-sel-2-lbl').click();
+});
+
+  test('tests services teams', async ({ page }) => {
+  await page.goto('http://localhost:8081/services');
+  await page.locator('label').filter({ hasText: 'postMeeting' }).click();
+  await page.getByText('Post a meeting to Teams').click();
+  await page.locator('ion-card').filter({ hasText: 'TeamScriptpostMessagepostMeetingpostIssuepostMeetingpostMeetingPost a meeting to' }).getByRole('button', { name: 'Activate' }).click();
+  await page.locator('#ion-sel-3-lbl').click();
+});
+
+  test('tests services github', async ({ page }) => {
+  await page.goto('http://localhost:8081/services');
+  await page.locator('label').filter({ hasText: 'createIssue' }).click();
+  await page.getByText('Create a new issue').click();
+  await page.locator('#ion-sel-4-lbl').click();
+});
+
+  test('tests services weather', async ({ page }) => {
+  await page.goto('http://localhost:8081/services');
+  await page.locator('label').filter({ hasText: 'fillCurrentWeather' }).click();
+  await page.getByText('Fill current weather').click();
+  await page.locator('#ion-sel-5-lbl').click();
+});
+
+  test('tests services calendar', async ({ page }) => {
+  await page.goto('http://localhost:8081/services');
+  await page.locator('label').filter({ hasText: 'postCalendarEvent' }).click();
+  await page.getByText('Post an event to google calendar').click();
+  await page.locator('#ion-sel-6-lbl').click();
+});
+
+  test('tests services htb', async ({ page }) => {
+  await page.goto('http://localhost:8081/services');
+  await page.locator('label').filter({ hasText: 'getOSProgress' }).click();
+  await page.getByText('Get my progress.').click();
+  await page.locator('ion-card').filter({ hasText: 'HackTheBoxgetProfilegetOSProgressgetOSProgressgetOSProgressGet my progress.Activ' }).getByRole('button', { name: 'Activate' }).click();
 });
 
 //test('get started link', async ({ page }) => {
