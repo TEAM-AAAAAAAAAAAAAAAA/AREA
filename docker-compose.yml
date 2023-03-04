@@ -78,6 +78,7 @@ services:
       - server
     links:
       - db:area_database
+      - server:area_server
 
 networks:
   server_network:
