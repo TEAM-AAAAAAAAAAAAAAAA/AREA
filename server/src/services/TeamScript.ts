@@ -6,7 +6,7 @@ import { Action, AuthProvider, Description } from "../area/mappings";
 import moment, { Moment } from "moment";
 
 @area.Service
-export class Teams implements IService {
+export class TeamScript implements IService {
     constructor() { this._outgoing = null; }
 
     read(data: any): void {

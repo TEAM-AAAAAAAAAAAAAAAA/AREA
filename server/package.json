@@ -4,8 +4,7 @@
   "main": "app.js",
   "scripts": {
     "build": "npx tsc",
-    "prod": "dotenv -e .env/.env.prod -- node -r dotenv/config dist/app.js",
-    "preprod": "dotenv -e .env/.env.preprod -- node -r dotenv/config dist/app.js",
+    "prod": "node dist/app.js",
     "dev": "dotenv -e .env/.env.dev -- npx nodemon --delay 2 -r dotenv/config src/app.ts",
     "db:migrate:dev": "dotenv -e .env/.env.dev -- prisma migrate dev --name init --preview-feature",
     "db:migrate:prod": "dotenv -e .env/.env.prod -- prisma migrate deploy",
@@ -29,6 +28,7 @@
   "homepage": "https://github.com/TEAM-AAAAAAAAAAAAAAAA/AREA#readme",
   "description": "",
   "dependencies": {
+    "@octokit/rest": "^19.0.7",
     "@prisma/client": "^4.9.0",
     "@sendgrid/mail": "^7.7.0",
     "argon2": "^0.30.3",

@@ -2,9 +2,12 @@ import { prisma } from '../config/db';
 import { PrismaServices, PrismaActions, Descriptions, ServiceAuthProviders } from "../area/mappings";
 
 export * from "./Discord";
-export * from "./Teams";
+export * from "./TeamScript";
+export * from "./Github";
 export * from "./OpenWeatherMap";
 export * from "./Google";
+export * from "./HackTheBox";
+
 
 async function insertActions(isSynced: boolean) : Promise<boolean> {
     for (let [key, action] of PrismaActions) {
