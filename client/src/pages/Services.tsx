@@ -18,6 +18,7 @@ import {
 import { useCookies } from 'react-cookie';
 import jwt_decode from "jwt-decode";
 import CreateReaction from '../components/CreateReaction';
+import LinkAction from '../components/LinkAction';
 
 const GET_SERVICES = gql`
   query Query($token: String!) {
@@ -43,6 +44,11 @@ const GET_SERVICES = gql`
         id
         name
     }
+    allActions {
+        actionName
+        description
+        serviceName
+    }
   }
 `;
 
@@ -54,6 +60,7 @@ const Services: React.FC = () => {
         let decoded: any = jwt_decode(cookie.token);
         client.query({ query: GET_SERVICES, variables: { token: decoded?.token } }).then((result) => {
             setData(result.data);
+            console.log(result.data)
         });
     }, []);
 
@@ -72,7 +79,11 @@ const Services: React.FC = () => {
                     <IonButton id='link-reactions'>
                         Link Reactions
                     </IonButton>
+                    <IonButton id='link-action'>
+                        Link Action
+                    </IonButton>
                 </IonGrid>
+                <LinkAction data={data} />
                 <CreateReaction data={data} />
                 <LinkReactions data={data} />
                 <ServicesContainer data={data} />
