@@ -2,7 +2,7 @@ import { nstring, ustring } from "../types/string";
 import { area } from "../area/.area";
 import { IService } from "./IService";
 import * as AreaCards from '../utils/AreaCards';
-import { Action, Description } from "../area/mappings";
+import { Action, AuthProvider, Description } from "../area/mappings";
 import moment, { Moment } from "moment";
 
 @area.Service
