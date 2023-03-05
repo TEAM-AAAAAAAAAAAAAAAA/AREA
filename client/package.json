@@ -49,7 +49,8 @@
   },
   "scripts": {
     "start": "npx ionic serve -p 8081",
-    "prod": "npx ionic build --prod --minifyjs --minifycss && npx serve -s build -l 8081"
+    "build": "npx ionic build --prod --minifyjs --minifycss",
+    "prod": "npx serve -s build -l 8081"
   },
   "browserslist": {
     "production": [
