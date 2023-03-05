@@ -32,7 +32,7 @@ import {
 //  return re.test(String(email).toLowerCase());
 //}
 export const loginWithDiscord = () => {
-    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_DISCORD_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fauth%2Fdiscord%2Fcb&response_type=token&scope=identify%20email`;
+    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_DISCORD_CLIENT_ID}&redirect_uri=http%3A%2F%2F${process.env.SERVER_IP}%3A8081%2Fauth%2Fdiscord%2Fcb&response_type=token&scope=identify%20email`;
 };
 
 const Login: React.FC = () => {
@@ -85,7 +85,7 @@ const Login: React.FC = () => {
             setIserror(true);
             return;
         }
-        fetch('http://localhost:8080/auth/login', {
+        fetch(`http://${process.env.SERVER_IP}:8080/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
