@@ -24,6 +24,9 @@ import {
     IonAlert,
     IonImg
 } from '@ionic/react';
+import {
+    useCookies
+} from 'react-cookie';
 
 //function validateEmail(email: string) {
 //  const re = /^((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
@@ -66,6 +69,11 @@ const LoginWithDiscord: React.FC = () => {
         setUserAvatar
     ] = useState<string>('');
 
+    const [
+        cookies,
+        setCookies
+    ] = useCookies(['token']);
+
     const handleLogin = async () => {
         let OAuthUserData: Object;
         if (!email) {
@@ -87,28 +95,28 @@ const LoginWithDiscord: React.FC = () => {
                 'Authorization': 'Bearer ' + accessToken
             }
         })
-            .then((response) => response.json())
-            .then((data) => {
-                OAuthUserData = data;
-                return fetch('http://localhost:8080/auth/discord_oauth', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ accessToken, refreshToken, email, password, name, userData: OAuthUserData })
-                })
+        .then((response) => response.json())
+        .then((data) => {
+            OAuthUserData = data;
+            return fetch('http://localhost:8080/auth/discord_oauth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ accessToken, refreshToken, email, password, name, userData: OAuthUserData })
             })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data?.error) {
-                    setMessage(data?.error);
-                    setIserror(true);
-                } else {
-                    console.log(data?.token);
-                    document.cookie = `token=${data?.token}`;
-                    window.location.href = '/services';
-                }
-            });
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data?.error) {
+                setMessage(data?.error);
+                setIserror(true);
+            } else {
+                console.log(data?.token);
+                setCookies('token', data?.token, { path: '/' });
+                window.location.href = '/services';
+            }
+        });
     };
 
     useEffect(() => {
@@ -131,7 +139,6 @@ const LoginWithDiscord: React.FC = () => {
         if (access_token)
             getUserInfos();
     });
-
     return (
         <IonPage>
             <IonHeader>

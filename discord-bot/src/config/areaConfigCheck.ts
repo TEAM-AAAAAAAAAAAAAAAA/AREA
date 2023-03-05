@@ -1,6 +1,38 @@
 import { DiscordBotWebhook } from "@prisma/client";
 import { prisma } from "./db.js";
 
+export async function areaGetUser(interaction: any, targetUser: any): Promise<string | null>
+{
+    const serviceName = "Discord";
+
+    let thisProvider = await prisma.oAuthProvider.findUnique({
+        where: {
+            serviceName: serviceName
+        }
+    });
+    if (!thisProvider)
+    {
+        interaction.reply("This AREA server's administrator has not set up the " + serviceName + " OAuth provider yet");
+        return null;
+    }
+
+    let thisUser = await prisma.oAuthUserData.findUnique({
+        where: {
+            providerUserId_oAuthProviderName: {
+                providerUserId: targetUser,
+                oAuthProviderName: thisProvider.oAuthProviderName
+            }
+        }
+    });
+    if (!thisUser)
+    {
+        interaction.reply("This user needs to be linked to an AREA account");
+        return null;
+    }
+
+    return thisUser.userId;
+}
+
 export async function areaConfigCheck(interaction: any, command: string): Promise<DiscordBotWebhook | null>
 {
     const serviceName = "Discord";
@@ -26,7 +58,7 @@ export async function areaConfigCheck(interaction: any, command: string): Promis
     });
     if (!thisUser)
     {
-        interaction.reply("You need to be linked to an AREA account to use commands");
+        interaction.reply("This user needs to be linked to an AREA account to use commands");
         return null;
     }
 

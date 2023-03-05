@@ -9,20 +9,21 @@ import { validate_email } from './validate_email';
 // OAuth providers login routes
 import { discord_oauth } from './oauth_providers/discord';
 import { htb_config } from './oauth_providers/hackthebox';
-
+import { get_oauth_tokens, google_oauth, get_oauth_url } from './oauth_providers/google';
+import { github_config } from './oauth_providers/github';
 
 let opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: jwtSecret
-}
+};
 
 passport.use(new JWTStrategy(opts, async (jwt_payload, done) => {
-    const token = await prisma.token.findUnique({
+    console.log(jwt_payload);
+    const token = await prisma.token.findFirst({
         where: {
             id: jwt_payload.tokenId
         }
     });
-
     if (token) {
         return done(null, token);
     } else {
@@ -33,6 +34,10 @@ passport.use(new JWTStrategy(opts, async (jwt_payload, done) => {
 export const auth = {
     discord_oauth,
     htb_config,
+    github_config,
+    get_oauth_tokens,
+    google_oauth,
+    get_oauth_url,
     login,
     logout,
     validate_email

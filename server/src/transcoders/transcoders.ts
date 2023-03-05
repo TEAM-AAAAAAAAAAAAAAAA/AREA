@@ -127,4 +127,37 @@ export class transcoders
         return google;
     }
 
+    @Transcoder(services.Google.name, services.Discord.name)
+    static googleToDiscord(google: services.Google): services.Discord {
+        let discord: services.Discord = new services.Discord();
+        discord._subject = google._summary;
+        discord._message = google._description;
+        discord._startDateTime = moment(google._startDateTime);
+        discord._durationHours = google._durationHours;
+        discord._durationMinutes = google._durationMinutes;
+        discord._authorName = google._userId;
+        discord._city = google._location;
+        return discord;
+    }
+
+    @Transcoder(services.Discord.name, services.HackTheBox.name)
+    static discordToHackTheBox(discord: services.Discord): services.HackTheBox {
+        let hackTheBox: services.HackTheBox = new services.HackTheBox();
+        hackTheBox._userId = discord._authorName;
+        hackTheBox._message = discord._message;
+        hackTheBox._targetUser = discord._targetUser;
+        hackTheBox._targetUserName = discord._targetUserName;
+        return hackTheBox;
+    }
+
+    @Transcoder(services.HackTheBox.name, services.Discord.name)
+    static hackTheBoxToDiscord(hackTheBox: services.HackTheBox): services.Discord {
+        let discord: services.Discord = new services.Discord();
+        discord._authorName = hackTheBox._userId;
+        discord._message = hackTheBox._message;
+        discord._targetUser = hackTheBox._targetUser;
+        discord._targetUserName = hackTheBox._targetUserName;
+        return discord;
+    }
+    
 }

@@ -63,7 +63,8 @@ async function fetchMessageQueue()
         {
             if (message.embed)
                 message.message = JSON.parse(message.message);
-            channel.send(message.message);
+            if (message.message && message.message != "")
+                channel.send(message.message);
         }
 
         await prisma.discordMessageQueue.delete({

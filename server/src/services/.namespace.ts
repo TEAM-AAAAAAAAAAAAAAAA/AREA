@@ -6,6 +6,7 @@ export * from "./TeamScript";
 export * from "./Github";
 export * from "./OpenWeatherMap";
 export * from "./Google";
+export * from "./HackTheBox";
 
 
 async function insertActions(isSynced: boolean) : Promise<boolean> {

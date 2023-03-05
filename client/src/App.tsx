@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import Setup from './pages/Setup';
 import Services from './pages/Services';
 import LoginWithDiscord from './pages/LoginWithDiscord';
+import SetupGoogle from './pages/SetupGoogle';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -53,7 +54,10 @@ const App: React.FC = () => (
                     </Route>
                     <Route path="/auth/discord/cb">
                         <LoginWithDiscord />
-                    </ Route>
+                    </Route>
+                    <Route exact path="/auth/google/cb">
+                        <SetupGoogle />
+                    </Route>
                     <Route exact path="/setup">
                         <Setup />
                     </Route>
