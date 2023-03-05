@@ -24,6 +24,7 @@ FROM node:14-alpine as prod-runner
 WORKDIR /app
 
 COPY --from=build-runner /tmp/app/package.json /app/package.json
+COPY --from=build-runner /tmp/app/yarn.lock /app/yarn.lock
 
 #Install dependencies (could be modified/extend)
 RUN yarn install --omit=dev
