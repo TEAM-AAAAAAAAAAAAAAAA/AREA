@@ -45,6 +45,10 @@ export class Discord implements IService {
         this._startDateTime.hours(data.bot?.hour);
         this._startDateTime.minutes(data.bot?.minute || 0);        
         this._city = data.bot?.city;
+        this._owner = data.bot?.owner;
+        this._repo = data.bot?.repo;
+        this._title = data.bot?.title;
+        this._body = data.bot?.body;
     }
 
     setOutgoing(data: nstring): void {
@@ -143,4 +147,9 @@ export class Discord implements IService {
     _subject: ustring;
     _message: ustring;
     _outgoing: nstring;
+    _owner: ustring;
+    _repo: ustring;
+    _title: ustring;
+    _body: ustring;
+
 }
