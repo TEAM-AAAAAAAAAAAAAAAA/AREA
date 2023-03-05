@@ -25,14 +25,15 @@ interface ContainerProps {
     data: any;
 };
 
+const LINK_REACTIONS = gql`
+mutation CreateChainedReaction($actionId: Int!, $reactionId: Int!) {
+    createChainedReaction(actionId: $actionId, reactionId: $reactionId)
+}`
+
 const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
     const [present] = useIonToast();
-    const [firstService, setFirstService] = useState<string>('');
-    const [firstReacts, setFirstReacts] = useState<string[]>([]);
-    const [firstReact, setFirstReact] = useState<string>('');
-    const [secondService, setSecondService] = useState<string>('');
-    const [secondReacts, setSecondReacts] = useState<string[]>([]);
-    const [secondReact, setSecondReact] = useState<string>('');
+    const [firstReaction, setFirstReaction] = useState<any>(null);
+    const [secondReaction, setSecondReaction] = useState<any>(null);
     const modal = useRef<HTMLIonModalElement>(null);
     const firstWebhook = useRef<HTMLIonInputElement>(null);
     const secondWebhook = useRef<HTMLIonInputElement>(null);
@@ -41,22 +42,11 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
         modal.current?.dismiss({ first: firstWebhook.current?.value, second: secondWebhook.current?.value }, 'confirm');
     }
 
-    function getDesc(list: any, name: string) {
-        for (let i = 0; i < list.length; i++) {
-            if (list[i].reactionName === name) {
-                return list[i].description;
-            }
-        }
-    }
-
     function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
         if (ev.detail.role === 'confirm') {
-            if (firstReact && secondReact && firstService && secondService) {
+            if (firstReaction && secondReaction) {
                 client.mutate({
-                    mutation: gql`
-                    mutation Mutation($actionName: String!, $actionService: String!, $reactionName: String!, $reactionService: String!, $reactionOutgoingWebhook: String, $actionOutgoingWebhook: String) {
-                        createChainedReaction(actionName: $actionName, actionService: $actionService, reactionName: $reactionName, reactionService: $reactionService, reactionOutgoingWebhook: $reactionOutgoingWebhook, actionOutgoingWebhook: $actionOutgoingWebhook)
-                    }`, variables: { actionName: firstReact, actionService: firstService, reactionName: secondReact, reactionService: secondService, reactionOutgoingWebhook: ev.detail.data.second, actionOutgoingWebhook: ev.detail.data.first }
+                    mutation: LINK_REACTIONS, variables: { actionId: firstReaction.reactionId, reactionId: secondReaction.reactionId }
                 }).then((result) => {
                     if (result.data?.createChainedReaction === 200) {
                         present({
@@ -84,31 +74,9 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
             }
         }
     }
-    useEffect(() => {
-        setFirstReacts(data?.allReact?.filter((react: any) => react.serviceName === firstService));
-        if (firstService === secondService) {
-            setFirstReacts(data?.allReact?.filter((react: any) => react.serviceName === firstService && react.reactionName != secondReact));
-        }
-    }, [firstService]);
-
-    useEffect(() => {
-        if (firstService === secondService)
-            setSecondReacts(data?.allReact?.filter((react: any) => react.serviceName === secondService && react.reactionName != firstReact));
-    }, [firstReact]);
-
-    useEffect(() => {
-        if (firstService === secondService)
-            setFirstReacts(data?.allReact?.filter((react: any) => react.serviceName === firstService && react.reactionName != secondReact));
-    }, [secondReact]);
-
-    useEffect(() => {
-        setSecondReacts(data?.allReact?.filter((react: any) => react.serviceName === secondService));
-        if (firstService === secondService)
-            setSecondReacts(data?.allReact?.filter((react: any) => react.serviceName === secondService && react.reactionName != firstReact));
-    }, [secondService]);
 
     return (
-        <IonModal ref={modal} onWillDismiss={(ev) => onWillDismiss(ev)} onWillPresent={() => { setFirstService(''); setFirstReacts([]); setFirstReact(''); setSecondService(''); setSecondReacts([]); setSecondReact('') }} trigger='link-reactions'>
+        <IonModal ref={modal} onWillDismiss={(ev) => onWillDismiss(ev)} onWillPresent={() => { setFirstReaction(null); setSecondReaction(null) }} trigger='link-reactions'>
             <IonHeader>
                 <IonToolbar className='ion-padding ion-text-center'>
                     <IonButtons slot='start'><IonButton onClick={() => modal.current?.dismiss()}>Cancel</IonButton></IonButtons>
@@ -118,82 +86,21 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
             </IonHeader>
             <IonContent class='ion-padding'>
                 <IonItem>
-                    <IonLabel position='floating' >Choose first service :</IonLabel>
-                    <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => { setFirstService(e.detail.value); setFirstReact('') }}>
-                        {data.allServices?.map((service: any) => (
-                            <IonSelectOption key={service.serviceName} value={service.serviceName}>{service.serviceName}</IonSelectOption>
+                    <IonLabel position='floating' >Choose first service's reaction :</IonLabel>
+                    <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => setFirstReaction(e.detail.value)}>
+                        {data.allReactions?.filter((reaction: any) => reaction.reactionId != secondReaction?.reactionId).map((react: any) => (
+                            <IonSelectOption key={react} value={react}>{react.reactionName} : {react.reactionId} from {react.serviceName}</IonSelectOption>
                         ))}
                     </IonSelect>
                 </IonItem>
-                {firstService !== '' && (
-                    <IonItem>
-                        <IonLabel position='floating' >Choose first service's reaction :</IonLabel>
-                        <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => setFirstReact(e.detail.value)}>
-                            {firstReacts?.map((react: any) => (
-                                <IonSelectOption key={react.reactionName} value={react.reactionName}>{react.reactionName}</IonSelectOption>
-                            ))}
-                        </IonSelect>
-                    </IonItem>
-                )
-                }
-                {firstReact !== '' && firstService !== '' && (
-                    <>
-                        <IonItem>
-                            Reaction Description : {getDesc(firstReacts, firstReact)}
-                        </IonItem>
-                        {firstService === 'Discord' && (
-                            <IonItem>
-                                <IonLabel position='floating'>Channel id : </IonLabel>
-                                <IonInput ref={firstWebhook} placeholder='Channel id' />
-                            </IonItem>
-                        )}
-                        {firstService === 'TeamScript' && (
-                            <IonItem>
-                                <IonLabel position='floating'>TeamScript Hook + Link to doc : </IonLabel>
-                                <IonInput ref={firstWebhook} placeholder='Webhook url' />
-                            </IonItem>
-                        )}
-
-                    </>
-                )}
                 <IonItem>
-                    <IonLabel position='floating' >Choose second service :</IonLabel>
-                    <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => { setSecondService(e.detail.value); setSecondReact('') }}>
-                        {data.allServices?.map((service: any) => (
-                            <IonSelectOption key={service.serviceName} value={service.serviceName}>{service.serviceName}</IonSelectOption>
+                    <IonLabel position='floating' >Choose second service's reaction :</IonLabel>
+                    <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => { setSecondReaction(e.detail.value) }}>
+                        {data.allReactions?.filter((reaction: any) => reaction.reactionId != firstReaction?.reactionId).map((react: any) => (
+                            <IonSelectOption key={react} value={react}>{react.reactionName} : {react.reactionId} from {react.serviceName}</IonSelectOption>
                         ))}
                     </IonSelect>
                 </IonItem>
-                {secondService !== '' && (
-                    <IonItem>
-                        <IonLabel position='floating' >Choose second service's reaction :</IonLabel>
-                        <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => { setSecondReact(e.detail.value) }}>
-                            {secondReacts?.map((react: any) => (
-                                <IonSelectOption key={react.reactionName} value={react.reactionName}>{react.reactionName}</IonSelectOption>
-                            ))}
-                        </IonSelect>
-                    </IonItem>
-                )}
-                {secondReact !== '' && secondService !== '' && (
-                    <>
-                        <IonItem>
-                            Reaction Description : {getDesc(secondReacts, secondReact)}
-                        </IonItem>
-                        {secondService === 'Discord' && (
-                            <IonItem>
-                                <IonLabel position='floating'>Channel id : </IonLabel>
-                                <IonInput ref={secondWebhook} placeholder='Channel id' />
-                            </IonItem>
-                        )}
-                        {secondService === 'TeamScript' && (
-                            <IonItem>
-                                <IonLabel position='floating'>TeamScript Hook + Link to doc : </IonLabel>
-                                <IonInput ref={secondWebhook} placeholder='Webhook url' />
-                            </IonItem>
-                        )}
-
-                    </>
-                )}
             </IonContent>
         </IonModal>
     );
