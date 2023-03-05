@@ -1,13 +1,13 @@
 import { ustring } from "../types/string";
 
-export function issueFormat(authorName: ustring, authorImage: ustring, repositoryName: ustring, repositoryUrl: ustring, issueId: number | undefined, issueTitle: ustring, issueContent: ustring, issueUrl: ustring, datetime: Date | undefined)
+export function issueFormat(authorName: ustring, authorImage: ustring, repositoryName: ustring, repositoryUrl: ustring, issueId: ustring, issueTitle: ustring, issueContent: ustring, issueUrl: ustring, datetime: ustring)
 {
     var card = {
         "@type": "MessageCard",
         "@context": "https://schema.org/extensions",
         "summary": "Issue " + issueId,
         "themeColor": "0078D7",
-        "title": "Issue opened: \"" + issueTitle + "\"",
+        "title": "Issue \"" + issueTitle + "\"",
         "sections": [
             {
                 "activityTitle": authorName,

@@ -39,7 +39,7 @@ export class GetIssues {
             if (!res || !res.ok)
                 interaction.editReply("Unknown error");
             else
-                interaction.editReply("This is the repo's issues' list :");
+                interaction.editReply("Issues sent");
         }).catch();
     }
 }

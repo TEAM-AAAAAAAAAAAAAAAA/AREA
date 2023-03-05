@@ -69,7 +69,7 @@ const Login: React.FC = () => {
     const handleLogin = () => {
 
         if (!email) {
-            setMessage('enter email');
+            setMessage('An email address is required');
             setIserror(true);
             return;
         }
@@ -81,7 +81,7 @@ const Login: React.FC = () => {
         //    }
 
         if (!password || password.length < 6) {
-            setMessage('enter pw');
+            setMessage('A password is required');
             setIserror(true);
             return;
         }

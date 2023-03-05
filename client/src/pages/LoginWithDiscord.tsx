@@ -77,12 +77,12 @@ const LoginWithDiscord: React.FC = () => {
     const handleLogin = async () => {
         let OAuthUserData: Object;
         if (!email) {
-            setMessage('enter email');
+            setMessage('An email address is required');
             setIserror(true);
             return;
         }
         if (!password || password.length < 6) {
-            setMessage('enter pw');
+            setMessage('A password is required');
             setIserror(true);
             return;
         }

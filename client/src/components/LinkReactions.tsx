@@ -51,7 +51,7 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
 
     function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
         if (ev.detail.role === 'confirm') {
-            if (ev.detail.data?.first && ev.detail.data?.second && firstReact && secondReact && firstService && secondService) {
+            if (firstReact && secondReact && firstService && secondService) {
                 client.mutate({
                     mutation: gql`
                     mutation Mutation($actionName: String!, $actionService: String!, $reactionName: String!, $reactionService: String!, $reactionOutgoingWebhook: String, $actionOutgoingWebhook: String) {
@@ -118,7 +118,7 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
             </IonHeader>
             <IonContent class='ion-padding'>
                 <IonItem>
-                    <IonLabel class='modal-label'>Choose first service :</IonLabel>
+                    <IonLabel position='floating' >Choose first service :</IonLabel>
                     <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => { setFirstService(e.detail.value); setFirstReact('') }}>
                         {data.allServices?.map((service: any) => (
                             <IonSelectOption key={service.serviceName} value={service.serviceName}>{service.serviceName}</IonSelectOption>
@@ -127,7 +127,7 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
                 </IonItem>
                 {firstService !== '' && (
                     <IonItem>
-                        <IonLabel class='modal-label'>Choose first service's reaction :</IonLabel>
+                        <IonLabel position='floating' >Choose first service's reaction :</IonLabel>
                         <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => setFirstReact(e.detail.value)}>
                             {firstReacts?.map((react: any) => (
                                 <IonSelectOption key={react.reactionName} value={react.reactionName}>{react.reactionName}</IonSelectOption>
@@ -141,14 +141,23 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
                         <IonItem>
                             Reaction Description : {getDesc(firstReacts, firstReact)}
                         </IonItem>
-                        <IonItem>
-                            <IonLabel class='modal-label'>Input first reaction's webhook :</IonLabel>
-                            <IonInput ref={firstWebhook} placeholder='Input webhook' />
-                        </IonItem>
+                        {firstService === 'Discord' && (
+                            <IonItem>
+                                <IonLabel position='floating'>Channel id : </IonLabel>
+                                <IonInput ref={firstWebhook} placeholder='Channel id' />
+                            </IonItem>
+                        )}
+                        {firstService === 'TeamScript' && (
+                            <IonItem>
+                                <IonLabel position='floating'>TeamScript Hook + Link to doc : </IonLabel>
+                                <IonInput ref={firstWebhook} placeholder='Webhook url' />
+                            </IonItem>
+                        )}
+
                     </>
                 )}
                 <IonItem>
-                    <IonLabel class='modal-label'>Choose second service :</IonLabel>
+                    <IonLabel position='floating' >Choose second service :</IonLabel>
                     <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => { setSecondService(e.detail.value); setSecondReact('') }}>
                         {data.allServices?.map((service: any) => (
                             <IonSelectOption key={service.serviceName} value={service.serviceName}>{service.serviceName}</IonSelectOption>
@@ -157,7 +166,7 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
                 </IonItem>
                 {secondService !== '' && (
                     <IonItem>
-                        <IonLabel class='modal-label'>Choose second service's reaction :</IonLabel>
+                        <IonLabel position='floating' >Choose second service's reaction :</IonLabel>
                         <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => { setSecondReact(e.detail.value) }}>
                             {secondReacts?.map((react: any) => (
                                 <IonSelectOption key={react.reactionName} value={react.reactionName}>{react.reactionName}</IonSelectOption>
@@ -170,10 +179,19 @@ const LinkReactions: React.FC<ContainerProps> = ({ data }) => {
                         <IonItem>
                             Reaction Description : {getDesc(secondReacts, secondReact)}
                         </IonItem>
-                        <IonItem>
-                            <IonLabel class='modal-label'>Input second reaction's webhook :</IonLabel>
-                            <IonInput ref={secondWebhook} placeholder='Input webhook' />
-                        </IonItem>
+                        {secondService === 'Discord' && (
+                            <IonItem>
+                                <IonLabel position='floating'>Channel id : </IonLabel>
+                                <IonInput ref={secondWebhook} placeholder='Channel id' />
+                            </IonItem>
+                        )}
+                        {secondService === 'TeamScript' && (
+                            <IonItem>
+                                <IonLabel position='floating'>TeamScript Hook + Link to doc : </IonLabel>
+                                <IonInput ref={secondWebhook} placeholder='Webhook url' />
+                            </IonItem>
+                        )}
+
                     </>
                 )}
             </IonContent>
