@@ -98,7 +98,7 @@ const LoginWithDiscord: React.FC = () => {
         .then((response) => response.json())
         .then((data) => {
             OAuthUserData = data;
-            return fetch('http://localhost:8080/auth/discord_oauth', {
+            return fetch(`http://${process.env.REACT_APP_SERVER_IP}:8080/auth/discord_oauth`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

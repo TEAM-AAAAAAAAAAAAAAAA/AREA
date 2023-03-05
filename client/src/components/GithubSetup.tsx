@@ -34,7 +34,7 @@ const GithubSetupContainer: React.FC<GithubSetupProps> = (cookies) => {
                     return;
                 }
                 console.dir(cookies);
-                fetch('http://localhost:8080/auth/github_config', {
+                fetch(`http://${process.env.REACT_APP_SERVER_IP}:8080/auth/github_config`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

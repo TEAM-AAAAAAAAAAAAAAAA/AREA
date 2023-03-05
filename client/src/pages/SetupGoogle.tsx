@@ -43,7 +43,7 @@ const Setup: React.FC = () => {
         if (!authCode)
             return;
         if (!cookies?.google_refresh_token || !cookies?.google_access_token) {
-            fetch('http://localhost:8080/auth/google/get_oauth_tokens', {
+            fetch(`http://${process.env.REACT_APP_SERVER_IP}:8080/auth/google/get_oauth_tokens`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const Setup: React.FC = () => {
         .then(data => {
             if (data?.error?.code)
                 return;
-            return fetch('http://localhost:8080/auth/google/google_oauth', {
+            return fetch(`http://${process.env.REACT_APP_SERVER_IP}:8080/auth/google/google_oauth`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
