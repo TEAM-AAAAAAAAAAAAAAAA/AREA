@@ -72,6 +72,11 @@ async function seedActions()
                 serviceName: services.Discord.name,
                 description: '/rank command',
             },
+            {
+                actionName: 'progress',
+                serviceName: 'Discord',
+                description: '/progress command',
+            },
         ],
         skipDuplicates: true,
     });

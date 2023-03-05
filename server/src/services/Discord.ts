@@ -49,6 +49,8 @@ export class Discord implements IService {
         this._repo = data.bot?.repo;
         this._title = data.bot?.title;
         this._body = data.bot?.body;
+        this._targetUser = data.bot?.targetUser;
+        this._targetUserName = data.bot?.targetUserName;
     }
 
     setOutgoing(data: nstring): void {
@@ -146,6 +148,8 @@ export class Discord implements IService {
     _authorName: ustring;
     _subject: ustring;
     _message: ustring;
+    _targetUser: ustring;
+    _targetUserName: ustring;
     _outgoing: nstring;
     _owner: ustring;
     _repo: ustring;

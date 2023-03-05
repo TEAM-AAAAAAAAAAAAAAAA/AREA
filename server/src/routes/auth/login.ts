@@ -40,7 +40,7 @@ const user = await prisma.user.findFirst({
 if (user) {
     try {
         let is_verified = await prisma.user.findUnique({ where: { id: user.id }, select: { emailVerified: true } });
-        if (!is_verified?.emailVerified)
+        if (is_verified?.emailVerified)
             return res.status(401).json('Email not verified');
         if (await argon2id.verify(user.password, userInput.value.password)) {
             const prismaToken = await prisma.token.findFirst({
@@ -66,7 +66,8 @@ if (user) {
             data: {
                 name: userInput.value.name,
                 email: userInput.value.email,
-                password: password
+                password: password,
+                emailVerified: true
             }
         });
         const prismaToken = await prisma.token.create({
