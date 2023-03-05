@@ -34,6 +34,12 @@ export class transcoders
     @area.Transcoder(services.Discord.name, services.Github.name)
     static discordToGithub(discord: services.Discord): services.Github {
         var github: services.Github = new services.Github();
+
+        github._owner = discord._owner;
+        github._repo = discord._repo;
+        github._title = discord._title;
+        github._body = discord._body;
+        github._userId = discord._authorName;
         return github;
     }
 
