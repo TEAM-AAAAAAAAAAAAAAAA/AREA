@@ -34,7 +34,7 @@ const HackTheBoxSetupContainer: React.FC<HackTheBoxSetupProps> = (cookies) => {
                     return;
                 }
                 console.dir(cookies);
-                fetch('http://localhost:8080/auth/hackthebox_config', {
+                fetch(`http://${process.env.REACT_APP_SERVER_IP}:8080/auth/hackthebox_config`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

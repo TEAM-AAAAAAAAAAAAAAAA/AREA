@@ -32,7 +32,7 @@ const Setup: React.FC = () => {
     };
 
     const loginWithGoogle = () => {
-        fetch('http://localhost:8080/auth/google/get_oauth_url', {
+        fetch(`http://${process.env.REACT_APP_SERVER_IP}:8080/auth/google/get_oauth_url`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + cookies?.token

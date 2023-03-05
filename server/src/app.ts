@@ -74,8 +74,18 @@ async function seedActions()
             },
             {
                 actionName: 'progress',
-                serviceName: 'Discord',
+                serviceName: services.Discord.name,
                 description: '/progress command',
+            },
+            {
+                actionName: 'create_issue',
+                serviceName: services.Discord.name,
+                description: '/create_issue command',
+            },
+            {
+                actionName: 'get_issues',
+                serviceName: services.Discord.name,
+                description: '/get_issues command',
             },
         ],
         skipDuplicates: true,

@@ -7,3 +7,4 @@ COPY . .
 RUN npm i
 
 CMD ["sh", "start_web.sh"]
+
