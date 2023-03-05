@@ -4,28 +4,7 @@ import { IService } from "./IService";
 import { AuthProvider, Description } from "../area/mappings";
 import { prisma } from "../config/db";
 import moment, { Moment } from "moment";
-
-interface DiscordListEmbed {
-    "content": "AREA",
-    "embeds": [DiscordListItem?],
-    "attachments": []
-}
-
-export interface DiscordListItem {
-    title: string;
-    description: string;
-    color: number;
-    author: {
-        name: string;
-    }
-    footer: {
-        text: string;
-    }
-}
-
-export interface DiscordList {
-    list: DiscordListItem[];
-}
+import { DiscordList, DiscordListEmbed } from "../interfaces/Embed";
 
 @area.Service
 @AuthProvider("discord")

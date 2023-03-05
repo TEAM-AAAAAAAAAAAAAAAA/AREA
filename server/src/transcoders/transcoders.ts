@@ -1,9 +1,9 @@
 import { services } from "../services/.services";
 import { area } from "../area/.area";
-import { WeatherType } from "../services/OpenWeatherMap";
 import { ustring } from "../types/string";
 import { Transcoder } from "../area/mappings";
 import moment, { Moment } from "moment";
+import { WeatherType } from "../interfaces/Weather";
 
 export class transcoders
 {

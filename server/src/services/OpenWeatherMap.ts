@@ -1,23 +1,8 @@
 import { Action, Description, Service } from "../area/mappings";
 import { env } from "../config/env";
+import { WeatherForecast, WeatherType } from "../interfaces/Weather";
 import { nstring, ustring } from "../types/string";
 import { IService } from "./IService";
-
-export enum WeatherType {
-    Default,
-    Now,
-    Hourly
-};
-
-export interface WeatherForecast {
-    forecast: Weather[];
-}
-
-export interface Weather {
-    temp: number;
-    weather: string;
-    dt: Date;
-}
 
 /**
  * OpenWeatherMap service
