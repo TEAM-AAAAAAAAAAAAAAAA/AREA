@@ -38,8 +38,8 @@ jobs:
         run: graphdoc -s ./database/src/schemas/schema.graphql -o ./docs/graphql
       - name: Install prisma client
         run: npm install -g @prisma/client
-      - name: Install prisma prisma-docs-generator
-        run: npm install -g prisma-docs-generator
+      - name: Install prisma prisma-docs-generator in database node_modules
+        run: cd database && npm install prisma-docs-generator
       - name: Run prisma generate
         run: cd database && npx prisma generate --schema=prisma/schema_docs.prisma
       - name: Move prisma generated docs
