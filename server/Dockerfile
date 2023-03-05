@@ -3,14 +3,14 @@ FROM node:18-alpine as build-runner
 WORKDIR /tmp/app
 
 #Install dependencies (could be modified/extend)
-COPY package.json ./
+COPY package.json yarn.lock ./
 
 RUN yarn install
 
 #Bundle app source
 COPY ./src ./src
 COPY ./prisma ./prisma
-COPY ./tsconfig.json yarn.lock ./
+COPY ./tsconfig.json ./
 
 #Generate Prisma Client
 RUN npx prisma generate --schema=./prisma/schema.prisma
@@ -23,6 +23,7 @@ FROM node:18-alpine as prod-runner
 WORKDIR /app
 
 COPY --from=build-runner /tmp/app/package.json /app/package.json
+COPY --from=build-runner /tmp/app/yarn.lock /app/yarn.lock
 
 RUN yarn install --omit=dev
 

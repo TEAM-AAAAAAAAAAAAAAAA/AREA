@@ -5,27 +5,21 @@ import { env } from '../config/env.js';
 import {areaConfigCheck} from "../config/areaConfigCheck.js";
 
 @Discord()
-export class CreateIssue {
-    @Slash({description: "Create issue"})
-    async create_issue(
+export class GetIssues {
+    @Slash({description: "Get issues"})
+    async get_issues(
         @SlashOption({name: "owner", description: "username of the repo's owner", required: true, type: ApplicationCommandOptionType.String})
-        owner: string,
+            owner: string,
 
         @SlashOption({name: "repo", description: "name of the repo", required: true, type: ApplicationCommandOptionType.String})
-        repo: string,
-
-        @SlashOption({name: "title", description: "title of the new issue", required: true, type: ApplicationCommandOptionType.String})
-        title: string,
-
-        @SlashOption({name: "body", description: "body of the new issue", required: true, type: ApplicationCommandOptionType.String})
-        body: string,
+            repo: string,
 
         interaction: CommandInteraction
     ): Promise<void> {
 
 
 
-        let webhook = await areaConfigCheck(interaction, "create_issue");
+        let webhook = await areaConfigCheck(interaction, "get_issues");
         if (!webhook) {
             interaction.reply("You need to set up a webhook for this command");
             return;
@@ -38,8 +32,6 @@ export class CreateIssue {
                 bot: {
                     owner: owner,
                     repo: repo,
-                    title: title,
-                    body: body,
                     author: webhook.userId
                 }
             })
@@ -49,6 +41,6 @@ export class CreateIssue {
             return;
         }
         console.log(res);
-        interaction.reply("Issue created");
+        interaction.reply("This is the repo's issues' list :");
     }
 }
