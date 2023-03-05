@@ -3,17 +3,7 @@ import { area } from "../area/.area";
 import { IService } from "./IService";
 import { Octokit } from "octokit";
 import {prisma} from "../config/db";
-
-export interface IssueList {
-    issues: Issue[];
-}
-
-export interface Issue {
-    number: string;
-    title: string;
-    author: ustring;
-    body: ustring;
-}
+import { IssueList } from "../interfaces/Issue";
 
 @area.Service
 @area.AuthProvider('github')
@@ -86,7 +76,11 @@ export class Github implements IService {
                     number: issue.number.toString(),
                     title: issue.title,
                     author: issue.assignee?.login,
-                    body: issue.body || ''
+                    body: issue.body || '',
+                    authorImage: issue.assignee?.avatar_url,
+                    repoLink: issue.html_url ? issue.html_url.split('/issues')[0] : '',
+                    issueLink: issue.html_url,
+                    createdAt: issue.created_at
                 });
             }
         }

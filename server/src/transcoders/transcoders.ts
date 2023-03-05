@@ -74,6 +74,32 @@ export class transcoders
         return discord;
     }
 
+    @area.Transcoder(services.Github.name, services.TeamScript.name)
+    static githubToTeamScript(github: services.Github): services.TeamScript {
+        var teamScript: services.TeamScript = new services.TeamScript();
+
+        teamScript._issues = github._issues;
+        teamScript._authorId = github._owner;
+        teamScript._repository = github._repo;
+        teamScript._title = github._title;
+        teamScript._message = github._body;
+
+        return teamScript;
+    }
+
+    @area.Transcoder(services.TeamScript.name, services.Github.name)
+    static teamScriptToGithub(teamScript: services.TeamScript): services.Github {
+        var github: services.Github = new services.Github();
+
+        github._issues = teamScript._issues;
+        github._owner = teamScript._authorId;
+        github._repo = teamScript._repository;
+        github._title = teamScript._title;
+        github._body = teamScript._message;
+
+        return github;
+    }
+
     @area.Transcoder(services.Discord.name, services.OpenWeatherMap.name)
     static discordToOpenWeatherMap(discord: services.Discord): services.OpenWeatherMap {
         var openWeatherMap: services.OpenWeatherMap = new services.OpenWeatherMap();
