@@ -11,8 +11,8 @@ export class CreateIssue {
         @SlashOption({name: "owner", description: "username of the repo's owner", required: true, type: ApplicationCommandOptionType.String})
         owner: string,
 
-        @SlashOption({name: "url", description: "url of the repo", required: true, type: ApplicationCommandOptionType.String})
-        url: string,
+        @SlashOption({name: "repo", description: "name of the repo", required: true, type: ApplicationCommandOptionType.String})
+        repo: string,
 
         @SlashOption({name: "title", description: "title of the new issue", required: true, type: ApplicationCommandOptionType.String})
         title: string,
@@ -25,7 +25,7 @@ export class CreateIssue {
 
 
 
-        let webhook = await areaConfigCheck(interaction, "issue");
+        let webhook = await areaConfigCheck(interaction, "create_issue");
         if (!webhook) {
             interaction.reply("You need to set up a webhook for this command");
             return;
@@ -37,7 +37,7 @@ export class CreateIssue {
             body: JSON.stringify({
                 bot: {
                     owner: owner,
-                    url: url,
+                    repo: repo,
                     title: title,
                     body: body,
                     author: webhook.userId
