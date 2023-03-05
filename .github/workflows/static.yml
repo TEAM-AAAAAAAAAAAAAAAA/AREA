@@ -1,0 +1,53 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Install graphdoc deps
+        run: npm install -g @2fd/graphdoc
+      - name: Run graphdoc
+        run: graphdoc -s ./database/src/schemas/schema.graphql -o ./docs/graphql
+      - name: Install prisma client
+        run: npm install -g @prisma/client
+      - name: Install prisma prisma-docs-generator in database node_modules
+        run: cd database && npm install prisma-docs-generator
+      - name: Run prisma generate
+        run: cd database && npx prisma generate --schema=prisma/schema_docs.prisma
+      - name: Move prisma generated docs
+        run: mv database/prisma/docs/ docs/prisma
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: './docs'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
