@@ -48,7 +48,9 @@
     "workbox-streams": "^5.1.4"
   },
   "scripts": {
-    "start": "npx ionic serve -p 8081"
+    "start": "npx ionic serve -p 8081",
+    "build": "npx ionic build --prod --minifyjs --minifycss",
+    "prod": "npx serve -s build -l 8081"
   },
   "browserslist": {
     "production": [
@@ -66,6 +68,7 @@
     "@capacitor/cli": "4.6.2",
     "@playwright/test": "^1.31.2",
     "playwright": "^1.31.2",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "serve": "^14.2.0"
   }
 }
