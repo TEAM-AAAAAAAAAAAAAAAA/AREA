@@ -347,7 +347,7 @@ type Mutation {
   """
   Create a new chained reaction with the specified action name, action service name, reaction name, reaction service name, and optional outgoing webhook URLs.
   """
-  createChainedReaction(actionName: String!, actionService: String!, reactionName: String!, reactionService: String!, reactionOutgoingWebhook: String, actionOutgoingWebhook: String): Int!
+  createChainedReaction(actionId: Int!, reactionId: Int!): Int!
 
   """
   Create new OAuth user data with the specified user ID, refresh token, access token, data, OAuth provider name, and provider user ID.
@@ -667,20 +667,8 @@ export const resolvers = {
         createChainedReaction: async (_: any, args: any, context: Context) => {
             await context.prisma.actionReaction.create({
                 data: {
-                    action: {
-                        create: {
-                            reactionName: args.actionName,
-                            serviceName: args.actionService,
-                            outgoingWebhook: args.actionOutgoingWebhook,
-                        }
-                    },
-                    reaction: {
-                        create: {
-                            reactionName: args.reactionName,
-                            serviceName: args.reactionService,
-                            outgoingWebhook: args.reactionOutgoingWebhook,
-                        }
-                    },
+                    actionId: args.actionId,
+                    reactionId: args.reactionId
                 }
             });
             return 200
