@@ -1,40 +1,9 @@
-FROM node:18-alpine as build-runner
+FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package.json ./
+COPY . .
 
-COPY package-lock.json ./
-
-RUN npm install
-
-COPY public ./public
-
-COPY src ./src
-
-COPY capacitor.config.json ./
-
-COPY capacitor.config.ts ./
-
-COPY ionic.config.json ./
-
-COPY tsconfig.json ./
-
-COPY start_web.sh ./
-
-RUN npm run build
-
-FROM node:18-alpine as prod-runner
-
-WORKDIR /app
-
-COPY --from=build-runner /app/package.json /app/package.json
-
-COPY --from=build-runner /app/package-lock.json /app/package-lock.json
-
-COPY --from=build-runner /app/build /app/build
-COPY --from=build-runner /app/start_web.sh /app/start_web.sh
-
-RUN npm install
+RUN npm i
 
 CMD ["sh", "start_web.sh"]
