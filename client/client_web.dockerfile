@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY package.json ./
 
+COPY package-lock.json ./
+
 RUN npm install
 
 COPY public ./public
@@ -25,6 +27,8 @@ FROM node:18-alpine as prod-runner
 WORKDIR /app
 
 COPY --from=build-runner /app/package.json /app/package.json
+
+COPY --from=build-runner /app/package-lock.json /app/package-lock.json
 
 COPY --from=build-runner /app/build /app/build
 
