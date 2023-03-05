@@ -86,7 +86,7 @@ const LinkAction: React.FC<ContainerProps> = ({ data }) => {
                                     }
                                 })
                             } else {
-                                setTsLink(`http://server:8080/hook/${data?.getUserFromToken.id}/${result.data?.getWebhook.webhookId}`);
+                                setTsLink(`/hook/${data?.getUserFromToken.id}/${result.data?.getWebhook.webhookId}`);
                                 ts_modal.current?.present();
                             }
                         });
