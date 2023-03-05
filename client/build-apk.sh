@@ -11,4 +11,4 @@ ionic capacitor add android
 ionic capacitor sync
 cd android
 ./gradlew assembleRelease
-cp app/build/outputs/apk/release/app-release-unsigned.apk /app/client/public
+cp app/build/outputs/apk/release/app-release-unsigned.apk /app/client/app-release-unsigned.apk

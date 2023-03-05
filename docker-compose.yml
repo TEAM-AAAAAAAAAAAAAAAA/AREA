@@ -6,7 +6,8 @@ services:
       context: ./server
     restart: always
     depends_on:
-      - apollo
+      apollo:
+        condition: service_started
     ports:
       - "8080:8080"
     env_file:
@@ -24,8 +25,10 @@ services:
     env_file:
       - .env
     depends_on:
-      - client_mobile
-      - server
+      client_mobile:
+        condition: service_completed_successfully
+      server:
+        condition: service_started
     volumes:
       - ./client_data:/app/client
   client_mobile:
@@ -48,7 +51,8 @@ services:
     networks:
       - server_network
     depends_on:
-      - db
+      db:
+        condition: service_started
     links:
       - db:area_database
   db:
@@ -74,8 +78,8 @@ services:
     networks:
       - server_network
     depends_on:
-      - apollo
-      - server
+      server:
+        condition: service_started
     links:
       - db:area_database
       - server:area_server
