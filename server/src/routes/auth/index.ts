@@ -18,10 +18,9 @@ let opts = {
 };
 
 passport.use(new JWTStrategy(opts, async (jwt_payload, done) => {
-    console.log(jwt_payload);
     const token = await prisma.token.findFirst({
         where: {
-            id: jwt_payload.tokenId
+            id: jwt_payload.token
         }
     });
     if (token) {
