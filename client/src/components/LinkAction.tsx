@@ -141,9 +141,7 @@ const LinkAction: React.FC<ContainerProps> = ({ data }) => {
                 <IonContent class='ion-padding'>
                     <IonItem>
                         <IonLabel position='stacked'>Instructions :</IonLabel>
-                        <IonCardContent>
-                                Go to the following link in order to set up your webhook
-                        </IonCardContent>
+                        <IonCardContent>Go to the following link in order to set up your webhook</IonCardContent>
                     </IonItem>
                     <IonItem>
                         <IonLabel position='stacked'>Link :</IonLabel>
@@ -151,7 +149,7 @@ const LinkAction: React.FC<ContainerProps> = ({ data }) => {
                     </IonItem>
                     <IonItem>
                         <IonLabel position='stacked'>Doc :</IonLabel>
-                        <IonCardContent>Put the link to the doc</IonCardContent>
+                        <IonCardContent>https://app.theneo.io/epitech-lLMVLzQ9Sw/AREA/teamscript</IonCardContent>
                     </IonItem>
                     </IonContent>
             </IonModal>
