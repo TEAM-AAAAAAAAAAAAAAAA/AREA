@@ -20,6 +20,8 @@ COPY ionic.config.json ./
 
 COPY tsconfig.json ./
 
+COPY start_web.sh ./
+
 RUN npm run build
 
 FROM node:18-alpine as prod-runner
@@ -31,7 +33,8 @@ COPY --from=build-runner /app/package.json /app/package.json
 COPY --from=build-runner /app/package-lock.json /app/package-lock.json
 
 COPY --from=build-runner /app/build /app/build
+COPY --from=build-runner /app/start_web.sh /app/start_web.sh
 
 RUN npm install
 
-CMD [ "npm", "run", "prod" ]
+CMD ["sh", "start_web.sh"]
