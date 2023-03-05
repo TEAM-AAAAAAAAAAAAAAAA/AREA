@@ -60,7 +60,6 @@ export class Github implements IService {
                 }
             }
         });
-        console.log("Devrait y avoir des choses en dessous la");
         if (!prismaUserGithub) {
             console.log("Failed to load user");
             return undefined;
