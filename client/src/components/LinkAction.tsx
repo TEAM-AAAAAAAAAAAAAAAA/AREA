@@ -4,6 +4,7 @@ import { gql } from '@apollo/client';
 import {
     IonButton,
     IonButtons,
+    IonCard,
     IonCardContent,
     IonContent,
     IonHeader,
@@ -15,6 +16,7 @@ import {
     IonSelectOption,
     IonTitle,
     IonToolbar,
+    useIonAlert,
     useIonToast
 } from '@ionic/react';
 import {
@@ -52,6 +54,9 @@ const LinkAction: React.FC<ContainerProps> = ({ data }) => {
     const [reaction, setReaction] = useState<any>();
     const [reactions, setReactions] = useState<string[]>([]);
     const modal = useRef<HTMLIonModalElement>(null);
+    const ts_modal = useRef<HTMLIonModalElement>(null);
+    const [update, setUpdate] = useState<boolean>(false);
+    const [tsLink, setTsLink] = useState<string>('');
 
     function confirm() {
         modal.current?.dismiss(serverId.current?.value, 'confirm');
@@ -71,12 +76,19 @@ const LinkAction: React.FC<ContainerProps> = ({ data }) => {
                             color: 'success'
                         });
                         client.query({ query: GET_WEBHOOK, variables: { reactionId: reaction.reactionId } }).then((result) => {
-                            client.mutate({ mutation: SET_DISCORD_WEBHOOK, variables: {
-                                command: action.actionName,
-                                userId: data?.getUserFromToken.id,
-                                serverId: ev.detail?.data,
-                                webhookId: result.data?.getWebhook.webhookId } })
-                                .then((result) => { console.log(result) })
+                            if (actionService === 'Discord') {
+                                client.mutate({
+                                    mutation: SET_DISCORD_WEBHOOK, variables: {
+                                        command: action.actionName,
+                                        userId: data?.getUserFromToken.id,
+                                        serverId: ev.detail?.data,
+                                        webhookId: result.data?.getWebhook.webhookId
+                                    }
+                                })
+                            } else {
+                                setTsLink(`http://server:8080/hook/${data?.getUserFromToken.id}/${result.data?.getWebhook.webhookId}`);
+                                ts_modal.current?.present();
+                            }
                         });
                     } else {
                         present({
@@ -112,68 +124,99 @@ const LinkAction: React.FC<ContainerProps> = ({ data }) => {
         setReactions(data?.allReactions?.filter((reaction: any) => reaction.serviceName === reactionService));
     }, [reactionService]);
 
+    useEffect(() => {
+        if (actionService === 'TeamScript') {
+        }
+    }, [update]);
+
     return (
-        <IonModal ref={modal} onWillDismiss={(ev) => onWillDismiss(ev)} trigger='link-action'>
-            <IonHeader>
-                <IonToolbar className='ion-padding ion-text-center'>
-                    <IonButtons slot='start'><IonButton onClick={() => modal.current?.dismiss()}>Cancel</IonButton></IonButtons>
-                    <IonTitle>Link Actions</IonTitle>
-                    <IonButtons slot='end'><IonButton strong={true} onClick={() => confirm()}>Create</IonButton></IonButtons>
-                </IonToolbar>
-            </IonHeader>
-            <IonContent class='ion-padding'>
-                <IonItem>
-                    <IonLabel position='floating'>Action Service</IonLabel>
-                    <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => { setActionService(e.detail.value!); setAction('') }}>
-                        {services.map((service: any) => (
-                            <IonSelectOption key={service} value={service}>{service}</IonSelectOption>
-                        ))}
-                    </IonSelect>
-                </IonItem>
-                {actionService && actions && (
-                    <>
-                        <IonItem>
-                            <IonLabel position='floating'>Action</IonLabel>
-                            <IonSelect placeholder='Choose action' interface='popover' onIonChange={(e) => { setAction(e.detail.value!) }}>
-                                {actions.map((action: any) => (
-                                    <IonSelectOption key={action.actionName} value={action}>{action.actionName}</IonSelectOption>
-                                ))}
-                            </IonSelect>
-                            {action && (
-                                <IonCardContent>
-                                    {action.description}
-                                </IonCardContent>
-                            )}
-                        </IonItem>
-                        {actionService === 'Discord' && (
-                            <IonItem>
-                                <IonLabel position='floating'>Server ID</IonLabel>
-                                <IonInput ref={serverId} placeholder='Server ID' />
-                            </IonItem>
-                        )}
-                    </>
-                )
-                }
-                <IonItem>
-                    <IonLabel position='floating'>Reaction Service</IonLabel>
-                    <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => { setReactionService(e.detail.value!); setReaction('') }}>
-                        {data.allServices?.map((service: any) => (
-                            <IonSelectOption key={service.serviceName} value={service.serviceName}>{service.serviceName}</IonSelectOption>
-                        ))}
-                    </IonSelect>
-                </IonItem>
-                {reactionService && reactions && (
+        <>
+            <IonModal ref={ts_modal} >
+                <IonHeader>
+                    <IonToolbar className='ion-padding ion-text-center'>
+                        <IonButtons slot='start'><IonButton onClick={() => modal.current?.dismiss()}>Cancel</IonButton></IonButtons>
+                        <IonTitle>TeamScript</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
+                <IonContent class='ion-padding'>
                     <IonItem>
-                        <IonLabel position='floating'>Reaction</IonLabel>
-                        <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => { setReaction(e.detail.value!) }}>
-                            {reactions.map((reaction: any) => (
-                                <IonSelectOption key={reaction.reactionName} value={reaction}>{reaction.reactionName}</IonSelectOption>
+                        <IonLabel position='stacked'>Instructions :</IonLabel>
+                        <IonCardContent>
+                                Go to the following link in order to set up your webhook
+                        </IonCardContent>
+                    </IonItem>
+                    <IonItem>
+                        <IonLabel position='stacked'>Link :</IonLabel>
+                        <IonCardContent>{tsLink}</IonCardContent>
+                    </IonItem>
+                    <IonItem>
+                        <IonLabel position='stacked'>Doc :</IonLabel>
+                        <IonCardContent>Put the link to the doc</IonCardContent>
+                    </IonItem>
+                    </IonContent>
+            </IonModal>
+            <IonModal ref={modal} onWillDismiss={(ev) => onWillDismiss(ev)} trigger='link-action'>
+                <IonHeader>
+                    <IonToolbar className='ion-padding ion-text-center'>
+                        <IonButtons slot='start'><IonButton onClick={() => modal.current?.dismiss()}>Cancel</IonButton></IonButtons>
+                        <IonTitle>Link Actions</IonTitle>
+                        <IonButtons slot='end'><IonButton strong={true} onClick={() => confirm()}>Create</IonButton></IonButtons>
+                    </IonToolbar>
+                </IonHeader>
+                <IonContent class='ion-padding'>
+                    <IonItem>
+                        <IonLabel position='floating'>Action Service</IonLabel>
+                        <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => { setActionService(e.detail.value!); setAction('') }}>
+                            {services.map((service: any) => (
+                                <IonSelectOption key={service} value={service}>{service}</IonSelectOption>
                             ))}
                         </IonSelect>
                     </IonItem>
-                )}
-            </IonContent>
-        </IonModal>
+                    {actionService && actions && (
+                        <>
+                            <IonItem>
+                                <IonLabel position='floating'>Action</IonLabel>
+                                <IonSelect placeholder='Choose action' interface='popover' onIonChange={(e) => { setAction(e.detail.value!) }}>
+                                    {actions.map((action: any) => (
+                                        <IonSelectOption key={action.actionName} value={action}>{action.actionName}</IonSelectOption>
+                                    ))}
+                                </IonSelect>
+                                {action && (
+                                    <IonCardContent>
+                                        {action.description}
+                                    </IonCardContent>
+                                )}
+                            </IonItem>
+                            {actionService === 'Discord' && (
+                                <IonItem>
+                                    <IonLabel position='floating'>Server ID</IonLabel>
+                                    <IonInput ref={serverId} placeholder='Server ID' />
+                                </IonItem>
+                            )}
+                        </>
+                    )
+                    }
+                    <IonItem>
+                        <IonLabel position='floating'>Reaction Service</IonLabel>
+                        <IonSelect placeholder='Choose service' interface='popover' onIonChange={(e) => { setReactionService(e.detail.value!); setReaction('') }}>
+                            {data.allServices?.map((service: any) => (
+                                <IonSelectOption key={service.serviceName} value={service.serviceName}>{service.serviceName}</IonSelectOption>
+                            ))}
+                        </IonSelect>
+                    </IonItem>
+                    {reactionService && reactions && (
+                        <IonItem>
+                            <IonLabel position='floating'>Reaction</IonLabel>
+                            <IonSelect placeholder='Choose reaction' interface='popover' onIonChange={(e) => { setReaction(e.detail.value!) }}>
+                                {reactions.map((reaction: any) => (
+                                    <IonSelectOption key={reaction.reactionName} value={reaction}>{reaction.reactionName}</IonSelectOption>
+                                ))}
+                            </IonSelect>
+                        </IonItem>
+                    )}
+                </IonContent>
+            </IonModal>
+        </>
     );
 };
 
