@@ -79,7 +79,7 @@ const ActionsContainer: React.FC<ContainerProps> = ({ allReact, serviceName }) =
             <>
                 <IonSelect placeholder='Select reaction' interface='popover' onIonChange={(e) => { setDesc(e.detail?.value.react.description); setReaction(e.detail?.value) }}>
                     {actions.map((action: any) => (
-                        <IonSelectOption key={action.reactionName} value={action}>{action.reactionName}</IonSelectOption>
+                        <IonSelectOption key={action.reactionName} value={action}>{action.reactionName} : {action.reactionId}</IonSelectOption>
                     ))}
                 </IonSelect>
                 <IonCardContent>
