@@ -36,10 +36,15 @@ jobs:
         run: npm install -g @2fd/graphdoc
       - name: Run graphdoc
         run: graphdoc -s ./database/src/schemas/schema.graphql -o ./docs/graphql
+      - name: Install prisma client
+        run: npm install -g @prisma/client
+      - name: Run prisma generate
+        run: cd database && npx prisma generate --schema=prisma/schema_docs.prisma
+      - name: Move prisma generated docs
+        run: mv database/prisma/docs/ docs/prisma
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          # Upload entire repository
           path: './docs'
       - name: Deploy to GitHub Pages
         id: deployment
