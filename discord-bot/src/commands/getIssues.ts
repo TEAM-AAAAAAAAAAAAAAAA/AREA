@@ -16,16 +16,16 @@ export class GetIssues {
 
         interaction: CommandInteraction
     ): Promise<void> {
-
-
-
         let webhook = await areaConfigCheck(interaction, "get_issues");
         if (!webhook) {
             interaction.reply("You need to set up a webhook for this command");
             return;
         }
+
+        await interaction.deferReply({ ephemeral: true});
+
         console.log(webhook)
-        let res = await fetch(env.API_URL + '/hook/' + webhook.userId + '/' + webhook.webhookWebhookId, {
+        fetch(env.API_URL + '/hook/' + webhook.userId + '/' + webhook.webhookWebhookId, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -35,12 +35,11 @@ export class GetIssues {
                     author: webhook.userId
                 }
             })
-        });
-        if (!res || !res.ok) {
-            interaction.reply("Unknown error");
-            return;
-        }
-        console.log(res);
-        interaction.reply("This is the repo's issues' list :");
+        }).then(res => {
+            if (!res || !res.ok)
+                interaction.editReply("Unknown error");
+            else
+                interaction.editReply("This is the repo's issues' list :");
+        }).catch();
     }
 }

@@ -4,6 +4,17 @@ import { IService } from "./IService";
 import { Octokit } from "octokit";
 import {prisma} from "../config/db";
 
+export interface IssueList {
+    issues: Issue[];
+}
+
+export interface Issue {
+    number: string;
+    title: string;
+    author: ustring;
+    body: ustring;
+}
+
 @area.Service
 @area.AuthProvider('github')
 export class Github implements IService {
@@ -68,15 +79,20 @@ export class Github implements IService {
         const iterator = octokit.paginate.iterator(octokit.rest.issues.listForRepo, {
             owner: this._owner || '',
             repo: this._repo || '',
-            per_page: 100,
         });
         for await (const { data: issues } of iterator) {
             for (const issue of issues) {
-                console.log("Issue #%d: %s", issue.number, issue.title);
+                this._issues.issues.push({
+                    number: issue.number.toString(),
+                    title: issue.title,
+                    author: issue.assignee?.login,
+                    body: issue.body || ''
+                });
             }
         }
     }
 
+    _issues: IssueList = { issues: [] };
     _outgoing: nstring;
     _title: ustring;
     _owner: ustring;
