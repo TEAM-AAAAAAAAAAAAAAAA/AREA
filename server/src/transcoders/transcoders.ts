@@ -43,6 +43,37 @@ export class transcoders
         return github;
     }
 
+    @area.Transcoder(services.Github.name, services.Discord.name)
+    static githubToDiscord(github: services.Github): services.Discord {
+        var discord: services.Discord = new services.Discord();
+
+        discord._owner = github._owner;
+        discord._repo = github._repo;
+        discord._title = github._title;
+        discord._body = github._body;
+        discord._authorName = github._userId;
+
+        discord._message = "This is the repo's issue list:\n";
+        for (let issue of github._issues.issues)
+        {
+            discord._list.list.push({
+                author: {
+                    name: issue.author || ""
+                },
+                title: issue.title,
+                footer: {
+                    text: "Issue #" + issue.number
+                },
+                description: issue.body || "",
+                color: 0x00ff00
+            });
+
+            discord._message += `> Issue #${issue.number}: ${issue.title} assigned to ${issue.author}\n`;
+        }
+
+        return discord;
+    }
+
     @area.Transcoder(services.Discord.name, services.OpenWeatherMap.name)
     static discordToOpenWeatherMap(discord: services.Discord): services.OpenWeatherMap {
         var openWeatherMap: services.OpenWeatherMap = new services.OpenWeatherMap();
