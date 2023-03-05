@@ -4,6 +4,7 @@ import { IService } from "./IService";
 import * as AreaCards from '../utils/AreaCards';
 import { Action, AuthProvider, Description } from "../area/mappings";
 import moment, { Moment } from "moment";
+import { Issue, IssueList } from "../interfaces/Issue";
 
 @area.Service
 export class TeamScript implements IService {
@@ -70,15 +71,19 @@ export class TeamScript implements IService {
 
     @Action
     @Description("A cool way to post an issue to Teams using adaptive cards")
-    postIssue(): void
+    async postIssue(): Promise<void>
     {
         if (!this._outgoing) return;
 
-        fetch(this._outgoing, {
-            method: 'POST',
-            body: JSON.stringify(AreaCards.issueFormat(this._authorName, this._authorImage, this._repository, this._repositoryLink, this._issueId, this._issue, this._issueLink, this._message, this._datetime)),
-            headers: {'Content-Type': 'application/json'} 
-        }).then();
+        for (let issue of this._issues.issues)
+        {
+            await fetch(this._outgoing, {
+                method: 'POST',
+                body: JSON.stringify(AreaCards.issueFormat(issue.author, issue.authorImage, this._repository, issue.repoLink, issue.number, issue.title, issue.body, issue.issueLink, issue.createdAt)),
+                headers: {'Content-Type': 'application/json'} 
+            }).then().catch(e => console.error(e));
+            await new Promise(r => setTimeout(r, 1000)); // Don't get rate limited by Teams
+        }
     }
 
     // @area.Action
@@ -95,6 +100,7 @@ export class TeamScript implements IService {
     //     })
     // }
 
+    _issues: IssueList = { issues: [] };
     _startDateTime: Moment = moment();
     _durationHours: number = 0;
     _durationMinutes: number = 0;
